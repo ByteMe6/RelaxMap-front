@@ -8,7 +8,7 @@ import LocationFormPage from "./pages/LocationFormPage/LocationFormPage";
 import EditLocation from "./pages/EditLocation/EditLocation";
 import RegisterPage from "./pages/Auth/RegisterPage/RegisterPage";
 import LoginPage from "./pages/Auth/Login/LoginPage";
-
+import "./index.css"
 
 function App() {
   return (
