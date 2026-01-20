@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import Container from "../Container/Container";
 import styles from "./Header.module.scss";
 // import "../../../node_modules/normalize.css/normalize.css"
