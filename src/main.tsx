@@ -1,4 +1,3 @@
-// main.tsx або index.tsx
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { HashRouter } from 'react-router-dom'
