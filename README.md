@@ -1,6 +1,10 @@
 # RelaxMap
 Relax map – project to share your travel destinations
 
+[Md on russian](./README.ru.md) <br/>
+[Md on english](./README.md)
+
+
 ## Tools
 **lang:** *typesript* <br/>
 **framework:** *React* <br/>
