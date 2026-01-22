@@ -1,0 +1,91 @@
+.containerNewLocation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 375px;
+    margin: auto;
+    border: 1px solid red;
+    padding-bottom: 40px;
+}
+
+.titleNewLocation {
+    font-weight: 700;
+    font-family: "Montserrat";
+    font-style: bold;
+    color: #1B391B;
+    margin-left: 20px;
+}
+
+.containerFormLocation {
+    display: flex;
+    flex-direction: column;
+    gap:15px;
+}
+
+.photoInput {
+    width: 335px;
+    height: 223px;
+    background-image: url("../../../public/assets/placeholderImage.png");
+}
+
+.btnDownload {
+    width: 176px;
+    height: 32px;
+    border: 1px solid #00000026;
+    color: #4C2613;
+    font-family: "Montserrat";
+    font-weight: 500;
+    border-radius: 8px;
+}
+
+.labelLocation {
+    font-family: "Montserrat";
+    color: #1B391B;
+    font-weight: 500;
+}
+
+.inputLocation {
+    width: 335px;
+    height: 40px;
+    background-color: #FFE5D9;
+    border: 1px solid #00000026;
+    border-radius: 8px;
+    padding-left: 10px;
+
+    &::placeholder {
+        font-family: "Montserrat";
+        font-weight: 400;
+    }
+}
+
+.inputLocationArea {
+    background-color: #FFE5D9;
+    width: 335px;
+    height: 180px;
+    border: 1px solid #00000026;
+    border-radius: 8px;
+    padding-top:10px;
+    padding-left: 10px;
+    &::placeholder {
+        font-family: "Montserrat";
+        font-weight: 400;
+    }
+}
+
+.btnLocation {
+    width: 335px;
+    height: 48px;
+    border: 1px solid #00000026;
+    border-radius: 8px;
+
+    &--post {
+        background: #CC6534;
+    }
+}
+.wraperButton {
+    margin-top:30px;
+    gap:20px;
+    display:flex;
+    flex-direction: column;
+}
