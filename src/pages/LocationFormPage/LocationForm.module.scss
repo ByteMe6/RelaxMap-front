@@ -151,6 +151,10 @@
     width:704px;
     height:395px;
 }
+.imageLocation{
+    width:704px;
+    height:468px;
+}
 }
 @media(min-width:1440px){
     .containerNewLocation {
@@ -170,5 +174,9 @@
     }
     .btnDownload {
         width:215px;
+    }
+    .imageLocation{
+        width: 1091px;
+        height: 726px;
     }
 }
