@@ -10,17 +10,17 @@ export const searchLocation = createAsyncThunk<
     { state: RootState }
 >(
     "location/searchLocation",
-    async ({name}, thunkApi) => {
+    async ({ name }, thunkApi) => {
         try {
+            const apiKey = "6764bd2847e64b93954f19ad39fa852b"
             const response = await fetch(
-                `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(name)}`
+                `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(
+                    name
+                )}&key=${apiKey}&language=uk&pretty=1`
             );
             const data = await response.json();
-            const { lat, lon } = data[0];
-            return {
-                lat: parseFloat(lat),
-                lng: parseFloat(lon),
-            } as LocationData;
+            const { lat, lng } = data.results[0].geometry;
+            return { lat, lng } as LocationData;
         } catch (error) {
             return thunkApi.rejectWithValue(error)
         }

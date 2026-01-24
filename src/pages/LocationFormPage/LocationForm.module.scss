@@ -27,6 +27,8 @@
     width: 335px;
     height: 223px;
     background-image: url("../../../public/assets/placeholderImage.png");
+    background-repeat: no-repeat;
+    resize:none;
 }
 
 .btnDownload {
@@ -83,7 +85,7 @@
         background: #CC6534;
     }
 }
-.wraperButton {
+.wrapperButton {
     margin-top:30px;
     gap:20px;
     display:flex;
@@ -100,6 +102,36 @@
 .imageLocation {
     width:335px;
 }
+.btnLocation:hover {
+    border: 1px solid #FFE5D9;
+}
 @media(min-width:768px) {
+.containerNewLocation {
+    width:768px;
+}
+.photoInput {
+    width:704px;
+}
+.inputLocation {
+    width:704px;
+}
+.inputLocationArea {
+    width:704px;
+}
+.inputLocation:nth-last-child{
+    width:421px;
+}
+.wrapperButton {
+    flex-direction: row;
+}
+.btnLocation {
+    width:203px;
+}
 
+}
+@media(min-width:1440px){
+    .inputLocation {
+        width:1075px;
+        height:27px;
+    }
 }
