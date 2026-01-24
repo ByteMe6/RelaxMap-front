@@ -6,8 +6,7 @@
   width: 100%;
 }
 
-.linksBox {
-}
+
 .loginFormContent {
   h1 {
     font-family:
@@ -39,7 +38,6 @@
   font-family: "Montserrat";
   color: #1b391b;
   font-weight: 400;
-  //   margin-bottom: -5px;
   text-align: left;
 }
 
@@ -160,7 +158,7 @@
       padding: 4px 0;
 
       &::after {
-        width: 0; // отключаем hover line для телефонов
+        width: 0;
       }
 
       &:hover::after {
@@ -170,7 +168,7 @@
 
     .activeLinkBoxItem {
       &::before {
-        width: 100px; // делаем активную линию меньше на мобиле
+        width: 100px; 
       }
     }
   }
