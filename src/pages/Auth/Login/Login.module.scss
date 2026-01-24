@@ -1,0 +1,153 @@
+// @import url("./Scss/_Colors.scss");
+
+.loginForm {
+  background-color: #fff2ec;
+  // color: red;
+  width: 100%;
+}
+
+.linksBox {
+}
+.loginFormContent {
+  h1 {
+    font-family:
+      "Montserrat",
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      Oxygen,
+      Ubuntu,
+      Cantarell,
+      "Open Sans",
+      "Helvetica Neue",
+      sans-serif;
+  }
+}
+
+.loginFormContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 335px;
+  margin: auto;
+}
+
+.labelField {
+  font-family: "Montserrat";
+  color: #1b391b;
+  font-weight: 400;
+  //   margin-bottom: -5px;
+  text-align: left;
+}
+
+.inputField {
+  width: 100%;
+  height: 40px;
+  background-color: #ffe5d9;
+  border: 1px solid #00000026;
+  border-radius: 8px;
+  padding-left: 10px;
+  font-family: "Montserrat";
+  font-weight: 400;
+
+  &::placeholder {
+    font-family: "Montserrat";
+    font-weight: 400;
+  }
+}
+
+.btn {
+  width: 335px;
+  height: 48px;
+  border-radius: 8px;
+  border: 1px solid #00000026;
+  font-family: "Montserrat";
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  &--submit {
+    background-color: #cc6534;
+    color: white;
+
+    &:hover {
+      background-color: #b6623c;
+    }
+  }
+
+  &--cancel {
+    background-color: #dfdfdf;
+    color: #4c2613;
+  }
+}
+
+.buttonWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.leftText {
+  margin: 0;
+  width: 100%;
+  text-align: left;
+}
+
+.linksBox {
+  display: flex;
+  gap: 40px;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  justify-content: space-evenly;
+  max-width: 644px;
+ 
+
+  .linksBoxItem {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  padding: 0 8px;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -2px;
+    transform: translateX(-50%);
+    width: 0;      
+    height: 2px;
+    background-color: #cc6534;
+    transition: width 0.3s ease, background-color 0.3s ease;
+  }
+
+  &:hover::after {
+    width: 200px;
+  }
+
+  // Active элемент
+  
+}
+
+.activeLinkBoxItem {
+    &::before {           // пассивная серяя линия под текстом
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -2px;
+      transform: translateX(-50%);
+      width: 200px;         // ширина серой линии
+      height: 2px;
+      background-color: #ccc; // серый цвет
+    }
+  }
+}
