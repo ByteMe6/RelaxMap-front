@@ -89,3 +89,17 @@
     display:flex;
     flex-direction: column;
 }
+.btnSearch {
+    width:335px;
+    height:48px;
+    font-family: "Montserrat";
+    font-weight: 500;
+    border: 1px solid  #00000026;
+    color:"#4C2613";
+}
+.imageLocation {
+    width:335px;
+}
+@media(min-width:768px) {
+
+}
