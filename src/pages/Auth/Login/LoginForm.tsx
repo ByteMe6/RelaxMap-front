@@ -20,7 +20,7 @@ export default function LoginForm() {
           <div className={styles.loginFormContent}>
             <h1 className={styles.heading}>Вхід</h1>
             <Formik
-              initialValues={{ location: "" }}
+              initialValues={{ mail: "", password: "" }} // <-- добавили mail и password
               onSubmit={(values) => console.log(values)}
             >
               {() => (
@@ -32,19 +32,21 @@ export default function LoginForm() {
                     Вхід*
                   </label>
                   <Field
+                    id="mail"
                     name="mail"
                     placeholder="example@example.com"
                     className={styles.inputField}
                   />
 
                   <label
-                    htmlFor="mail"
+                    htmlFor="password"
                     className={`${styles.labelField} ${styles.leftText}`}
                   >
                     Пороль*
                   </label>
                   <Field
-                  type="password"
+                    id="password"
+                    type="password"
                     name="password"
                     placeholder="Password123"
                     className={styles.inputField}
