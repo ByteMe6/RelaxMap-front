@@ -1,10 +1,15 @@
 import styles from "./LocationForm.module.scss"
 import { Formik, Form, Field } from "formik"
 import { useRef } from "react"
+import type { RootState,} from "../../redux/store";
+import type {useAppSelector, useAppDispatch} from "../../redux/hooks/hook"
+import { searchLocation } from "../../redux/thunk/thunkLocationMap";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
 export default function LocationForm() {
     const fileRef = useRef<HTMLInputElement>(null)
     return (
-        <Formik initialValues={{ name: "", type: "", region: "", description: "", image: null as File | null }} onSubmit={(values) => console.log(values)}>
+        <Formik initialValues={{ name: "", type: "", region: "", description: "", image: null as File | null, location:"" }} onSubmit={(values) => console.log(values)}>
             {({ setFieldValue, values }) => (
                 <Form className={styles.containerFormLocation}>
                     <label htmlFor="image" className={styles.labelLocation}>Обкладинка</label>
@@ -14,7 +19,7 @@ export default function LocationForm() {
                     }} style={{ display: "none" }} id="image" />
                     <label  className={styles.photoInput} >
                         {values.image && (
-                            <img src={URL.createObjectURL(values.image)} />
+                            <img src={URL.createObjectURL(values.image)} className={styles.imageLocation}/>
                         )}
                     </label>
                     <button onClick={() => fileRef.current?.click()} className={styles.btnDownload} type="button">Завантажити фото</button>
@@ -26,6 +31,9 @@ export default function LocationForm() {
                     <Field name="region" placeholder="Оберіть регіон" className={styles.inputLocation}/>
                     <label htmlFor="description" className={styles.labelLocation}>Детальний опис</label>
                     <Field as="textarea" name="description" placeholder="Детальний опис локації"  className={styles.inputLocationArea}/>
+                    <label htmlFor="location" className={styles.labelLocation}>Оберіть розташування</label>
+                    <Field name="location" placeholder="Введіть назву місця" className={styles.inputLocation}/>
+                    <button className={styles.btnSearch}>Пошук</button>
                 <div className={styles.wraperButton}>
                 <button className={styles.btnLocation}  type="button">Відмінити</button>
                 <button className={`${styles.btnLocation} ${styles['btnLocation--post']}`} type="submit">Опублікувати</button>
