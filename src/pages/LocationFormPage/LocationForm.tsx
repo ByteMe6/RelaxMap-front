@@ -37,7 +37,7 @@ export default function LocationForm() {
                         const file = e.currentTarget.files?.[0] || null
                         setFieldValue("image", file)
                     }} style={{ display: "none" }} id="image" />
-                    <label className={styles.photoInput} >
+                    <label className={`${styles.photoInput} ${styles.photoInputLarge}`} >
                         {values.image && (
                             <img src={URL.createObjectURL(values.image)} className={styles.imageLocation} />
                         )}
@@ -52,10 +52,12 @@ export default function LocationForm() {
                     <label htmlFor="description" className={styles.labelLocation}>Детальний опис</label>
                     <Field as="textarea" name="description" placeholder="Детальний опис локації" className={styles.inputLocationArea} />
                     <label htmlFor="location" className={styles.labelLocation}>Оберіть розташування</label>
-                    <Field name="location" placeholder="Введіть назву місця" className={styles.inputLocation} />
+                    <div className={styles.wrapperLocation}>
+                    <Field name="location" placeholder="Введіть назву місця" className={`${styles.inputLocation} ${styles.search}`}  />
                     <button className={styles.btnSearch} onClick={() => handleSearchLocation(values.location, setFieldValue)}>Пошук</button>
+                    </div>
                     {coords && (
-                        <div style={{ height: "300px", marginTop: "10px" }}>
+                        <div className={styles.mapLocation}>
                             <MapContainer center={[coords.lat, coords.lng] as LatLngExpression} zoom={13} style={{ height: "100%" }}>
                                 <TileLayer
                                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
