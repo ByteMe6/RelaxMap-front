@@ -1,14 +1,14 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import locationSlice from "./slice/locationSlice"
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"
+import locationReducer from "./slice/locationSlice"
 const persistConfig = {
     key:"root",
     storage,
-    whitelist:[]
+    whitelist:["location"]
 }
 const rootReducer = combineReducers({
-    location:locationSlice
+    location:locationReducer
 })
 export type RootState = ReturnType<typeof rootReducer>
 const persistedReducer = persistReducer(persistConfig, rootReducer)

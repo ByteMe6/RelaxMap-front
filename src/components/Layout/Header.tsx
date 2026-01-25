@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import Container from "../Container/Container";
 import styles from "./Header.module.scss";
 import "normalize.css";
@@ -73,8 +73,8 @@ function Header() {
             </nav>
 
             <div className={styles.authBox} data-aos="fade-up">
-              <button className={styles.loginBtn}>Вхід</button>
-              <button className={styles.regBtn}>Регістрація</button>
+              <Link to="/auth/login" className={styles.loginBtn}>Вхід</Link>
+              <Link to="/auth/register" className={styles.regBtn}>Регістрація</Link>
             </div>
 
             <button
