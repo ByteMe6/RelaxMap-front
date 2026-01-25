@@ -1,0 +1,68 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+.advantages {
+    padding: 60px 0;
+    font-family: "Montserrat", sans-serif;
+    background-color: #fffaf7;
+
+    &__title {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 40px;
+        color: #1b4332;
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+
+        @media (max-width: 768px) {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+.advantage-card {
+    background-color: #ffede6;
+    padding: 30px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: translateY(-5px);
+    }
+
+    &__icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+
+        svg {
+            width: 40px;
+            height: 40px;
+            color: #000;
+        }
+    }
+
+    &__title {
+        font-size: 20px;
+        font-weight: 700;
+        margin: 0;
+        color: #333;
+    }
+
+    &__text {
+        font-size: 14px;
+        line-height: 1.5;
+        color: #555;
+        margin: 0;
+    }
+}
