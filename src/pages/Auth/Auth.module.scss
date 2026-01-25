@@ -1,7 +1,7 @@
-// @import url("./Scss/_Colors.scss");
+@use "../../Scss/Colors" as *;
 
 .loginForm {
-  background-color: #fff2ec;
+  background-color: $bg-primary;
   // color: red;
   width: 100%;
 }
@@ -172,4 +172,13 @@
       }
     }
   }
+}
+
+
+.copyright{
+  width: 100%;
+  text-align: center;
+  // height: 100%;
+  position: absolute;
+  bottom: 10px;
 }
