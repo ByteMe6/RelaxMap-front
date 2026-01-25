@@ -8,7 +8,7 @@ import LocationFormPage from "./pages/LocationFormPage/LocationFormPage";
 import EditLocation from "./pages/EditLocation/EditLocation";
 import RegisterPage from "./pages/Auth/RegisterPage/RegisterPage";
 import LoginPage from "./pages/Auth/Login/LoginPage";
-import "./index.css"
+import "./index.css";
 
 function App() {
   return (
@@ -16,14 +16,22 @@ function App() {
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/locations" element={<LocationsPage />} />
-        <Route path="/locations/location" element={<LocationDeteilsPage />} /> {/* add id route*/}
+        <Route
+          path="/locations/location"
+          element={<LocationDeteilsPage />}
+        />{" "}
+        {/* add id route*/}
         <Route path="/profile" element={<ProfilePage />} /> {/* add id route*/}
-        <Route path="/locations/add" element={<LocationFormPage />} /> 
-        <Route path="/locations/location/edit" element={<EditLocation />} /> {/* add id route*/}
-        <Route path="/auth/register" element={<RegisterPage />} /> 
-        <Route path="/auth/login" element={<LoginPage />} /> 
-
+        <Route path="/locations/add" element={<LocationFormPage />} />
+        <Route
+          path="/locations/location/edit"
+          element={<EditLocation />}
+        />{" "}
+        {/* add id route*/}
       </Route>
+
+      <Route path="/auth/register" element={<RegisterPage />} />
+      <Route path="/auth/login" element={<LoginPage />} />
     </Routes>
   );
 }

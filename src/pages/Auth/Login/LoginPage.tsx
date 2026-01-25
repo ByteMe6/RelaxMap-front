@@ -3,12 +3,15 @@ import LoginForm from "./LoginForm";
 import styles from "../Auth.module.scss";
 // import { Link } from "react-router-dom";
 import AuthNav from "../AuthNav";
+import Header from "../../../components/Layout/Header";
 
 export default function LoginPage() {
   return (
     <div className={styles.loginForm}>
+      <Header />
+
       <Container isLogin>
-        <AuthNav/>
+        <AuthNav />
 
         <div className={styles.loginFormContent}>
           <h1 className={styles.heading}>Вхід</h1>

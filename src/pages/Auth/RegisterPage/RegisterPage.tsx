@@ -1,11 +1,14 @@
 import Container from "../../../components/Container/Container";
+import Header from "../../../components/Layout/Header";
 import styles from "../Auth.module.scss";
 import AuthNav from "../AuthNav";
 import RegistrationForm from "./RegistrationForm";
 
+
 export default function LoginPage() {
   return (
     <div className={styles.loginForm}>
+      <Header/>
       <Container isLogin>
         <AuthNav />
 
