@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import styles from "./Auth.module.scss";
-import Container from "../../components/Container/Container";
 
 export default function AuthNav() {
   return (
