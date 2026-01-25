@@ -1,5 +1,3 @@
-function ProfilePlaceholder(){
-    return <></>
+export default function ProfilePlaceholder() {
+  return <h2>Профіль не знайдено</h2>;
 }
-
-export default ProfilePlaceholder;

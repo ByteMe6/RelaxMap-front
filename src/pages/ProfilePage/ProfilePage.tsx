@@ -1,12 +1,18 @@
+import { useParams } from "react-router-dom";
+import Container from "../../components/Container/Container";
 import ProfileInfo from "./ProfileInfo";
 import ProfilePlaceholder from "./ProfilePlaceholder";
 
-function ProfilePage() {
+export default function ProfilePage() {
+  const { mail } = useParams<{ mail: string }>();
+
+  if (!mail) {
+    return <ProfilePlaceholder />;
+  }
+
   return (
-    <>
-      <ProfileInfo />
-      <ProfilePlaceholder/>
-    </>
+    <Container>
+      <ProfileInfo email={decodeURIComponent(mail)} />
+    </Container>
   );
 }
-export default ProfilePage;

@@ -21,7 +21,7 @@ function App() {
           element={<LocationDeteilsPage />}
         />{" "}
         {/* add id route*/}
-        <Route path="/profile" element={<ProfilePage />} /> {/* add id route*/}
+  <Route path="/profile/:mail" element={<ProfilePage />} />
         <Route path="/locations/add" element={<LocationFormPage />} />
         <Route
           path="/locations/location/edit"

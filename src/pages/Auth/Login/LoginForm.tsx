@@ -1,58 +1,30 @@
+import { Formik, Form, Field } from "formik";
 import Container from "../../../components/Container/Container";
 import styles from "../Auth.module.scss";
-import "normalize.css";
-import { Formik, Form, Field } from "formik";
-import axios from "axios";
-import { host } from "../../../backendHost"
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hook";
+import { loginUser } from "../../../redux/thunk/authThunk";
 
 export default function LoginForm() {
-  function loginUser(mail: string, password: string) {
-    console.log(mail, password);
-    let refreshToken: string;
-    let accessToken: string = "";
-    const post = axios.post(`${host}/auth/login`, {
-      email: mail,
-      password: password,
-    });
-    post.then((promise) => {
-      refreshToken = promise.data.refresh;
-      accessToken = promise.data.access;
-      localStorage.setItem("refreshToken", refreshToken);
-      localStorage.setItem("accesToken", accessToken);
-      localStorage.setItem("email", mail)
-      localStorage.setItem("password", password)
-    });
-    return post;
-  }
+  const dispatch = useAppDispatch();
+  const { loading, error } = useAppSelector((s) => s.auth);
+
   return (
     <Container>
       <Formik
-        initialValues={{ mail: "", password: "" }}
-        onSubmit={(v) => (
-          loginUser(v.mail, v.password)
-        )}
+        initialValues={{ email: "", password: "" }}
+        onSubmit={(values) => dispatch(loginUser(values))}
       >
         {() => (
           <Form className={styles.loginFormContent}>
-            <label
-              htmlFor="mail"
-              className={`${styles.labelField} ${styles.leftText}`}
-            >
-              Пошта*
-            </label>
+            <label htmlFor="email">Пошта*</label>
             <Field
-              id="mail"
-              name="mail"
+              id="email"
+              name="email"
               placeholder="example@example.com"
               className={styles.inputField}
             />
 
-            <label
-              htmlFor="password"
-              className={`${styles.labelField} ${styles.leftText}`}
-            >
-              Пороль*
-            </label>
+            <label htmlFor="password">Пароль*</label>
             <Field
               id="password"
               type="password"
@@ -61,14 +33,11 @@ export default function LoginForm() {
               className={styles.inputField}
             />
 
-            <div className={styles.buttonWrapper}>
-              <button
-                type="submit"
-                className={`${styles.btn} ${styles["btn--submit"]}`}
-              >
-                Увійти
-              </button>
-            </div>
+            {error && <p className={styles.error}>{error}</p>}
+
+            <button type="submit" className={styles.btn} disabled={loading}>
+              {loading ? "Завантаження..." : "Увійти"}
+            </button>
           </Form>
         )}
       </Formik>
