@@ -11,7 +11,6 @@ export default function LoginPage() {
 
         <div className={styles.loginFormContent}>
           <h1 className={styles.heading}>Реєстарція</h1>
-
           <RegistrationForm />
         </div>
       </Container>

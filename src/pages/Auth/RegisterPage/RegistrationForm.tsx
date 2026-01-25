@@ -2,13 +2,32 @@ import Container from "../../../components/Container/Container";
 import styles from "../Auth.module.scss";
 import "normalize.css";
 import { Formik, Form, Field } from "formik";
+import axios from "axios";
 
 export default function RegistrationForm() {
+
+    function registerUser(mail: string, name: string, password: string){
+        console.log(mail, name, password)
+        let refreshToken: string;
+        let accessToken: string = "";
+        const post = axios.post("http://localhost:8080/auth/register", {"name": name,"email": mail, "password": password});
+        post.then((promise)=>{
+            // console.log(promise.data)
+            refreshToken = promise.data.refresh
+            accessToken = promise.data.access
+            localStorage.setItem("refreshToken", refreshToken)
+            localStorage.setItem("accesToken", accessToken)
+        })
+        // localStorage.setItem(post);
+        return post;
+
+    }
+
   return (
     <Container>
       <Formik
-        initialValues={{ mail: "", password: "" }} // <-- добавили mail и password
-        onSubmit={(values) => console.log(values)}
+        initialValues={{ mail: "", password: "", name: "" }}
+        onSubmit={(values) => registerUser(values.mail, values.name, values.password)}
       >
         {() => (
           <Form className={styles.loginFormContent}>
