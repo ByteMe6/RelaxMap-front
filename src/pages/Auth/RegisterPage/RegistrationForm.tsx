@@ -3,14 +3,15 @@ import styles from "../Auth.module.scss";
 import "normalize.css";
 import { Formik, Form, Field } from "formik";
 import axios from "axios";
+import { host } from "../../../backendHost"
+
 
 export default function RegistrationForm() {
 
     function registerUser(mail: string, name: string, password: string){
-        console.log(mail, name, password)
         let refreshToken: string;
         let accessToken: string = "";
-        const post = axios.post("http://localhost:8080/auth/register", {"name": name,"email": mail, "password": password});
+        const post = axios.post(`${host}/auth/register`, {"name": name,"email": mail, "password": password});
         post.then((promise)=>{
             // console.log(promise.data)
             refreshToken = promise.data.refresh

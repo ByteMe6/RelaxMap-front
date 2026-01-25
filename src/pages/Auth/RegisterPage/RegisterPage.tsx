@@ -5,7 +5,7 @@ import AuthNav from "../AuthNav";
 import RegistrationForm from "./RegistrationForm";
 
 
-export default function LoginPage() {
+export default function RegisterPage() {
   return (
     <div className={styles.loginForm}>
       <Header/>
