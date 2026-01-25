@@ -1,9 +1,8 @@
+
 import AdvantagesBlock from "./AdvantagesBlock";
 import HeroBlock from "./HeroBlock";
-import LocationCard from "./LocationCard";
 import PopularLocationsBlock from "./PopularLocationsBlock";
 import ReviewsBlock from "./ReviewsBlock";
-
 
 function HomePage() {
   return (
@@ -11,10 +10,10 @@ function HomePage() {
       <HeroBlock />
       <AdvantagesBlock />
       <PopularLocationsBlock />
-      <LocationCard />
-      <ReviewsBlock/>
+      <ReviewsBlock />
     </>
   );
 }
+
 
 export default HomePage;

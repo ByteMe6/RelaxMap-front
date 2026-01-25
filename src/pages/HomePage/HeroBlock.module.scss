@@ -1,0 +1,113 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+.hero {
+    position: relative;
+    isolation: isolate;
+    width: 100%;
+    min-height: 750px;
+    padding-right: 280px;
+    background-image: url("./img/background.jpg");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    color: #fff;
+    font-family: "Montserrat", sans-serif;
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: -1;
+    }
+}
+
+.hero__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.hero__title {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+}
+
+.hero__text {
+    font-size: 18px;
+    max-width: 600px;
+    margin: 0;
+}
+
+.hero__search-box {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 8px;
+    max-width: 500px;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+}
+
+.hero__search-input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 16px;
+    color: #333;
+
+    &::placeholder {
+        color: #777;
+    }
+}
+
+.hero__search-btn {
+    flex-shrink: 0;
+    padding: 10px 24px;
+    background-color: #cc6534;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+        background-color: #b6623c;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        min-height: 500px;
+    }
+
+    .hero__title {
+        font-size: 32px;
+    }
+
+    .hero__search-box {
+        flex-direction: column;
+        background: transparent;
+        gap: 10px;
+    }
+
+    .hero__search-input {
+        width: 100%;
+        background: #fff;
+        border-radius: 8px;
+    }
+
+    .hero__search-btn {
+        width: 100%;
+    }
+}
