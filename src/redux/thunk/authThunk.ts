@@ -7,7 +7,7 @@ import { authStart, authSuccess, authFailure } from "../slice/authSlice";
 interface AuthPayload {
   email: string;
   password: string;
-  name?: string; // только для регистрации
+  name?: string;
 }
 
 // ---------------- LOGIN ----------------
