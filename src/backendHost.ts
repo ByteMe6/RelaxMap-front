@@ -1,1 +1,1 @@
-export const host: string = "http://localhost:8080"
+export const host: string = "https://relaxmap.hellper.dev"
