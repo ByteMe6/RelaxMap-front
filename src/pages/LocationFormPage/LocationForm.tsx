@@ -6,6 +6,7 @@ import { searchLocation } from "../../redux/thunk/thunkLocationMap";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import type { LatLngExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { postNewLocation } from "../../redux/thunk/thunkLocation";
 export default function LocationForm() {
     const dispatch = useAppDispatch()
     const fileRef = useRef<HTMLInputElement>(null)
@@ -29,24 +30,26 @@ export default function LocationForm() {
             });
     };
     return (
-        <Formik initialValues={{ name: "", type: "", region: "", description: "", image: null as File | null, location: "" }} onSubmit={(values) => console.log(values)}>
+        <Formik initialValues={{ name: "", placeType: "", region: "", description: "", imageName: null as File | null, location: "" }} onSubmit={(values) => {
+            dispatch(postNewLocation({name:values.name, placeType:values.placeType, region:values.region ,description:values.description, imageName:values.imageName}))
+        }}>
             {({ setFieldValue, values }) => (
                 <Form className={styles.containerFormLocation}>
-                    <label htmlFor="image" className={styles.labelLocation}>Обкладинка</label>
+                    <label htmlFor="imageName" className={styles.labelLocation}>Обкладинка</label>
                     <input type="file" accept="image/*" ref={fileRef} onChange={(e) => {
                         const file = e.currentTarget.files?.[0] || null
-                        setFieldValue("image", file)
-                    }} style={{ display: "none" }} id="image" />
+                        setFieldValue("imageName", file)
+                    }} style={{ display: "none" }} id="imageName" />
                     <label className={`${styles.photoInput} ${styles.photoInputLarge}`} >
-                        {values.image && (
-                            <img src={URL.createObjectURL(values.image)} className={styles.imageLocation} />
+                        {values.imageName && (
+                            <img src={URL.createObjectURL(values.imageName)} className={styles.imageLocation} />
                         )}
                     </label>
                     <button onClick={() => fileRef.current?.click()} className={styles.btnDownload} type="button">Завантажити фото</button>
                     <label htmlFor="name" className={styles.labelLocation}>Назва місця</label>
                     <Field name="name" placeholder="Введіть назву місця" className={styles.inputLocation} />
-                    <label htmlFor="type" className={styles.labelLocation}>Тип місця</label>
-                    <Field name="type" placeholder="Оберіть тип місця" className={styles.inputLocation} />
+                    <label htmlFor="placeType" className={styles.labelLocation}>Тип місця</label>
+                    <Field name="placeType" placeholder="Оберіть тип місця" className={styles.inputLocation} />
                     <label htmlFor="region" className={styles.labelLocation}>Регіон</label>
                     <Field name="region" placeholder="Оберіть регіон" className={styles.inputLocation} />
                     <label htmlFor="description" className={styles.labelLocation}>Детальний опис</label>
