@@ -4,6 +4,8 @@ Relax map – проэкт чтобы делиться вашими любимы
 [Md on russian](./README.ru.md) <br/>
 [Md on english](./README.md)
 
+### [Деплой](https://byteme6.github.io/RelaxMap-front/)
+
 ## Интсрументы
 **Яп:** *typesript* <br/>
 **Фреймвор:** *React* <br/>
