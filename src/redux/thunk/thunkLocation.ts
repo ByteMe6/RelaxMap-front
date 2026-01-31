@@ -4,7 +4,7 @@ import { host } from "../../backendHost";
 import type { RootState } from "../store";
 import type { LocationInfo } from "../slice/locationSlice";
 interface NewLocation {
-    imageName: File | null;
+    file: File | null;
     name: string;
     placeType: string;
     region: string | null;
@@ -31,8 +31,8 @@ export const postNewLocation = createAsyncThunk<
         formData.append("placeType", newLocation.placeType);
         formData.append("region", newLocation.region ?? "");
         formData.append("description", newLocation.description);
-        if (newLocation.imageName) {
-            formData.append("imageName", newLocation.imageName);
+        if (newLocation.file) {
+            formData.append("file", newLocation.file);
         }
         try {
             const response = await axios.post(`${host}/places`, formData, {
@@ -41,6 +41,7 @@ export const postNewLocation = createAsyncThunk<
                 },
             });
             const data: LocationInfo = await response.data;
+            console.log(data)
             return data;
         } catch (error: any) {
             if (error.response?.status === 401) {

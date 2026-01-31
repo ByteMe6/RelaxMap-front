@@ -19,6 +19,7 @@ export default function LocationForm() {
     const cities = useAppSelector((state) => state.location.listCity) || []
     const regions = useAppSelector((state) => state.location.listRegion) || []
     const optionsLocation: string[] = ["місто", "село", "смт"]
+    const optionRegion:string[] = ["Lviv"]
     const info = useAppSelector(state => state.location.info)
     console.log(info)
     const handleCityInput = (e: React.ChangeEvent<HTMLInputElement>, setFieldValue: any) => {
@@ -58,19 +59,19 @@ export default function LocationForm() {
             });
     };
     return (
-        <Formik initialValues={{ name: "", placeType: "", region: "", description: "", imageName: null as File | null, location: "" }} onSubmit={(values) => {
-            dispatch(postNewLocation({ name: values.name, placeType: values.placeType, region: values.region, description: values.description, imageName: values.imageName }))
+        <Formik initialValues={{ name: "", placeType: "", region: "", description: "", file: null as File | null, location: "" }} onSubmit={(values) => {
+            dispatch(postNewLocation({ name: values.name, placeType: values.placeType, region: values.region, description: values.description, file: values.file }))
         }}>
             {({ setFieldValue, values }) => (
                 <Form className={styles.containerFormLocation}>
-                    <label htmlFor="imageName" className={styles.labelLocation}>Обкладинка</label>
+                    <label htmlFor="file" className={styles.labelLocation}>Обкладинка</label>
                     <input type="file" accept="image/*" ref={fileRef} onChange={(e) => {
                         const file = e.currentTarget.files?.[0] || null
-                        setFieldValue("imageName", file)
-                    }} style={{ display: "none" }} id="imageName" />
+                        setFieldValue("file", file)
+                    }} style={{ display: "none" }} id="file" />
                     <label className={`${styles.photoInput} ${styles.photoInputLarge}`} >
-                        {values.imageName && (
-                            <img src={URL.createObjectURL(values.imageName)} className={styles.imageLocation} />
+                        {values.file && (
+                            <img src={URL.createObjectURL(values.file)} className={styles.imageLocation} />
                         )}
                     </label>
                     <button onClick={() => fileRef.current?.click()} className={styles.btnDownload} type="button">Завантажити фото</button>
@@ -95,10 +96,8 @@ export default function LocationForm() {
                     <label htmlFor="region" className={styles.labelLocation}>Регіон</label>
                     <Field as="select" name="region" className={styles.inputLocation} >
                         <option>Оберіть регіон</option>
-                        {regions.map((region) => (
-                            <option key={region.id} value={region.name}>
-                                {region.name}, {region.countryCode}
-                            </option>
+                      {optionsLocation.map((location, index) => (
+                            <option key={index}>{location}</option>
                         ))}
                     </Field>
                     <label htmlFor="description" className={styles.labelLocation}>Детальний опис</label>
