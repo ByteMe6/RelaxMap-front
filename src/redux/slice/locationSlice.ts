@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { searchLocation } from "../thunk/thunkLocationMap";
 import { postNewLocation } from "../thunk/thunkLocation";
+import { searchCities, searchRegions } from "../thunk/thunkTypeLocation";
 export interface LocationData {
     lat: number | null,
     lng: number | null,
@@ -13,10 +14,13 @@ export interface LocationInfo {
     region: null | string,
     description: string,
 }
+
 interface LocationState {
     loading: boolean
     info: LocationInfo
-    location: LocationData | null
+    location: LocationData | null,
+    listCity: any[],
+    listRegion:any[]
 }
 const initialState: LocationState = {
     loading: false,
@@ -27,7 +31,8 @@ const initialState: LocationState = {
         region: null,
         description: "",
     },
-
+    listCity:[],
+    listRegion:[],
     location: null
 }
 console.log(initialState.info)
@@ -56,9 +61,30 @@ const locationSlice = createSlice({
             .addCase(postNewLocation.fulfilled, (state, action) => {
             state.loading = false
             state.info = action.payload
-            console.log(state.info)
+            console.log("aa",state.info)
             })
             .addCase(postNewLocation.rejected, (state) => {
+                state.loading = false
+            })
+           .addCase(searchCities.pending, (state) => {
+            state.loading = true
+           })
+           .addCase(searchCities.fulfilled, (state,action) => {
+            state.loading = false
+            state.listCity = action.payload
+           })
+           .addCase(searchCities.rejected, (state) => {
+            state.loading = false
+           })
+           .addCase(searchRegions.pending, (state) => {
+            state.loading = true
+           })
+           .addCase(searchRegions.fulfilled, (state,action) => {
+            state.loading = false
+            state.listRegion = action.payload
+            console.log(state.listRegion)
+           })
+            .addCase(searchRegions.rejected, (state) => {
                 state.loading = false
             })
     },
