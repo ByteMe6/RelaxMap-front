@@ -8,6 +8,7 @@ import type { LatLngExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { postNewLocation } from "../../redux/thunk/thunkLocation";
 import { searchCities, searchRegions } from "../../redux/thunk/thunkTypeLocation";
+import { resetLocation } from "../../redux/slice/locationSlice";
 export default function LocationForm() {
     const dispatch = useAppDispatch()
     const fileRef = useRef<HTMLInputElement>(null)
@@ -17,21 +18,45 @@ export default function LocationForm() {
     const [selectedCountryCode, setSelectedCountryCode] = useState<string | null>(null)
     const [showRegionSuggestions, setShowRegionSuggestions] = useState(false)
     const cities = useAppSelector((state) => state.location.listCity) || []
-    const regions = useAppSelector((state) => state.location.listRegion) || []
+    const regions = useAppSelector((state) => state.location.listRegion) || [
+        "Вінницька область",
+        "Волинська область",
+        "Дніпропетровська область",
+        "Донецька область",
+        "Житомирська область",
+        "Закарпатська область",
+        "Запорізька область",
+        "Івано-Франківська область",
+        "Київська область",
+        "Кіровоградська область",
+        "Луганська область",
+        "Львівська область",
+        "Миколаївська область",
+        "Одеська область",
+        "Полтавська область",
+        "Рівненська область",
+        "Сумська область",
+        "Тернопільська область",
+        "Харківська область",
+        "Херсонська область",
+        "Хмельницька область",
+        "Черкаська область",
+        "Чернівецька область",
+        "Чернігівська область"
+    ]
     const optionsLocation: string[] = ["місто", "село", "смт"]
-    const optionRegion:string[] = ["Lviv"]
     const info = useAppSelector(state => state.location.info)
     console.log(info)
     const handleCityInput = (e: React.ChangeEvent<HTMLInputElement>, setFieldValue: any) => {
         const value = e.target.value
         setQuery(value)
-        setFieldValue("location", value)
+        setFieldValue("name", value)
         if (value.length >= 1) {
             dispatch(searchCities(value))
             setShowCitySuggestions(true)
         }
     }
-    const handleCitySelect = (city:any, setFieldValue:any) => {
+    const handleCitySelect = (city: any, setFieldValue: any) => {
         setFieldValue("name", city.name)
         setQuery(city.name)
         setShowCitySuggestions(false)
@@ -62,7 +87,7 @@ export default function LocationForm() {
         <Formik initialValues={{ name: "", placeType: "", region: "", description: "", file: null as File | null, location: "" }} onSubmit={(values) => {
             dispatch(postNewLocation({ name: values.name, placeType: values.placeType, region: values.region, description: values.description, file: values.file }))
         }}>
-            {({ setFieldValue, values }) => (
+            {({ setFieldValue, values, resetForm }) => (
                 <Form className={styles.containerFormLocation}>
                     <label htmlFor="file" className={styles.labelLocation}>Обкладинка</label>
                     <input type="file" accept="image/*" ref={fileRef} onChange={(e) => {
@@ -78,26 +103,26 @@ export default function LocationForm() {
                     <label htmlFor="name" className={styles.labelLocation} >Назва місця</label>
                     <Field name="name" value={values.name} placeholder="Введіть назву місця" className={styles.inputLocation} onChange={(e: any) => handleCityInput(e, setFieldValue)} />
                     {showCitySuggestions && cities.length > 0 && (
-                        <ul>
+                        <ul className={styles.suggestionsList}>
                             {cities.map((city) => (
-                                <li key={city.id} onClick={() => handleCitySelect(city, setFieldValue)}>
+                                <li key={city.id} onClick={() => handleCitySelect(city, setFieldValue)} className={styles.suggestionsItemList}>
                                     {city.name}, {city.country}
                                 </li>
                             ))}
                         </ul>
                     )}
                     <label htmlFor="placeType" className={styles.labelLocation}>Тип місця</label>
-                    <Field as="select" name="placeType" className={styles.inputLocation} >
+                    <Field as="select" name="placeType" className={`${styles.inputLocation} ${styles.inputLocationSelect}`} >
                         <option>Оберіть тип місця</option>
                         {optionsLocation.map((location, index) => (
                             <option key={index}>{location}</option>
                         ))}
                     </Field>
                     <label htmlFor="region" className={styles.labelLocation}>Регіон</label>
-                    <Field as="select" name="region" className={styles.inputLocation} >
-                        <option>Оберіть регіон</option>
-                      {optionsLocation.map((location, index) => (
-                            <option key={index}>{location}</option>
+                    <Field as="select" name="region" className={`${styles.inputLocation} ${styles.inputLocationSelect}`} >
+                        <option value="">Оберіть регіон</option>
+                        {regions.map((location, index) => (
+                            <option key={index} value={location}>{location}</option>
                         ))}
                     </Field>
                     <label htmlFor="description" className={styles.labelLocation}>Детальний опис</label>
@@ -121,7 +146,10 @@ export default function LocationForm() {
                         </div>
                     )}
                     <div className={styles.wrapperButton}>
-                        <button className={styles.btnLocation} type="button">Відмінити</button>
+                        <button className={styles.btnLocation} type="button" onClick={() => {
+                            resetForm()
+                            dispatch(resetLocation())
+                            }}>Відмінити</button>
                         <button className={`${styles.btnLocation} ${styles['btnLocation--post']}`} type="submit">Опублікувати</button>
                     </div>
                 </Form>

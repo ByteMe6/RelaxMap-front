@@ -42,6 +42,19 @@ const locationSlice = createSlice({
     reducers: {
         setLocationData: (state, action: PayloadAction<LocationInfo>) => {
             state.info = action.payload
+        },
+        resetLocation:(state) => {
+            state.info = {
+                name:"",
+                image:"",
+                placeType:null,
+                region:null,
+                description:""
+            }
+            state.location = null
+            state.listCity = []
+            state.listRegion = []
+            state.loading = false
         }
     }, extraReducers(builder) {
         builder
@@ -89,5 +102,5 @@ const locationSlice = createSlice({
             })
     },
 })
-export const {setLocationData} = locationSlice.actions
+export const {setLocationData, resetLocation} = locationSlice.actions
 export default locationSlice.reducer
