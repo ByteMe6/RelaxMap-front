@@ -5,7 +5,6 @@
     justify-content: center;
     width: 375px;
     margin: auto;
-    border: 1px solid red;
     padding-bottom: 40px;
 }
 
@@ -27,6 +26,8 @@
     width: 335px;
     height: 223px;
     background-image: url("../../../public/assets/placeholderImage.png");
+    background-repeat: no-repeat;
+    resize:none;
 }
 
 .btnDownload {
@@ -83,9 +84,99 @@
         background: #CC6534;
     }
 }
-.wraperButton {
+.wrapperButton {
     margin-top:30px;
     gap:20px;
     display:flex;
     flex-direction: column;
+}
+.btnSearch {
+    width:335px;
+    height:48px;
+    font-family: "Montserrat";
+    font-weight: 500;
+    border: 1px solid  #00000026;
+    color:#4C2613;
+    border-radius: 8px;
+}
+.imageLocation {
+    width:335px;
+}
+.btnLocation:hover {
+    border: 1px solid #FFE5D9;
+}
+.mapLocation {
+    width:335px;
+    height:188px;
+}
+.wrapperLocation {
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+    align-items: center;
+}
+@media(min-width:768px) {
+.containerNewLocation {
+    width:768px;
+}
+.photoInputLarge {
+    width:704px;
+    height:468px;
+    background-image: url("../../../public/assets/placeholderImageTablet.png");
+}
+
+.wrapperLocation {
+    flex-direction: row;
+}
+.btnSearch {
+    width:199px;
+}
+.inputLocation {
+    width:704px;
+    &.search {
+        width:421px;
+    }
+}
+.inputLocationArea {
+    width:704px;
+}
+
+.wrapperButton {
+    flex-direction: row;
+}
+.btnLocation {
+    width:203px;
+}
+.mapLocation {
+    width:704px;
+    height:395px;
+}
+.imageLocation{
+    width:704px;
+    height:468px;
+}
+}
+@media(min-width:1440px){
+    .containerNewLocation {
+        width:1240px;
+    }
+    .photoInputLarge {
+        background-image: url("../../../public/assets/placeholderImageDesktop.png");
+        width:1091px;
+        height: 726px;
+    }
+    .inputLocation {
+        width: 1091px;
+        height: 43px;
+    }
+    .inputLocationArea {
+        width:1091px;
+    }
+    .btnDownload {
+        width:215px;
+    }
+    .imageLocation{
+        width: 1091px;
+        height: 726px;
+    }
 }
