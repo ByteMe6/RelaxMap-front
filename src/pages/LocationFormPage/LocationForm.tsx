@@ -19,6 +19,8 @@ export default function LocationForm() {
     const cities = useAppSelector((state) => state.location.listCity) || []
     const regions = useAppSelector((state) => state.location.listRegion) || []
     const optionsLocation: string[] = ["місто", "село", "смт"]
+    const info = useAppSelector(state => state.location.info)
+    console.log(info)
     const handleCityInput = (e: React.ChangeEvent<HTMLInputElement>, setFieldValue: any) => {
         const value = e.target.value
         setQuery(value)
@@ -104,7 +106,7 @@ export default function LocationForm() {
                     <label htmlFor="location" className={styles.labelLocation}>Оберіть розташування</label>
                     <div className={styles.wrapperLocation}>
                         <Field name="location" placeholder="Введіть назву місця" className={`${styles.inputLocation} ${styles.search}`} />
-                        <button className={styles.btnSearch} onClick={() => handleSearchLocation(values.location, setFieldValue)}>Пошук</button>
+                        <button type="button" className={styles.btnSearch} onClick={() => handleSearchLocation(values.location, setFieldValue)}>Пошук</button>
                     </div>
                     {coords && (
                         <div className={styles.mapLocation}>
