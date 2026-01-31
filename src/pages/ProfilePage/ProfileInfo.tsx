@@ -19,17 +19,15 @@ export default function ProfileInfo({
   const [loadingName, setLoadingName] = useState(false);
   const [loadingPass, setLoadingPass] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
   const handleNameChange = async () => {
-    if (!newName.trim() || !onChangeName) return;
+    if (!newName.trim()) return;
+    if (!onChangeName) return;
     setLoadingName(true);
     setError("");
-    setSuccess("");
     try {
       await onChangeName(newName);
       setNewName("");
-      setSuccess("Name updated successfully!");
     } catch (e: any) {
       setError(e?.response?.data?.message || "Error changing name");
     } finally {
@@ -41,12 +39,10 @@ export default function ProfileInfo({
     if (!onChangePassword) return;
     setLoadingPass(true);
     setError("");
-    setSuccess("");
     try {
       await onChangePassword(oldPass, newPass);
       setOldPass("");
       setNewPass("");
-      setSuccess("Password updated successfully!");
     } catch (e: any) {
       setError(e?.response?.data?.message || "Error changing password");
     } finally {
@@ -54,70 +50,145 @@ export default function ProfileInfo({
     }
   };
 
-  const inputStyles = "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all mb-3";
-  const btnStyles = "w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors";
-
   return (
-    <div className="max-w-md mx-auto mt-10 p-8 bg-white rounded-2xl shadow-xl border border-gray-100">
-      <div className="flex items-center gap-4 mb-6">
-        <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-xl">
-          {userName.charAt(0).toUpperCase()}
-        </div>
-        <div>
-          <h2 className="text-2xl font-bold text-gray-800 tracking-tight">Profile Settings</h2>
-          <p className="text-gray-500 text-sm">{email}</p>
-        </div>
+    <div style={styles.container}>
+      <h2 style={styles.title}>Profile Settings</h2>
+      
+      <div style={styles.infoBox}>
+        <p style={styles.infoText}><strong>Email:</strong> {email}</p>
+        <p style={styles.infoText}><strong>Current Name:</strong> {userName}</p>
       </div>
 
-      <div className="mb-4">
-        <p className="text-sm font-medium text-gray-700">Current Name: <span className="text-gray-900">{userName}</span></p>
-      </div>
-
-      {error && <div className="p-3 mb-4 text-sm text-red-600 bg-red-50 rounded-lg border border-red-100">{error}</div>}
-      {success && <div className="p-3 mb-4 text-sm text-green-600 bg-green-50 rounded-lg border border-green-100">{success}</div>}
+      {error && <div style={styles.errorBadge}>{error}</div>}
 
       {onChangeName && (
-        <section className="mt-8 pt-6 border-t border-gray-100">
-          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Update Name</h3>
-          <input
-            type="text"
-            placeholder="Enter new name"
-            className={inputStyles}
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-          />
-          <button onClick={handleNameChange} disabled={loadingName || !newName} className={btnStyles}>
-            {loadingName ? "Saving..." : "Save Name"}
-          </button>
-        </section>
+        <div style={styles.section}>
+          <label style={styles.label}>Update Name</label>
+          <div style={styles.row}>
+            <input
+              style={styles.input}
+              type="text"
+              placeholder="Enter new name"
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+            />
+            <button 
+              style={{...styles.button, ...(loadingName || !newName ? styles.buttonDisabled : {})}} 
+              onClick={handleNameChange} 
+              disabled={loadingName || !newName}
+            >
+              {loadingName ? "Saving..." : "Update"}
+            </button>
+          </div>
+        </div>
       )}
 
       {onChangePassword && (
-        <section className="mt-8 pt-6 border-t border-gray-100">
-          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Security</h3>
+        <div style={styles.section}>
+          <label style={styles.label}>Security</label>
           <input
+            style={styles.input}
             type="password"
-            placeholder="Current password"
-            className={inputStyles}
+            placeholder="Current Password"
             value={oldPass}
             onChange={(e) => setOldPass(e.target.value)}
           />
           <input
+            style={{...styles.input, marginTop: '10px'}}
             type="password"
-            placeholder="New password"
-            className={inputStyles}
-            value={newPass}
+            placeholder="New Password"
+          value={newPass}
             onChange={(e) => setNewPass(e.target.value)}
           />
           <button
+            style={{...styles.button, marginTop: '15px', width: '100%', ...(loadingPass || !oldPass || !newPass ? styles.buttonDisabled : {})}}
             onClick={handlePasswordChange}
             disabled={loadingPass || !oldPass || !newPass}
-            className={btnStyles}
           >
-            {loadingPass ? "Updating..." : "Update Password"}
+            {loadingPass ? "Updating Password..." : "Change Password"}
           </button>
-        </section>
+        </div>
       )}
     </div>
   );
 }
+
+const styles = {
+  container: {
+    maxWidth: "420px",
+    margin: "40px auto",
+    padding: "30px",
+    borderRadius: "12px",
+    backgroundColor: "#ffffff",
+    boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  },
+  title: {
+    margin: "0 0 20px 0",
+    fontSize: "24px",
+    fontWeight: "700" as const,
+    color: "#1a1a1a",
+  },
+  infoBox: {
+    padding: "15px",
+    backgroundColor: "#f8f9fa",
+    borderRadius: "8px",
+    marginBottom: "25px",
+  },
+  infoText: {
+    margin: "5px 0",
+    fontSize: "14px",
+    color: "#4a4a4a",
+  },
+  section: {
+    marginTop: "25px",
+    display: "flex",
+    flexDirection: "column" as const,
+  },
+  label: {
+    fontSize: "13px",
+    fontWeight: "600" as const,
+    color: "#666",
+    marginBottom: "8px",
+    textTransform: "uppercase" as const,
+    letterSpacing: "0.5px",
+  },
+  row: {
+    display: "flex",
+    gap: "10px",
+  },
+  input: {
+    flex: 1,
+    padding: "10px 14px",
+    borderRadius: "6px",
+    border: "1px solid #ddd",
+    fontSize: "15px",
+    outline: "none",
+    transition: "border-color 0.2s",
+    // Focus effect handled via logic or CSS classes in real apps
+  },
+  button: {
+    padding: "10px 20px",
+    borderRadius: "6px",
+    border: "none",
+    backgroundColor: "#1a1a1a",
+    color: "white",
+    fontSize: "14px",
+    fontWeight: "600" as const,
+    cursor: "pointer",
+    transition: "all 0.2s",
+  },
+  buttonDisabled: {
+    backgroundColor: "#ccc",
+    cursor: "not-allowed",
+  },
+  errorBadge: {
+    padding: "10px",
+    backgroundColor: "#fff1f0",
+    border: "1px solid #ffa39e",
+    color: "#cf1322",
+    borderRadius: "6px",
+    fontSize: "14px",
+    marginBottom: "20px",
+  }
+};

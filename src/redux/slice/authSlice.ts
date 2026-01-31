@@ -26,8 +26,6 @@ const authSlice = createSlice({
       state.loading = true;
       state.error = null;
     },
-
-    // Успешный логин/регистрация
     authSuccess(
       state,
       action: PayloadAction<{ accessToken: string; refreshToken: string; email: string }>
@@ -39,13 +37,12 @@ const authSlice = createSlice({
       state.error = null;
     },
 
-    // Ошибка логина/регистрации
+
     authFailure(state, action: PayloadAction<string>) {
       state.loading = false;
       state.error = action.payload;
     },
 
-    // Выход
     logout(state) {
       state.accessToken = "";
       state.refreshToken = "";

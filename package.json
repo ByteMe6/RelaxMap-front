@@ -19,6 +19,7 @@
     "express": "^5.2.1",
     "formik": "^2.4.9",
     "leaflet": "^1.9.4",
+    "lucide-react": "^0.563.0",
     "mongoose": "^8.21.0",
     "normalize.css": "^8.0.1",
     "react": "^19.2.0",
