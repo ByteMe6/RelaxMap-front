@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Container from "../../components/Container/Container";
 import LocationCard from "./LocationCard";
@@ -29,6 +30,28 @@ function PopularLocationsBlock() {
     }
   ];
 
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const nextLocation = () => {
+    setCurrentIndex((prev) => (prev + 1) % locations.length);
+  };
+
+  const prevLocation = () => {
+    setCurrentIndex((prev) => (prev - 1 + locations.length) % locations.length);
+  };
+
   return (
     <section className={styles['popular-locations']}>
       <Container>
@@ -40,21 +63,30 @@ function PopularLocationsBlock() {
         </div>
 
         <div className={styles['popular-locations__grid']}>
-          {locations.map((loc, index) => (
-            <LocationCard
-              key={index}
-              {...loc}
-            />
-          ))}
+          {isMobile ? (
+            <LocationCard {...locations[currentIndex]} />
+          ) : (
+            locations.map((loc, index) => (
+              <LocationCard key={index} {...loc} />
+            ))
+          )}
         </div>
 
         <div className={styles['popular-locations__pagination']}>
-          <button aria-label="Previous" className={styles['popular-locations__pagination-btn']}>
+          <button
+            aria-label="Previous"
+            className={styles['popular-locations__pagination-btn']}
+            onClick={prevLocation}
+          >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
             </svg>
           </button>
-          <button aria-label="Next" className={styles['popular-locations__pagination-btn']}>
+          <button
+            aria-label="Next"
+            className={styles['popular-locations__pagination-btn']}
+            onClick={nextLocation}
+          >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
             </svg>
