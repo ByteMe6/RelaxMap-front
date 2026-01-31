@@ -9,6 +9,7 @@ import EditLocation from "./pages/EditLocation/EditLocation";
 import RegisterPage from "./pages/Auth/RegisterPage/RegisterPage";
 import LoginPage from "./pages/Auth/Login/LoginPage";
 import "./index.css";
+import NotFound from "./pages/notFound/NotFound";
 
 function App() {
     return (
@@ -32,6 +33,8 @@ function App() {
 
             <Route path="/auth/register" element={<RegisterPage/>}/>
             <Route path="/auth/login" element={<LoginPage/>}/>
+
+            <Route path="*" element={<NotFound/>} />
         </Routes>
     );
 }
