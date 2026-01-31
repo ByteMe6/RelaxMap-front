@@ -14,7 +14,6 @@ export default function LoginForm() {
     <Container>
       <Formik
         initialValues={{ email: "", password: "" }}
-        // onSubmit={(values) => dispatch(loginUser(values))}
         onSubmit={async (values) => {
           const resultAction = await dispatch(loginUser(values));
 

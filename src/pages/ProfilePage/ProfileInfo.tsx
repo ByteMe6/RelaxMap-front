@@ -165,7 +165,6 @@ const styles = {
     fontSize: "15px",
     outline: "none",
     transition: "border-color 0.2s",
-    // Focus effect handled via logic or CSS classes in real apps
   },
   button: {
     padding: "10px 20px",

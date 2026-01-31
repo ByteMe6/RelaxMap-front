@@ -1,8 +1,7 @@
-// src/redux/thunk/authThunk.ts
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { host } from "../../backendHost";
-import { authStart, authSuccess, authFailure } from "../slice/authSlice";
+import { authStart, authSuccess, authFailure, logout } from "../slice/authSlice";
 
 interface AuthPayload {
   email: string;
@@ -10,14 +9,18 @@ interface AuthPayload {
   name?: string;
 }
 
-// ---------------- LOGIN ----------------
+interface AuthResponse {
+  access: string;
+  refresh: string;
+}
+
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ email, password }: AuthPayload, { dispatch }) => {
     try {
       dispatch(authStart());
 
-      const response = await axios.post(`${host}/auth/login`, {
+      const response = await axios.post<AuthResponse>(`${host}/auth/login`, {
         email,
         password,
       });
@@ -33,7 +36,7 @@ export const loginUser = createAsyncThunk(
           accessToken: access,
           refreshToken: refresh,
           email,
-        })
+        }),
       );
 
       return response.data;
@@ -42,17 +45,16 @@ export const loginUser = createAsyncThunk(
       dispatch(authFailure(msg));
       throw err;
     }
-  }
+  },
 );
 
-// ---------------- REGISTER ----------------
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async ({ email, password, name }: AuthPayload, { dispatch }) => {
     try {
       dispatch(authStart());
 
-      const response = await axios.post(`${host}/auth/register`, {
+      const response = await axios.post<AuthResponse>(`${host}/auth/register`, {
         email,
         password,
         name,
@@ -69,7 +71,7 @@ export const registerUser = createAsyncThunk(
           accessToken: access,
           refreshToken: refresh,
           email,
-        })
+        }),
       );
 
       return response.data;
@@ -78,5 +80,12 @@ export const registerUser = createAsyncThunk(
       dispatch(authFailure(msg));
       throw err;
     }
-  }
+  },
 );
+
+export const logoutUser = createAsyncThunk("auth/logoutUser", async (_, { dispatch }) => {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+  localStorage.removeItem("email");
+  dispatch(logout());
+});

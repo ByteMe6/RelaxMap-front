@@ -1,7 +1,6 @@
 import Container from "../../../components/Container/Container";
 import LoginForm from "./LoginForm";
 import styles from "../Auth.module.scss";
-// import { Link } from "react-router-dom";
 import AuthNav from "../AuthNav";
 import Header from "../../../components/Layout/Header";
 
