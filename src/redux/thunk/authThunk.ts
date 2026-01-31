@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { host } from "../../backendHost";
 import { authStart, authSuccess, authFailure, logout } from "../slice/authSlice";
+import { getUserInfo } from "../../api/userClient";
 
 interface AuthPayload {
   email: string;
@@ -19,7 +20,7 @@ export const loginUser = createAsyncThunk(
   async ({ email, password }: AuthPayload, { dispatch }) => {
     try {
       dispatch(authStart());
-
+      
       const response = await axios.post<AuthResponse>(`${host}/auth/login`, {
         email,
         password,
@@ -31,13 +32,29 @@ export const loginUser = createAsyncThunk(
       localStorage.setItem("refreshToken", refresh);
       localStorage.setItem("email", email);
 
-      dispatch(
-        authSuccess({
-          accessToken: access,
-          refreshToken: refresh,
-          email,
-        }),
-      );
+      // Отримуємо інформацію про користувача
+      try {
+        const userInfo = await getUserInfo(email);
+        localStorage.setItem("userName", userInfo.name);
+        
+        dispatch(
+          authSuccess({
+            accessToken: access,
+            refreshToken: refresh,
+            email,
+            name: userInfo.name,
+          })
+        );
+      } catch (error) {
+        // Якщо не вдалося отримати ім'я, все одно логінимо
+        dispatch(
+          authSuccess({
+            accessToken: access,
+            refreshToken: refresh,
+            email,
+          })
+        );
+      }
 
       return response.data;
     } catch (err: any) {
@@ -45,7 +62,7 @@ export const loginUser = createAsyncThunk(
       dispatch(authFailure(msg));
       throw err;
     }
-  },
+  }
 );
 
 export const registerUser = createAsyncThunk(
@@ -53,7 +70,7 @@ export const registerUser = createAsyncThunk(
   async ({ email, password, name }: AuthPayload, { dispatch }) => {
     try {
       dispatch(authStart());
-
+      
       const response = await axios.post<AuthResponse>(`${host}/auth/register`, {
         email,
         password,
@@ -65,13 +82,18 @@ export const registerUser = createAsyncThunk(
       localStorage.setItem("accessToken", access);
       localStorage.setItem("refreshToken", refresh);
       localStorage.setItem("email", email);
+      
+      if (name) {
+        localStorage.setItem("userName", name);
+      }
 
       dispatch(
         authSuccess({
           accessToken: access,
           refreshToken: refresh,
           email,
-        }),
+          name: name || undefined,
+        })
       );
 
       return response.data;
@@ -80,12 +102,13 @@ export const registerUser = createAsyncThunk(
       dispatch(authFailure(msg));
       throw err;
     }
-  },
+  }
 );
 
 export const logoutUser = createAsyncThunk("auth/logoutUser", async (_, { dispatch }) => {
   localStorage.removeItem("accessToken");
   localStorage.removeItem("refreshToken");
   localStorage.removeItem("email");
+  localStorage.removeItem("userName");
   dispatch(logout());
 });

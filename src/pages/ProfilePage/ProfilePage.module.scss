@@ -1,7 +1,7 @@
 $bg-primary: #fff2ec;
 
 body{
-    background-color: $bg-primary;
+  background-color: $bg-primary;
 }
 
 .profilePage {
@@ -11,12 +11,12 @@ body{
   justify-content: center;
   align-items: flex-start;
   background: linear-gradient(
-      to top,
-      #ffe0cf 0,
-      #ffe0cf 200px,
-      transparent 200px
-    ),
-    $bg-primary;
+    to top,
+    #ffe0cf 0,
+    #ffe0cf 200px,
+    transparent 200px
+  ),
+  $bg-primary;
 }
 
 .card {
@@ -48,6 +48,13 @@ body{
   font-size: 20px;
   font-weight: 600;
   color: #222222;
+}
+
+.userEmail {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  color: #888888;
 }
 
 .status {
@@ -177,7 +184,6 @@ body{
 }
 
 /* popups */
-
 .popupOverlay {
   position: fixed;
   inset: 0;
@@ -289,7 +295,6 @@ body{
   }
 }
 
-
 .headerButtons {
   display: flex;
   gap: 8px;
@@ -309,7 +314,6 @@ body{
     transform: translateY(-1px);
   }
 }
-
 
 .headerButtons {
   display: flex;

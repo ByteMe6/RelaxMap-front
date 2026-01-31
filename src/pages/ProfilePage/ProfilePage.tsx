@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styles from "./ProfilePage.module.scss";
 import { getUserPlaces, type UserPlace } from "../../api/profileClient";
-import { useAppSelector } from "../../redux/hooks/hook";
+import { getUserInfo } from "../../api/userClient";
+import { useAppSelector, useAppDispatch } from "../../redux/hooks/hook";
 import Container from "../../components/Container/Container";
 import { changeUserName } from "../../api/userClient";
+import { updateUserName } from "../../redux/slice/authSlice";
 
 interface PasswordPopupProps {
   open: boolean;
@@ -58,11 +60,7 @@ function PasswordPopup({ open, onClose }: PasswordPopupProps) {
             />
           </label>
           <div className={styles.popupButtons}>
-            <button
-              type="button"
-              className={styles.popupCancel}
-              onClick={onClose}
-            >
+            <button type="button" className={styles.popupCancel} onClick={onClose}>
               Скасувати
             </button>
             <button type="submit" className={styles.popupSubmit}>
@@ -124,11 +122,7 @@ function EditPlacePopup({ open, place, onClose }: EditPlacePopupProps) {
             />
           </label>
           <div className={styles.popupButtons}>
-            <button
-              type="button"
-              className={styles.popupCancel}
-              onClick={onClose}
-            >
+            <button type="button" className={styles.popupCancel} onClick={onClose}>
               Скасувати
             </button>
             <button type="submit" className={styles.popupSubmit}>
@@ -169,7 +163,7 @@ function NamePopup({ open, currentName, onClose, onSaveLocal }: NamePopupProps) 
       onSaveLocal(value);
     } catch (err) {
       console.error(err);
-      setError("Не вдалося змінити ім’я");
+      setError("Не вдалося змінити ім'я");
     } finally {
       setLoading(false);
     }
@@ -178,10 +172,10 @@ function NamePopup({ open, currentName, onClose, onSaveLocal }: NamePopupProps) 
   return (
     <div className={styles.popupOverlay}>
       <div className={styles.popup}>
-        <h3 className={styles.popupTitle}>Змінити ім’я</h3>
+        <h3 className={styles.popupTitle}>Змінити ім'я</h3>
         <form onSubmit={handleSubmit} className={styles.popupForm}>
           <label className={styles.popupLabel}>
-            Нове ім’я
+            Нове ім'я
             <input
               type="text"
               className={styles.popupInput}
@@ -199,11 +193,7 @@ function NamePopup({ open, currentName, onClose, onSaveLocal }: NamePopupProps) 
             >
               Скасувати
             </button>
-            <button
-              type="submit"
-              className={styles.popupSubmit}
-              disabled={loading}
-            >
+            <button type="submit" className={styles.popupSubmit} disabled={loading}>
               {loading ? "Збереження..." : "Зберегти"}
             </button>
           </div>
@@ -215,15 +205,13 @@ function NamePopup({ open, currentName, onClose, onSaveLocal }: NamePopupProps) 
 
 function ProfilePage() {
   const { mail } = useParams();
-  const { email } = useAppSelector((s) => s.auth);
+  const dispatch = useAppDispatch();
+  const { email, name: reduxName } = useAppSelector((s) => s.auth);
 
   const routeMail = mail ? decodeURIComponent(mail) : undefined;
   const isOwner = Boolean(email && routeMail === email);
 
-  const [userName, setUserName] = useState<string>(
-    isOwner ? email || "Користувач" : routeMail || "Користувач",
-  );
-
+  const [userName, setUserName] = useState<string>(reduxName || "Завантаження...");
   const [places, setPlaces] = useState<UserPlace[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -233,6 +221,31 @@ function ProfilePage() {
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [isNamePopupOpen, setIsNamePopupOpen] = useState(false);
 
+  // Завантажуємо ім'я користувача через GET /users/info
+  useEffect(() => {
+    const targetEmail = routeMail || email;
+    if (!targetEmail) return;
+
+    const loadUserInfo = async () => {
+      try {
+        const userInfo = await getUserInfo(targetEmail);
+        setUserName(userInfo.name);
+        
+        // Якщо це власник, оновлюємо Redux
+        if (isOwner && userInfo.name !== reduxName) {
+          dispatch(updateUserName(userInfo.name));
+          localStorage.setItem("userName", userInfo.name);
+        }
+      } catch (e) {
+        console.error("Помилка завантаження інформації користувача:", e);
+        setUserName(targetEmail); // Fallback на email
+      }
+    };
+
+    loadUserInfo();
+  }, [routeMail, email, isOwner, reduxName, dispatch]);
+
+  // Завантажуємо локації для власника
   useEffect(() => {
     if (!isOwner) return;
 
@@ -263,6 +276,8 @@ function ProfilePage() {
 
   const handleSaveNameLocal = (newName: string) => {
     setUserName(newName);
+    dispatch(updateUserName(newName));
+    localStorage.setItem("userName", newName);
     setIsNamePopupOpen(false);
   };
 
@@ -273,9 +288,9 @@ function ProfilePage() {
           <div className={styles.header}>
             <div className={styles.nameBlock}>
               <p className={styles.userName}>{userName}</p>
+              <p className={styles.userEmail}>{routeMail || email}</p>
               <p className={styles.status}>Статус 0</p>
             </div>
-
             {isOwner && (
               <div className={styles.headerButtons}>
                 <button
@@ -283,7 +298,7 @@ function ProfilePage() {
                   className={styles.changeNameBtn}
                   onClick={() => setIsNamePopupOpen(true)}
                 >
-                  Змінити ім’я
+                  Змінити ім'я
                 </button>
                 <button
                   type="button"
@@ -313,9 +328,7 @@ function ProfilePage() {
                         </div>
                         <div className={styles.placeHeaderRight}>
                           {p.placeType && (
-                            <span className={styles.placeType}>
-                              {p.placeType}
-                            </span>
+                            <span className={styles.placeType}>{p.placeType}</span>
                           )}
                           {isOwner && (
                             <button
@@ -328,9 +341,7 @@ function ProfilePage() {
                           )}
                         </div>
                       </div>
-                      <p className={styles.placeDescription}>
-                        {p.description}
-                      </p>
+                      <p className={styles.placeDescription}>{p.description}</p>
                     </li>
                   ))}
                 </ul>
@@ -349,8 +360,7 @@ function ProfilePage() {
             {isOwnerEmpty && (
               <>
                 <p className={styles.mainMessage}>
-                  Ви ще нічого не публікували, поділіться своєю першою
-                  локацією!
+                  Ви ще нічого не публікували, поділіться своєю першою локацією!
                 </p>
               </>
             )}
@@ -362,13 +372,11 @@ function ProfilePage() {
         open={isPasswordPopupOpen}
         onClose={() => setIsPasswordPopupOpen(false)}
       />
-
       <EditPlacePopup
         open={isEditPopupOpen}
         place={editPlace}
         onClose={() => setIsEditPopupOpen(false)}
       />
-
       <NamePopup
         open={isNamePopupOpen}
         currentName={userName}
