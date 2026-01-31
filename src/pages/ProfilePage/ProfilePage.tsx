@@ -6,77 +6,104 @@ import axios, { AxiosError } from "axios";
 import { host } from "../../backendHost";
 import { useEffect, useState } from "react";
 import { logout } from "../../redux/slice/authSlice.ts";
-import {useAppDispatch} from "../../redux/hooks/hook.ts";
+import { useAppDispatch } from "../../redux/hooks/hook.ts";
 
 export default function ProfilePage() {
-    const { mail } = useParams<{ mail: string }>();
-    const [userName, setUserName] = useState<string>("");
-    const dispatch = useAppDispatch();
+  const { mail } = useParams<{ mail: string }>();
+  const [userName, setUserName] = useState<string>("");
 
-    const accessToken = localStorage.getItem("accessToken");
+  const dispatch = useAppDispatch();
+
+  async function loadProfileWithAccessToken(
+    token: string,
+    mail: string,
+    setUserName: (name: string) => void,
+  ) {
+    const response = await axios.get(
+      `${host}/users/info?email=${decodeURIComponent(mail)}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
+    setUserName(response.data.name);
+  }
+
+  async function refreshAccessToken(refreshToken: string): Promise<string> {
+    const response = await axios.post(`${host}/auth/refresh`, { refreshToken });
+    return response.data.accessToken;
+  }
+
+  async function changePassword(
+    token: string,
+    oldPassword: string,
+    newPassword: string,
+  ) {
+    await axios.patch(
+      `${host}/auth/change-password`,
+      { oldPassword, newPassword },
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+  }
+
+  async function changeName(token: string, newName: string) {
+    await axios.patch(
+      `${host}/auth/change-name`,
+      { newName },
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+  }
+
+  const withAuthRetry = async (callback: (token: string) => Promise<void>) => {
+    let token = localStorage.getItem("accessToken");
     const refreshToken = localStorage.getItem("refreshToken");
 
-    useEffect(() => {
-        if (!mail) return;
+    if (!token) throw new Error("No access token");
 
-        const fetchProfile = async () => {
-            try {
-                await loadProfileWithAccessToken(accessToken, mail, setUserName);
-            } catch (error) {
-                const axiosError = error as AxiosError;
+    try {
+      await callback(token);
+    } catch (error) {
+      const axiosError = error as AxiosError;
 
-                // only try refresh on 401
-                if (axiosError.response?.status === 401 && refreshToken) {
-                    try {
-                        const newAccessToken = await refreshAccessToken(refreshToken);
-                        localStorage.setItem("accessToken", newAccessToken);
-
-                        await loadProfileWithAccessToken(newAccessToken, mail, setUserName);
-                    } catch {
-                        dispatch(logout());
-                    }
-                } else {
-                    dispatch(logout());
-                }
-            }
-        };
-
-        fetchProfile();
-    }, [mail, accessToken, refreshToken, dispatch]);
-
-    if (!mail) {
-        return <ProfilePlaceholder />;
+      if (axiosError.response?.status === 401 && refreshToken) {
+        try {
+          token = await refreshAccessToken(refreshToken);
+          localStorage.setItem("accessToken", token);
+          await callback(token);
+        } catch {
+          dispatch(logout());
+        }
+      } else {
+        throw error;
+      }
     }
+  };
 
-    return (
-        <Container>
-            <ProfileInfo email={decodeURIComponent(mail)} userName={userName} />
-        </Container>
-    );
-}
+  useEffect(() => {
+    if (!mail) return;
+    withAuthRetry((token) =>
+      loadProfileWithAccessToken(token, mail, setUserName),
+    ).catch(() => dispatch(logout()));
+  }, [mail]);
 
-async function loadProfileWithAccessToken(
-    token: string | null,
-    mail: string,
-    setUserName: (name: string) => void
-) {
-    if (!token) {
-        throw new Error("No access token");
-    }
+  if (!mail) return <ProfilePlaceholder />;
 
-    const response = await axios.get(`${host}/users/info?email=${decodeURIComponent(mail)}`, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
-
-    setUserName(response.data.name);
-}
-
-async function refreshAccessToken(refreshToken: string): Promise<string> {
-    const response = await axios.post(`${host}/auth/refresh`, {
-        refreshToken,
-    });
-
-    return response.data.accessToken;
+  return (
+    <Container>
+      <ProfileInfo
+        email={decodeURIComponent(mail)}
+        userName={userName}
+        onChangeName={async (newName: string) =>
+          withAuthRetry(async (token: string) => {
+            await changeName(token, newName);
+            setUserName(newName);
+          })
+        }
+        onChangePassword={async (oldPass: string, newPass: string) =>
+          withAuthRetry(async (token: string) => {
+            await changePassword(token, oldPass, newPass);
+          })
+        }
+      />
+    </Container>
+  );
 }
