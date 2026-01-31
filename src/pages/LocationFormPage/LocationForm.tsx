@@ -16,7 +16,14 @@ export default function LocationForm() {
     const [query, setQuery] = useState("")
     const [showCitySuggestions, setShowCitySuggestions] = useState(false)
     const [selectedCountryCode, setSelectedCountryCode] = useState<string | null>(null)
-    const [showRegionSuggestions, setShowRegionSuggestions] = useState(false)
+    // const [showRegionSuggestions, setShowRegionSuggestions] = useState(false)
+
+    function remove(){
+        let remove = query + selectedCountryCode
+        remove = ""
+        console.log(remove)
+    }
+    remove()
     const cities = useAppSelector((state) => state.location.listCity) || []
     const regions = useAppSelector((state) => state.location.listRegion) || [
         "Вінницька область",
