@@ -1,4 +1,3 @@
-// src/api/userClient.ts
 import { authorizedRequest } from "../api/authClient";
 
 export interface UserInfo {
@@ -15,19 +14,19 @@ export async function getUserInfo(email: string): Promise<UserInfo> {
   });
 }
 
-export async function changeUserName(name: string): Promise<void> {
+export async function changeUserName(newName: string): Promise<void> { 
   await authorizedRequest({
     url: "/auth/change-name",
     method: "PATCH",
-    data: { name },          // было { newName }
+    data: { newName },
   });
 }
 
-export async function changePassword(password: string): Promise<void> {
+export async function changePassword(oldPassword: string, newPassword: string): Promise<void> { 
   await authorizedRequest({
     url: "/auth/change-password",
     method: "PATCH",
-    data: { password },      // было { newPassword }
+    data: { oldPassword, newPassword },
   });
 }
 
