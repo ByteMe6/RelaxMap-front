@@ -1,7 +1,6 @@
-// src/pages/ProfilePage/ProfilePage.tsx
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useAppSelector } from "../../redux/hooks/hook";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/hook";
 import Container from "../../components/Container/Container";
 import {
   getUserPlaces,
@@ -17,12 +16,17 @@ import {
 import { ProfileModal } from "./ProfileModal";
 import "./ProfilePage.scss";
 import { host } from "../../backendHost";
+import axios from "axios";
+
+import { logoutUser } from "../../redux/thunk/authThunk";
 
 const ProfilePage: React.FC = () => {
   const { mail } = useParams<{ mail: string }>();
+  const dispatch = useAppDispatch();
+
   const navigate = useNavigate();
   const currentUserEmail = useAppSelector((state) => state.auth.email);
-  const accessToken = useAppSelector((state) => state.auth.accessToken); // Додано для deps
+  const accessToken = useAppSelector((state) => state.auth.accessToken);
 
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [places, setPlaces] = useState<UserPlace[]>([]);
@@ -31,12 +35,25 @@ const ProfilePage: React.FC = () => {
     type: "name" | "pass";
     title: string;
   } | null>(null);
-  const [error, setError] = useState<string | null>(null); // Додано для помилок
+  const [error, setError] = useState<string | null>(null);
 
   const isMyProfile = currentUserEmail === mail;
+  const handleDeleteAccount = async () => {
+    axios.delete(`${host}/users/delete-account`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    dispatch(logoutUser());
+    navigate("/");
+  };
+
+  const navigateToAddLocation = () => {
+    navigate("/locations/add");
+  };
 
   const loadData = async () => {
-    if (!mail) return navigate("/"); // Якщо немає mail — редірект
+    if (!mail) return navigate("/");
 
     try {
       const info = await getUserInfo(mail);
@@ -46,24 +63,24 @@ const ProfilePage: React.FC = () => {
         const p = await getUserPlaces(0, 10);
         setPlaces(p.content);
       } else {
-        setPlaces([]); // Для чужих — поки порожньо
+        setPlaces([]);
       }
       setError(null);
     } catch (e: any) {
       setError(e.message || "Не вдалося завантажити профіль");
       if (e.message.includes("No access token")) {
-        navigate("/auth/login"); // Якщо не авторизовано — редірект
+        navigate("/auth/login");
       }
     }
   };
 
   useEffect(() => {
     if (!accessToken) {
-      navigate("/auth/login"); // Редірект якщо не авторизовано
+      navigate("/auth/login");
       return;
     }
     loadData();
-  }, [mail, isMyProfile, accessToken]); // Додано accessToken до deps
+  }, [mail, isMyProfile, accessToken]);
 
   const handleSave = async (oldValue?: string, newValue?: string) => {
     try {
@@ -104,7 +121,6 @@ const ProfilePage: React.FC = () => {
           </div>
         )}
 
-        {/* Блок з інформацією про користувача */}
         <div className="profile-header">
           <div className="user-info">
             <h1>{userInfo?.name || mail?.split("@")[0] || "Користувач"}</h1>
@@ -115,7 +131,7 @@ const ProfilePage: React.FC = () => {
           {isMyProfile && (
             <div className="profile-actions">
               <button
-                className="btn-edit"
+                className="btn-edit pBtn"
                 onClick={() =>
                   setModalConfig({
                     open: true,
@@ -127,7 +143,7 @@ const ProfilePage: React.FC = () => {
                 Змінити ім'я
               </button>
               <button
-                className="btn-edit"
+                className="btn-edit pBtn"
                 onClick={() =>
                   setModalConfig({
                     open: true,
@@ -138,14 +154,17 @@ const ProfilePage: React.FC = () => {
               >
                 Змінити пароль
               </button>
-              {/* Якщо хочеш кнопку видалення акаунту */}
-              {/* <button className="btn-danger" onClick={handleDeleteAccount}>Видалити акаунт</button> */}
+              <button className="btn-danger pBtn" onClick={handleDeleteAccount}>
+                Видалити акаунт
+              </button>
             </div>
           )}
         </div>
-
-        {/* Список локацій */}
         <h2 className="section-title">Мої локації</h2>
+
+        <button className="btn pBtn" onClick={navigateToAddLocation}>
+          Створити нову локацію
+        </button>
 
         {places.length === 0 ? (
           <p>У вас поки немає доданих локацій</p>
