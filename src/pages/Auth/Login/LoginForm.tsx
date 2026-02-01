@@ -3,16 +3,24 @@ import Container from "../../../components/Container/Container";
 import styles from "../Auth.module.scss";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hook";
 import { loginUser } from "../../../redux/thunk/authThunk";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginForm() {
   const dispatch = useAppDispatch();
   const { loading, error } = useAppSelector((s) => s.auth);
+  const navigate = useNavigate();
 
   return (
     <Container>
       <Formik
         initialValues={{ email: "", password: "" }}
-        onSubmit={(values) => dispatch(loginUser(values))}
+        onSubmit={async (values) => {
+          const resultAction = await dispatch(loginUser(values));
+
+          if (loginUser.fulfilled.match(resultAction)) {
+            navigate("/");
+          }
+        }}
       >
         {() => (
           <Form className={styles.loginFormContent}>

@@ -5,6 +5,7 @@
   padding: 40px 0;
   width: 100%;
   font-family: "Montserrat", sans-serif;
+//   top: 100vh; /* This makes it stick to the bottom */
 
   .footer-container {
       display: flex;
@@ -92,3 +93,4 @@
       margin-top: 10px;
   }
 }
+

@@ -1,8 +1,8 @@
-// src/redux/thunk/authThunk.ts
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { host } from "../../backendHost";
-import { authStart, authSuccess, authFailure } from "../slice/authSlice";
+import { authStart, authSuccess, authFailure, logout } from "../slice/authSlice";
+import { getUserInfo } from "../../api/userClient";
 
 interface AuthPayload {
   email: string;
@@ -10,14 +10,18 @@ interface AuthPayload {
   name?: string;
 }
 
-// ---------------- LOGIN ----------------
+interface AuthResponse {
+  access: string;
+  refresh: string;
+}
+
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ email, password }: AuthPayload, { dispatch }) => {
     try {
       dispatch(authStart());
-
-      const response = await axios.post(`${host}/auth/login`, {
+      
+      const response = await axios.post<AuthResponse>(`${host}/auth/login`, {
         email,
         password,
       });
@@ -28,13 +32,29 @@ export const loginUser = createAsyncThunk(
       localStorage.setItem("refreshToken", refresh);
       localStorage.setItem("email", email);
 
-      dispatch(
-        authSuccess({
-          accessToken: access,
-          refreshToken: refresh,
-          email,
-        })
-      );
+      // Отримуємо інформацію про користувача
+      try {
+        const userInfo = await getUserInfo(email);
+        localStorage.setItem("userName", userInfo.name);
+        
+        dispatch(
+          authSuccess({
+            accessToken: access,
+            refreshToken: refresh,
+            email,
+            name: userInfo.name,
+          })
+        );
+      } catch (error) {
+        // Якщо не вдалося отримати ім'я, все одно логінимо
+        dispatch(
+          authSuccess({
+            accessToken: access,
+            refreshToken: refresh,
+            email,
+          })
+        );
+      }
 
       return response.data;
     } catch (err: any) {
@@ -45,14 +65,13 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-// ---------------- REGISTER ----------------
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async ({ email, password, name }: AuthPayload, { dispatch }) => {
     try {
       dispatch(authStart());
-
-      const response = await axios.post(`${host}/auth/register`, {
+      
+      const response = await axios.post<AuthResponse>(`${host}/auth/register`, {
         email,
         password,
         name,
@@ -63,12 +82,17 @@ export const registerUser = createAsyncThunk(
       localStorage.setItem("accessToken", access);
       localStorage.setItem("refreshToken", refresh);
       localStorage.setItem("email", email);
+      
+      if (name) {
+        localStorage.setItem("userName", name);
+      }
 
       dispatch(
         authSuccess({
           accessToken: access,
           refreshToken: refresh,
           email,
+          name: name || undefined,
         })
       );
 
@@ -80,3 +104,11 @@ export const registerUser = createAsyncThunk(
     }
   }
 );
+
+export const logoutUser = createAsyncThunk("auth/logoutUser", async (_, { dispatch }) => {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+  localStorage.removeItem("email");
+  localStorage.removeItem("userName");
+  dispatch(logout());
+});
