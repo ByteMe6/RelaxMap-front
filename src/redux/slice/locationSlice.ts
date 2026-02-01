@@ -13,6 +13,7 @@ export interface LocationInfo {
     placeType: null | string,
     region: null | string,
     description: string,
+    imageName?: string
 }
 
 interface LocationState {

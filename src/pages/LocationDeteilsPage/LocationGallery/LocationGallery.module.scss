@@ -1,0 +1,12 @@
+.detailImage {
+    width: 335px;
+    height: 223px;
+    border-radius: 10px;
+}
+
+@media(min-width:768px) {
+    .detailImage {
+        width: 704px;
+        height: 468px;
+    }
+}

@@ -1,4 +1,4 @@
-import LocationInfoBlock from "./LocationInfoBlock";
+import LocationInfoBlock from "./LocationInfoBlock/LocationInfoBlock";
 import FilterPanel from "./FilterPanel";
 import LocationsGrid from "./LocationsGrid";
 

@@ -5,6 +5,10 @@
     font-family: "Montserrat", sans-serif;
     background-color: #fffaf7;
 
+    @media (max-width: 768px) {
+        padding: 40px 0;
+    }
+
     &__title {
         font-size: 32px;
         font-weight: 700;

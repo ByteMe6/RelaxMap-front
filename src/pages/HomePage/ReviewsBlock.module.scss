@@ -5,6 +5,10 @@
     font-family: "Montserrat", sans-serif;
     background-color: #fffaf7;
 
+    @media (max-width: 768px) {
+        padding: 40px 0;
+    }
+
     &__title {
         font-size: 32px;
         font-weight: 700;
@@ -18,11 +22,8 @@
         gap: 30px;
 
         @media (max-width: 900px) {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        @media (max-width: 600px) {
             grid-template-columns: 1fr;
+            gap: 20px;
         }
     }
 
@@ -34,8 +35,8 @@
     }
 
     &__pagination-btn {
-        width: 40px;
-        height: 40px;
+        width: 44px;
+        height: 44px;
         border-radius: 8px;
         border: none;
         background-color: #f7e0d6;
