@@ -1,5 +1,9 @@
 function LocationsGrid(){
-    return <></>
+    return (
+        <div>
+            
+        </div>
+    )
 }
 
 export default LocationsGrid;

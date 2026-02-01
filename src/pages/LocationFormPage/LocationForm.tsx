@@ -18,7 +18,7 @@ export default function LocationForm() {
     const [selectedCountryCode, setSelectedCountryCode] = useState<string | null>(null)
     const [showRegionSuggestions, setShowRegionSuggestions] = useState(false)
     const cities = useAppSelector((state) => state.location.listCity) || []
-    const regions = useAppSelector((state) => state.location.listRegion) || [
+    const regions =  [
         "Вінницька область",
         "Волинська область",
         "Дніпропетровська область",
@@ -122,7 +122,7 @@ export default function LocationForm() {
                     <Field as="select" name="region" className={`${styles.inputLocation} ${styles.inputLocationSelect}`} >
                         <option value="">Оберіть регіон</option>
                         {regions.map((location, index) => (
-                            <option key={index} value={location}>{location}</option>
+                            <option key={index} value={location}>{location || "Регіон"}</option>
                         ))}
                     </Field>
                     <label htmlFor="description" className={styles.labelLocation}>Детальний опис</label>
