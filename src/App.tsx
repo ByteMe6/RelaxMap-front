@@ -18,7 +18,7 @@ function App() {
                 <Route path="/" element={<HomePage/>}/>
                 <Route path="/locations" element={<LocationsPage/>}/>
                 <Route
-                    path="/locations/location"
+                    path="/locations/:id"
                     element={<LocationDeteilsPage/>}
                 />{" "}
                 {/* add id route*/}
