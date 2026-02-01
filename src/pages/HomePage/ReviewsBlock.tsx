@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import Container from "../../components/Container/Container";
 import styles from "./ReviewsBlock.module.scss";
 
@@ -51,14 +52,38 @@ function ReviewsBlock() {
     }
   ];
 
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile(); // Check on mount
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const nextReview = () => {
+    setCurrentIndex((prev) => (prev + 1) % reviews.length);
+  };
+
+  const prevReview = () => {
+    setCurrentIndex((prev) => (prev - 1 + reviews.length) % reviews.length);
+  };
+
+  const visibleReviews = isMobile ? [reviews[currentIndex]] : reviews;
+
   return (
     <section className={styles.reviews}>
       <Container>
         <h2 className={styles['reviews__title']}>Останні відгуки</h2>
 
         <div className={styles['reviews__grid']}>
-          {reviews.map((review, index) => (
-            <div key={index} className={styles['review-card']}>
+          {visibleReviews.map((review, index) => (
+            <div key={isMobile ? currentIndex : index} className={styles['review-card']}>
               <div className={styles['review-card__rating']}>
                 {Array.from({ length: 5 }).map((_, i) => {
                   let type: "full" | "half" | "empty" = "empty";
@@ -80,12 +105,20 @@ function ReviewsBlock() {
         </div>
 
         <div className={styles['reviews__pagination']}>
-          <button aria-label="Previous" className={styles['reviews__pagination-btn']}>
+          <button
+            aria-label="Previous"
+            className={styles['reviews__pagination-btn']}
+            onClick={prevReview}
+          >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
             </svg>
           </button>
-          <button aria-label="Next" className={styles['reviews__pagination-btn']}>
+          <button
+            aria-label="Next"
+            className={styles['reviews__pagination-btn']}
+            onClick={nextReview}
+          >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
             </svg>
