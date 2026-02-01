@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { searchLocation } from "../thunk/thunkLocationMap";
+import { postNewLocation } from "../thunk/thunkLocation";
+import { searchCities, searchRegions } from "../thunk/thunkTypeLocation";
 export interface LocationData {
     lat: number | null,
     lng: number | null,
@@ -8,33 +10,51 @@ export interface LocationData {
 export interface LocationInfo {
     image: string,
     name: string,
-    type: null | string,
+    placeType: null | string,
     region: null | string,
     description: string,
 }
+
 interface LocationState {
     loading: boolean
     info: LocationInfo
-    location: LocationData | null
+    location: LocationData | null,
+    listCity: any[],
+    listRegion:any[]
 }
 const initialState: LocationState = {
     loading: false,
     info: {
         name: "",
         image: "",
-        type: null,
+        placeType: null,
         region: null,
         description: "",
     },
-
+    listCity:[],
+    listRegion:[],
     location: null
 }
+console.log(initialState.info)
 const locationSlice = createSlice({
     name: "location",
     initialState,
     reducers: {
         setLocationData: (state, action: PayloadAction<LocationInfo>) => {
             state.info = action.payload
+        },
+        resetLocation:(state) => {
+            state.info = {
+                name:"",
+                image:"",
+                placeType:null,
+                region:null,
+                description:""
+            }
+            state.location = null
+            state.listCity = []
+            state.listRegion = []
+            state.loading = false
         }
     }, extraReducers(builder) {
         builder
@@ -48,7 +68,39 @@ const locationSlice = createSlice({
             .addCase(searchLocation.rejected, (state) => {
                 state.loading = false
             })
+            .addCase(postNewLocation.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(postNewLocation.fulfilled, (state, action) => {
+            state.loading = false
+            state.info = action.payload
+            console.log("aa",state.info)
+            })
+            .addCase(postNewLocation.rejected, (state) => {
+                state.loading = false
+            })
+           .addCase(searchCities.pending, (state) => {
+            state.loading = true
+           })
+           .addCase(searchCities.fulfilled, (state,action) => {
+            state.loading = false
+            state.listCity = action.payload
+           })
+           .addCase(searchCities.rejected, (state) => {
+            state.loading = false
+           })
+           .addCase(searchRegions.pending, (state) => {
+            state.loading = true
+           })
+           .addCase(searchRegions.fulfilled, (state,action) => {
+            state.loading = false
+            state.listRegion = action.payload
+            console.log(state.listRegion)
+           })
+            .addCase(searchRegions.rejected, (state) => {
+                state.loading = false
+            })
     },
 })
-export const {setLocationData} = locationSlice.actions
+export const {setLocationData, resetLocation} = locationSlice.actions
 export default locationSlice.reducer

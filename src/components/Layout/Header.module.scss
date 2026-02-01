@@ -14,6 +14,9 @@
   width: 100%;
   flex-direction: row;
   background-color: #fff2ec;
+  position: fixed;
+  z-index: 9999;
+  top: 0;
 }
 
 .logoDiv {

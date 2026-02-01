@@ -1,17 +1,30 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import styles from "./Auth.module.scss";
 
 export default function AuthNav() {
   return (
-    // <Container>
-      <ul className={styles.linksBox}>
-        <li className={styles.linksBoxItem}>
-          <Link to="/auth/register">Реєстрація</Link>
-        </li>
-        <li className={`${styles.linksBoxItem} ${styles.activeLinkBoxItem}`}>
-          <Link to="/auth/login">Вхід</Link>
-        </li>
-      </ul>
-    // </Container>
+    <ul className={styles.linksBox}>
+      <li className={styles.linksBoxItem}>
+        <NavLink
+          to="/auth/register"
+          className={({ isActive }) =>
+            isActive ? `${styles.linksBoxItem} ${styles.activeLinkBoxItem}` : styles.linksBoxItem
+          }
+        >
+          Реєстрація
+        </NavLink>
+      </li>
+
+      <li className={styles.linksBoxItem}>
+        <NavLink
+          to="/auth/login"
+          className={({ isActive }) =>
+            isActive ? `${styles.linksBoxItem} ${styles.activeLinkBoxItem}` : styles.linksBoxItem
+          }
+        >
+          Вхід
+        </NavLink>
+      </li>
+    </ul>
   );
 }

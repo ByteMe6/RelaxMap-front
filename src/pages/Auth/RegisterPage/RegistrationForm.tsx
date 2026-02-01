@@ -1,23 +1,30 @@
+import { Formik, Form, Field } from "formik";
 import Container from "../../../components/Container/Container";
 import styles from "../Auth.module.scss";
-import "normalize.css";
-import { Formik, Form, Field } from "formik";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hook";
+import { registerUser } from "../../../redux/thunk/authThunk";
+import { useNavigate } from "react-router-dom";
 
 export default function RegistrationForm() {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { loading, error } = useAppSelector((s) => s.auth);
+
   return (
     <Container>
       <Formik
-        initialValues={{ mail: "", password: "" }} // <-- добавили mail и password
-        onSubmit={(values) => console.log(values)}
+        initialValues={{ email: "", password: "", name: "" }}
+        onSubmit={async (values) => {
+          const resultAction = await dispatch(registerUser(values));
+
+          if (registerUser.fulfilled.match(resultAction)) {
+            navigate("/");
+          }
+        }}
       >
         {() => (
           <Form className={styles.loginFormContent}>
-            <label
-              htmlFor="name"
-              className={`${styles.labelField} ${styles.leftText}`}
-            >
-              Імʼя*
-            </label>
+            <label htmlFor="name">Імʼя*</label>
             <Field
               id="name"
               name="name"
@@ -25,25 +32,15 @@ export default function RegistrationForm() {
               className={styles.inputField}
             />
 
-            <label
-              htmlFor="mail"
-              className={`${styles.labelField} ${styles.leftText}`}
-            >
-              Пошта*
-            </label>
+            <label htmlFor="email">Пошта*</label>
             <Field
-              id="mail"
-              name="mail"
+              id="email"
+              name="email"
               placeholder="example@example.com"
               className={styles.inputField}
             />
 
-            <label
-              htmlFor="password"
-              className={`${styles.labelField} ${styles.leftText}`}
-            >
-              Пороль*
-            </label>
+            <label htmlFor="password">Пароль*</label>
             <Field
               id="password"
               type="password"
@@ -52,14 +49,11 @@ export default function RegistrationForm() {
               className={styles.inputField}
             />
 
-            <div className={styles.buttonWrapper}>
-              <button
-                type="submit"
-                className={`${styles.btn} ${styles["btn--submit"]}`}
-              >
-                Зареєструватися
-              </button>
-            </div>
+            {error && <p className={styles.error}>{error}</p>}
+
+            <button type="submit" className={styles.btn} disabled={loading}>
+              {loading ? "Завантаження..." : "Зареєструватися"}
+            </button>
           </Form>
         )}
       </Formik>

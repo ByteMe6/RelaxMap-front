@@ -1,0 +1,336 @@
+$bg-primary: #fff2ec;
+
+body{
+  background-color: $bg-primary;
+}
+
+.profilePage {
+  min-height: 100vh;
+  padding: 120px 16px 40px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background: linear-gradient(
+    to top,
+    #ffe0cf 0,
+    #ffe0cf 200px,
+    transparent 200px
+  ),
+  $bg-primary;
+}
+
+.card {
+  width: 100%;
+  max-width: 560px;
+  border-radius: 24px;
+  background-color: #ffffff;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+  padding: 24px 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nameBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.userName {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #222222;
+}
+
+.userEmail {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  color: #888888;
+}
+
+.status {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #9a9a9a;
+}
+
+.changePasswordBtn {
+  border: 0;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background-color: #dfdfdf;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+
+  &:hover {
+    background-color: #d0d0d0;
+    transform: translateY(-1px);
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #222222;
+}
+
+.mainMessage {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #222222;
+}
+
+.subMessage {
+  margin: 0;
+  font-size: 14px;
+  color: #707070;
+}
+
+.infoText {
+  font-size: 14px;
+  color: #707070;
+}
+
+.errorText {
+  font-size: 14px;
+  color: #c53030;
+}
+
+.placeList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.placeItem {
+  padding: 12px 14px;
+  border-radius: 16px;
+  background-color: #fff7f2;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.placeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.placeHeaderRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.placeName {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.placeType {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background-color: #ffe0cf;
+}
+
+.placeRegion {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #555555;
+}
+
+.placeDescription {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: #333333;
+}
+
+.editPlaceBtn {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 0;
+  background-color: #dfdfdf;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #d0d0d0;
+  }
+}
+
+/* popups */
+.popupOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+}
+
+.popup {
+  width: 100%;
+  max-width: 360px;
+  padding: 20px 20px 24px;
+  border-radius: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.16);
+}
+
+.popupTitle {
+  margin: 0 0 16px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.popupForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.popupLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.popupInput {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #dadada;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.popupButtons {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.popupCancel {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 0;
+  background-color: #dfdfdf;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.popupSubmit {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 0;
+  background-color: #cc6534;
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 20px 16px 24px;
+  }
+
+  .userName {
+    font-size: 18px;
+  }
+
+  .sectionTitle,
+  .mainMessage {
+    font-size: 16px;
+  }
+
+  .placeItem {
+    padding: 10px 12px;
+  }
+}
+
+.placeHeaderRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.editPlaceBtn {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 0;
+  background-color: #dfdfdf;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #d0d0d0;
+  }
+}
+
+.headerButtons {
+  display: flex;
+  gap: 8px;
+}
+
+.changeNameBtn {
+  border: 0;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background-color: #dfdfdf;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+
+  &:hover {
+    background-color: #d0d0d0;
+    transform: translateY(-1px);
+  }
+}
+
+.headerButtons {
+  display: flex;
+  gap: 8px;
+}
+
+.changeNameBtn {
+  border: 0;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background-color: #dfdfdf;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+
+  &:hover {
+    background-color: #d0d0d0;
+    transform: translateY(-1px);
+  }
+}

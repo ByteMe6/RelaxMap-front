@@ -68,6 +68,7 @@
     border-radius: 8px;
     padding-top:10px;
     padding-left: 10px;
+    resize: vertical;
     &::placeholder {
         font-family: "Montserrat";
         font-weight: 400;
@@ -114,6 +115,33 @@
     flex-direction: column;
     gap:20px;
     align-items: center;
+}
+.inputLocationSelect {
+    appearance: none;
+    background-image: url("../../../public/assets/arrowDown.svg");
+    background-repeat: no-repeat;
+    background-position: right 12px center; 
+}
+.suggestionsList {
+  width:100%;
+  border-radius: 10px;
+  border:1px solid #CC6534;
+  overflow-y: auto;
+  padding: 0;
+}
+.suggestionsItemList {
+    display: flex;
+    gap:20px;
+    list-style: none;
+    align-items: center;
+    cursor:pointer;
+    transition: background 0.2 ease;
+    &:hover {
+        background-color: #CC6534;
+    }
+    &:active {
+        background-color: #4C2613;
+    }
 }
 @media(min-width:768px) {
 .containerNewLocation {
