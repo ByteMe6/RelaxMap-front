@@ -1,299 +1,234 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useAppSelector, useAppDispatch } from "../../redux/hooks/hook";
-import { getUserInfo, deleteAccount } from "../../api/userClient";
-import { getUserPlaces, getPlacesByEmail, deletePlace } from "../../api/profileClient";
-import { logout, updateUserName } from "../../redux/slice/authSlice";
-import { changeUserName } from "../../api/userClient";
-import type { UserInfo } from "../../api/userClient";
-import type { UserPlace } from "../../api/profileClient";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/hook";
+import Container from "../../components/Container/Container";
+import {
+  getUserPlaces,
+  deletePlace,
+  type UserPlace,
+} from "../../api/profileClient";
+import {
+  getUserInfo,
+  changeUserName,
+  changePassword,
+  type UserInfo,
+} from "../../api/userClient";
+import { ProfileModal } from "./ProfileModal";
 import "./ProfilePage.scss";
 import { host } from "../../backendHost";
-import Container from "../../components/Container/Container";
+import axios from "axios";
 
-interface DeletePlaceModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  placeName: string;
-}
+import { logoutUser } from "../../redux/thunk/authThunk";
 
-function DeletePlaceModal({ isOpen, onClose, onConfirm, placeName }: DeletePlaceModalProps) {
-  if (!isOpen) return null;
-
-  return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-box" onClick={(e) => e.stopPropagation()}>
-        <h3>Видалити локацію?</h3>
-        <p>Ви впевнені, що хочете видалити "{placeName}"?</p>
-        <div className="modal-buttons">
-          <button onClick={onConfirm} className="standart-btn standart-btn--submit">
-            Видалити
-          </button>
-          <button onClick={onClose} className="standart-btn standart-btn--cancel">
-            Скасувати
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-interface DeleteAccountModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-}
-
-function DeleteAccountModal({ isOpen, onClose, onConfirm }: DeleteAccountModalProps) {
-  if (!isOpen) return null;
-
-  return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-box" onClick={(e) => e.stopPropagation()}>
-        <h3>Видалити акаунт?</h3>
-        <p>Ця дія незворотна. Всі ваші дані будуть видалені назавжди.</p>
-        <div className="modal-buttons">
-          <button onClick={onConfirm} className="standart-btn standart-btn--submit">
-            Так, видалити
-          </button>
-          <button onClick={onClose} className="standart-btn standart-btn--cancel">
-            Скасувати
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Компонент рейтингу (зірки)
-function Rating({ value = 4.5 }: { value?: number }) {
-  const fullStars = Math.floor(value);
-  const hasHalfStar = value % 1 !== 0;
-
-  return (
-    <div className="place-rating">
-      {[...Array(fullStars)].map((_, i) => (
-        <span key={i} className="star">
-          ★
-        </span>
-      ))}
-      {hasHalfStar && <span className="star star-half">★</span>}
-    </div>
-  );
-}
-
-function ProfilePage() {
+const ProfilePage: React.FC = () => {
   const { mail } = useParams<{ mail: string }>();
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const { email: currentUserEmail, accessToken } = useAppSelector((state) => state.auth);
-  const isOwnProfile = currentUserEmail === mail;
+  const navigate = useNavigate();
+  const currentUserEmail = useAppSelector((state) => state.auth.email);
+  const accessToken = useAppSelector((state) => state.auth.accessToken);
 
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [places, setPlaces] = useState<UserPlace[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [modalConfig, setModalConfig] = useState<{
+    open: boolean;
+    type: "name" | "pass";
+    title: string;
+  } | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
-  const [deletingPlace, setDeletingPlace] = useState<UserPlace | null>(null);
 
-  useEffect(() => {
-    loadProfileData();
-  }, [mail]);
+  const isMyProfile = currentUserEmail === mail;
+  const handleDeleteAccount = async () => {
+    axios.delete(`${host}/users/delete-account`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    dispatch(logoutUser());
+    navigate("/");
+  };
 
-  const loadProfileData = async () => {
-    if (!mail) {
-      setError("Email не вказано");
-      setLoading(false);
-      return;
-    }
+  const navigateToAddLocation = () => {
+    navigate("/locations/add");
+  };
+
+  const loadData = async () => {
+    if (!mail) return navigate("/");
 
     try {
-      setLoading(true);
-      setError(null);
-
       const info = await getUserInfo(mail);
       setUserInfo(info);
 
-      let placesData;
-      if (isOwnProfile && accessToken) {
-        placesData = await getUserPlaces(0, 100);
+      if (isMyProfile) {
+        const p = await getUserPlaces(0, 10);
+        setPlaces(p.content);
       } else {
-        placesData = await getPlacesByEmail(mail, 0, 100);
+        setPlaces([]);
       }
-      setPlaces(placesData.content);
-    } catch (err: any) {
-      console.error("Error loading profile:", err);
-      if (err.response?.status === 404) {
-        setError("Користувача не знайдено");
-      } else {
-        setError("Помилка завантаження профілю");
+      setError(null);
+    } catch (e: any) {
+      setError(e.message || "Не вдалося завантажити профіль");
+      if (e.message.includes("No access token")) {
+        navigate("/auth/login");
       }
-    } finally {
-      setLoading(false);
     }
   };
 
-  const handleDeleteAccount = async () => {
+  useEffect(() => {
+    if (!accessToken) {
+      navigate("/auth/login");
+      return;
+    }
+    loadData();
+  }, [mail, isMyProfile, accessToken]);
+
+  const handleSave = async (oldValue?: string, newValue?: string) => {
     try {
-      await deleteAccount();
-      dispatch(logout());
-      navigate("/");
-    } catch (err: any) {
-      alert(err.response?.data?.message || "Помилка видалення акаунту");
+      if (modalConfig?.type === "name" && newValue) {
+        await changeUserName(newValue);
+        alert("Ім'я змінено");
+      } else if (modalConfig?.type === "pass" && oldValue && newValue) {
+        await changePassword(oldValue, newValue);
+        alert("Пароль успішно змінено");
+      }
+      await loadData();
+      setModalConfig(null);
+      setError(null);
+    } catch (error: any) {
+      setError(error?.response?.data?.message || "Не вдалося змінити дані");
     }
   };
 
-  const handleDeletePlace = async () => {
-    if (!deletingPlace) return;
-
+  const handleDeletePlace = async (placeId: number) => {
+    if (!confirm("Видалити локацію?")) return;
     try {
-      await deletePlace(deletingPlace.id);
-      setPlaces((prev) => prev.filter((p) => p.id !== deletingPlace.id));
-      setDeletingPlace(null);
-    } catch (err: any) {
-      alert(err.response?.data?.message || "Помилка видалення локації");
+      await deletePlace(placeId);
+      await loadData();
+    } catch (error: any) {
+      setError(error.message || "Помилка видалення");
     }
   };
-
-  if (loading) {
-    return (
-      <div className="profile-page">
-        <Container>
-          <div className="profile-loading">Завантаження...</div>
-        </Container>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="profile-page">
-        <Container>
-          <div className="profile-error">
-            <h2>{error}</h2>
-            <button onClick={() => navigate("/locations")} className="standart-btn standart-btn--submit">
-              Повернутися до локацій
-            </button>
-          </div>
-        </Container>
-      </div>
-    );
-  }
-
-  if (!userInfo) {
-    return null;
-  }
 
   return (
     <div className="profile-page">
       <Container>
+        {error && (
+          <div
+            className="profile-error"
+            style={{ color: "red", marginBottom: "20px" }}
+          >
+            {error}
+          </div>
+        )}
+
         <div className="profile-header">
-          <div className="profile-user">
-            <div className="profile-avatar">{userInfo.name.charAt(0).toUpperCase()}</div>
-            <div className="profile-info">
-              <h1>{userInfo.name}</h1>
-              <p className="profile-email">Статей: {places.length}</p>
-            </div>
+          <div className="user-info">
+            <h1>{userInfo?.name || mail?.split("@")[0] || "Користувач"}</h1>
+            <p className="email">Email: {mail || "не вказано"}</p>
+            <p>Локацій: {places.length}</p>
           </div>
 
-          {isOwnProfile && (
+          {isMyProfile && (
             <div className="profile-actions">
-              <button onClick={() => navigate("/locations/add")} className="standart-btn standart-btn--submit">
-                Додати локацію
+              <button
+                className="btn-edit pBtn"
+                onClick={() =>
+                  setModalConfig({
+                    open: true,
+                    type: "name",
+                    title: "Змінити ім'я",
+                  })
+                }
+              >
+                Змінити ім'я
               </button>
-              <button onClick={() => setShowDeleteAccountModal(true)} className="profile-delete-btn">
+              <button
+                className="btn-edit pBtn"
+                onClick={() =>
+                  setModalConfig({
+                    open: true,
+                    type: "pass",
+                    title: "Змінити пароль",
+                  })
+                }
+              >
+                Змінити пароль
+              </button>
+              <button className="btn-danger pBtn" onClick={handleDeleteAccount}>
                 Видалити акаунт
               </button>
             </div>
           )}
         </div>
+        <h2 className="section-title">Мої локації</h2>
 
-        <div className="profile-places">
-          <h2>Локації</h2>
+        <button className="btn pBtn" onClick={navigateToAddLocation}>
+          Створити нову локацію
+        </button>
 
-          {places.length === 0 ? (
-            <div className="profile-empty">
-              <p>{isOwnProfile ? "У вас ще немає локацій" : "Користувач ще не додав локації"}</p>
-              {isOwnProfile && (
-                <button onClick={() => navigate("/locations/add")} className="standart-btn standart-btn--submit">
-                  Додати першу локацію
-                </button>
-              )}
-            </div>
-          ) : (
-            <>
-              <div className="places-grid">
-                {places.map((place) => (
-                  <div key={place.id} className="place-card">
-                    {place.imageName && (
-                      <div className="place-img">
-                        <img
-                          src={`${host}/images/${place.imageName}`}
-                          alt={place.name}
-                          onError={(e) => {
-                            const img = e.target as HTMLImageElement;
-                            img.style.display = "none";
-                          }}
-                        />
-                      </div>
-                    )}
-                    <div className="place-content">
-                      <div className="place-category">{place.placeType}</div>
-                      <Rating />
-                      <h3 className="place-name">{place.name}</h3>
-                      
-                      {!isOwnProfile ? (
-                        <button
-                          onClick={() => navigate(`/locations/location?id=${place.id}`)}
-                          className="place-view-btn"
-                        >
-                          Переглянути локацію
-                        </button>
-                      ) : null}
+        {places.length === 0 ? (
+          <p>У вас поки немає доданих локацій</p>
+        ) : (
+          <div className="locations-grid">
+            {places.map((place) => (
+              <div key={place.id} className="location-card">
+                <div className="img-box">
+                  <img
+                    src={
+                      place.imageName
+                        ? `${host}/images/${place.imageName}`
+                        : "/assets/placeholder.jpg"
+                    }
+                    alt={place.name}
+                  />
+                </div>
+                <div className="info-box">
+                  <span className="type">{place.placeType || "—"}</span>
+                  <h3>{place.name}</h3>
+
+                  {isMyProfile ? (
+                    <div className="card-btns">
+                      <button
+                        className="edit"
+                        onClick={() =>
+                          navigate(`/locations/location/edit`, {
+                            state: { place },
+                          })
+                        }
+                      >
+                        Редагувати
+                      </button>
+                      <button
+                        className="del"
+                        onClick={() => handleDeletePlace(place.id)}
+                      >
+                        Видалити
+                      </button>
                     </div>
-
-                    {isOwnProfile && (
-                      <div className="place-actions">
-                        <button
-                          onClick={() => navigate(`/locations/location?id=${place.id}`)}
-                          className="edit-btn"
-                        >
-                          Переглянути
-                        </button>
-                        <button onClick={() => setDeletingPlace(place)} className="delete-btn">
-                          Видалити
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                ))}
+                  ) : (
+                    <button
+                      className="standart-btn"
+                      onClick={() => navigate(`/locations/${place.id}`)}
+                    >
+                      Переглянути
+                    </button>
+                  )}
+                </div>
               </div>
-
-              {/* Кнопка "Показати ще" - поки що просто для красоти */}
-              {places.length > 6 && (
-                <button className="show-more-btn">Показати ще</button>
-              )}
-            </>
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </Container>
 
-      <DeleteAccountModal
-        isOpen={showDeleteAccountModal}
-        onClose={() => setShowDeleteAccountModal(false)}
-        onConfirm={handleDeleteAccount}
-      />
-
-      <DeletePlaceModal
-        isOpen={!!deletingPlace}
-        onClose={() => setDeletingPlace(null)}
-        onConfirm={handleDeletePlace}
-        placeName={deletingPlace?.name || ""}
+      <ProfileModal
+        isOpen={!!modalConfig?.open}
+        title={modalConfig?.title || ""}
+        type={modalConfig?.type === "pass" ? "password" : "text"}
+        onClose={() => setModalConfig(null)}
+        onSave={handleSave}
       />
     </div>
   );
-}
+};
 
 export default ProfilePage;

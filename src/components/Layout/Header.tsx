@@ -8,7 +8,8 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 import { useAppSelector, useAppDispatch } from "../../redux/hooks/hook";
-import { logout } from "../../redux/slice/authSlice";
+import { logoutUser } from "../../redux/thunk/authThunk";
+
 
 function Header() {
   const [isBurgerOpen, setIsBurgerOpen] = useState(false);
@@ -75,30 +76,29 @@ const profileLink = email ? `/profile/${encodeURIComponent(email)}` : "/auth/log
               </ul>
             </nav>
 
-            {/* AUTH DESKTOP */}
             <div className={styles.authBox} data-aos="fade-up">
               {!isAuth ? (
-                <>
-                  <Link to="/auth/login" className={styles.loginBtn}>
-                    Вхід
-                  </Link>
-                  <Link to="/auth/register" className={styles.regBtn}>
-                    Реєстрація
-                  </Link>
-                </>
-              ) : (
-                <>
-<Link to={profileLink} className={styles.loginBtn}>
-  Профіль
-</Link>
-                  <button
-                    className={styles.regBtn}
-                    onClick={() => dispatch(logout())}
-                  >
-                    Вийти
-                  </button>
-                </>
-              )}
+  <>
+    <Link to="/auth/login" className={styles.loginBtn}>
+      Вхід
+    </Link>
+    <Link to="/auth/register" className={styles.regBtn}>
+      Реєстрація
+    </Link>
+  </>
+) : (
+  <>
+    <Link to={profileLink} className={styles.loginBtn}>
+      Профіль
+    </Link>
+    <button
+      className={styles.regBtn}
+      onClick={() => dispatch(logoutUser())}
+    >
+      Вийти
+    </button>
+  </>
+)}
             </div>
 
             {/* BURGER BTN */}
@@ -144,43 +144,28 @@ const profileLink = email ? `/profile/${encodeURIComponent(email)}` : "/auth/log
 
             {/* AUTH BURGER */}
             <div className={styles.burgerAuthBox}>
-              {!isAuth ? (
-                <>
-                  <Link
-                    to="/auth/login"
-                    className={styles.loginBtn}
-                    onClick={handleLinkClick}
-                  >
-                    Вхід
-                  </Link>
-                  <Link
-                    to="/auth/register"
-                    className={styles.regBtn}
-                    onClick={handleLinkClick}
-                  >
-                    Реєстрація
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to={profileLink}
-                    className={styles.loginBtn}
-                    onClick={handleLinkClick}
-                  >
-                    Профіль
-                  </Link>
-                  <button
-                    className={styles.regBtn}
-                    onClick={() => {
-                      dispatch(logout());
-                      handleLinkClick();
-                    }}
-                  >
-                    Вийти
-                  </button>
-                </>
-              )}
+{!isAuth ? (
+  <>
+    <Link to="/auth/login" className={styles.loginBtn}>
+      Вхід
+    </Link>
+    <Link to="/auth/register" className={styles.regBtn}>
+      Реєстрація
+    </Link>
+  </>
+) : (
+  <>
+    <Link to={profileLink} className={styles.loginBtn}>
+      Профіль
+    </Link>
+    <button
+      className={styles.regBtn}
+      onClick={() => dispatch(logoutUser())}
+    >
+      Вийти
+    </button>
+  </>
+)}
             </div>
 
             <button

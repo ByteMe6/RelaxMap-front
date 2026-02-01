@@ -1,3 +1,4 @@
+// src/App.tsx
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
 import HomePage from "./pages/HomePage/HomePage";
@@ -17,15 +18,10 @@ function App() {
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/locations" element={<LocationsPage />} />
-        <Route path="/locations/:id" element={<LocationDeteilsPage />} />{" "}
-        {/* add id route*/}
+        <Route path="/locations/:id" element={<LocationDeteilsPage />} />
         <Route path="/profile/:mail" element={<ProfilePage />} />
         <Route path="/locations/add" element={<LocationFormPage />} />
-        <Route
-          path="/locations/location/edit"
-          element={<EditLocation />}
-        />{" "}
-        {/* add id route*/}
+        <Route path="/locations/location/edit" element={<EditLocation />} />
       </Route>
 
       <Route path="/auth/register" element={<RegisterPage />} />

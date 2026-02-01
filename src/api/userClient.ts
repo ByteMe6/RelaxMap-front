@@ -1,4 +1,4 @@
-import { authorizedRequest } from "./authClient";
+import { authorizedRequest } from "../api/authClient";
 
 export interface UserInfo {
   id: number;
@@ -14,7 +14,7 @@ export async function getUserInfo(email: string): Promise<UserInfo> {
   });
 }
 
-export async function changeUserName(newName: string): Promise<void> {
+export async function changeUserName(newName: string): Promise<void> { 
   await authorizedRequest({
     url: "/auth/change-name",
     method: "PATCH",
@@ -22,9 +22,17 @@ export async function changeUserName(newName: string): Promise<void> {
   });
 }
 
+export async function changePassword(oldPassword: string, newPassword: string): Promise<void> { 
+  await authorizedRequest({
+    url: "/auth/change-password",
+    method: "PATCH",
+    data: { oldPassword, newPassword },
+  });
+}
+
 export async function deleteAccount(): Promise<void> {
   await authorizedRequest({
-    url: "/users/delete",
+    url: "/users/delete-account",
     method: "DELETE",
   });
 }
