@@ -1,389 +1,298 @@
-// src/pages/ProfilePage/ProfilePage.tsx
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import styles from "./ProfilePage.module.scss";
-import { getUserPlaces, type UserPlace } from "../../api/profileClient";
-import { getUserInfo } from "../../api/userClient";
+import { useParams, useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks/hook";
-import Container from "../../components/Container/Container";
+import { getUserInfo, deleteAccount } from "../../api/userClient";
+import { getUserPlaces, getPlacesByEmail, deletePlace } from "../../api/profileClient";
+import { logout, updateUserName } from "../../redux/slice/authSlice";
 import { changeUserName } from "../../api/userClient";
-import { updateUserName } from "../../redux/slice/authSlice";
+import type { UserInfo } from "../../api/userClient";
+import type { UserPlace } from "../../api/profileClient";
+import "./ProfilePage.scss";
+import { host } from "../../backendHost";
+import Container from "../../components/Container/Container";
 
-interface PasswordPopupProps {
-  open: boolean;
+interface DeletePlaceModalProps {
+  isOpen: boolean;
   onClose: () => void;
+  onConfirm: () => void;
+  placeName: string;
 }
 
-function PasswordPopup({ open, onClose }: PasswordPopupProps) {
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
-
-  if (!open) return null;
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: POST /auth/change-password
-    console.log({ oldPassword, newPassword, repeatPassword });
-  };
+function DeletePlaceModal({ isOpen, onClose, onConfirm, placeName }: DeletePlaceModalProps) {
+  if (!isOpen) return null;
 
   return (
-    <div className={styles.popupOverlay}>
-      <div className={styles.popup}>
-        <h3 className={styles.popupTitle}>Змінити пароль</h3>
-        <form onSubmit={handleSubmit} className={styles.popupForm}>
-          <label className={styles.popupLabel}>
-            Старий пароль
-            <input
-              type="password"
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-              className={styles.popupInput}
-            />
-          </label>
-          <label className={styles.popupLabel}>
-            Новий пароль
-            <input
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className={styles.popupInput}
-            />
-          </label>
-          <label className={styles.popupLabel}>
-            Повторіть новий пароль
-            <input
-              type="password"
-              value={repeatPassword}
-              onChange={(e) => setRepeatPassword(e.target.value)}
-              className={styles.popupInput}
-            />
-          </label>
-          <div className={styles.popupButtons}>
-            <button type="button" className={styles.popupCancel} onClick={onClose}>
-              Скасувати
-            </button>
-            <button type="submit" className={styles.popupSubmit}>
-              Зберегти
-            </button>
-          </div>
-        </form>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+        <h3>Видалити локацію?</h3>
+        <p>Ви впевнені, що хочете видалити "{placeName}"?</p>
+        <div className="modal-buttons">
+          <button onClick={onConfirm} className="standart-btn standart-btn--submit">
+            Видалити
+          </button>
+          <button onClick={onClose} className="standart-btn standart-btn--cancel">
+            Скасувати
+          </button>
+        </div>
       </div>
     </div>
   );
 }
 
-interface EditPlacePopupProps {
-  open: boolean;
-  place: UserPlace | null;
+interface DeleteAccountModalProps {
+  isOpen: boolean;
   onClose: () => void;
+  onConfirm: () => void;
 }
 
-function EditPlacePopup({ open, place, onClose }: EditPlacePopupProps) {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-
-  useEffect(() => {
-    if (place) {
-      setName(place.name);
-      setDescription(place.description);
-    }
-  }, [place]);
-
-  if (!open || !place) return null;
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: PUT /places/{id}
-    console.log("update place", place.id, { name, description });
-  };
+function DeleteAccountModal({ isOpen, onClose, onConfirm }: DeleteAccountModalProps) {
+  if (!isOpen) return null;
 
   return (
-    <div className={styles.popupOverlay}>
-      <div className={styles.popup}>
-        <h3 className={styles.popupTitle}>Редагувати локацію</h3>
-        <form onSubmit={handleSubmit} className={styles.popupForm}>
-          <label className={styles.popupLabel}>
-            Назва
-            <input
-              type="text"
-              className={styles.popupInput}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </label>
-          <label className={styles.popupLabel}>
-            Опис
-            <textarea
-              className={styles.popupInput}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={4}
-            />
-          </label>
-          <div className={styles.popupButtons}>
-            <button type="button" className={styles.popupCancel} onClick={onClose}>
-              Скасувати
-            </button>
-            <button type="submit" className={styles.popupSubmit}>
-              Зберегти
-            </button>
-          </div>
-        </form>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+        <h3>Видалити акаунт?</h3>
+        <p>Ця дія незворотна. Всі ваші дані будуть видалені назавжди.</p>
+        <div className="modal-buttons">
+          <button onClick={onConfirm} className="standart-btn standart-btn--submit">
+            Так, видалити
+          </button>
+          <button onClick={onClose} className="standart-btn standart-btn--cancel">
+            Скасувати
+          </button>
+        </div>
       </div>
     </div>
   );
 }
 
-interface NamePopupProps {
-  open: boolean;
-  currentName: string;
-  onClose: () => void;
-  onSaveLocal: (newName: string) => void;
-}
-
-function NamePopup({ open, currentName, onClose, onSaveLocal }: NamePopupProps) {
-  const [value, setValue] = useState(currentName);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    setValue(currentName);
-    setError("");
-  }, [currentName]);
-
-  if (!open) return null;
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-    try {
-      await changeUserName(value); // PATCH /auth/change-name
-      onSaveLocal(value);
-    } catch (err) {
-      console.error(err);
-      setError("Не вдалося змінити ім'я");
-    } finally {
-      setLoading(false);
-    }
-  };
+// Компонент рейтингу (зірки)
+function Rating({ value = 4.5 }: { value?: number }) {
+  const fullStars = Math.floor(value);
+  const hasHalfStar = value % 1 !== 0;
 
   return (
-    <div className={styles.popupOverlay}>
-      <div className={styles.popup}>
-        <h3 className={styles.popupTitle}>Змінити ім'я</h3>
-        <form onSubmit={handleSubmit} className={styles.popupForm}>
-          <label className={styles.popupLabel}>
-            Нове ім'я
-            <input
-              type="text"
-              className={styles.popupInput}
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-            />
-          </label>
-          {error && <p className={styles.errorText}>{error}</p>}
-          <div className={styles.popupButtons}>
-            <button
-              type="button"
-              className={styles.popupCancel}
-              onClick={onClose}
-              disabled={loading}
-            >
-              Скасувати
-            </button>
-            <button type="submit" className={styles.popupSubmit} disabled={loading}>
-              {loading ? "Збереження..." : "Зберегти"}
-            </button>
-          </div>
-        </form>
-      </div>
+    <div className="place-rating">
+      {[...Array(fullStars)].map((_, i) => (
+        <span key={i} className="star">
+          ★
+        </span>
+      ))}
+      {hasHalfStar && <span className="star star-half">★</span>}
     </div>
   );
 }
 
 function ProfilePage() {
-  const { mail } = useParams();
+  const { mail } = useParams<{ mail: string }>();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { email, name: reduxName } = useAppSelector((s) => s.auth);
 
-  const routeMail = mail ? decodeURIComponent(mail) : undefined;
-  const isOwner = Boolean(email && routeMail === email);
+  const { email: currentUserEmail, accessToken } = useAppSelector((state) => state.auth);
+  const isOwnProfile = currentUserEmail === mail;
 
-  const [userName, setUserName] = useState<string>(reduxName || "Завантаження...");
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [places, setPlaces] = useState<UserPlace[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
+  const [deletingPlace, setDeletingPlace] = useState<UserPlace | null>(null);
 
-  const [isPasswordPopupOpen, setIsPasswordPopupOpen] = useState(false);
-  const [editPlace, setEditPlace] = useState<UserPlace | null>(null);
-  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
-  const [isNamePopupOpen, setIsNamePopupOpen] = useState(false);
-
-  // Завантажуємо ім'я користувача через GET /users/info
   useEffect(() => {
-    const targetEmail = routeMail || email;
-    if (!targetEmail) return;
+    loadProfileData();
+  }, [mail]);
 
-    const loadUserInfo = async () => {
-      try {
-        const userInfo = await getUserInfo(targetEmail);
-        setUserName(userInfo.name);
-        
-        // Якщо це власник, оновлюємо Redux
-        if (isOwner && userInfo.name !== reduxName) {
-          dispatch(updateUserName(userInfo.name));
-          localStorage.setItem("userName", userInfo.name);
-        }
-      } catch (e) {
-        console.error("Помилка завантаження інформації користувача:", e);
-        setUserName(targetEmail); // Fallback на email
+  const loadProfileData = async () => {
+    if (!mail) {
+      setError("Email не вказано");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      const info = await getUserInfo(mail);
+      setUserInfo(info);
+
+      let placesData;
+      if (isOwnProfile && accessToken) {
+        placesData = await getUserPlaces(0, 100);
+      } else {
+        placesData = await getPlacesByEmail(mail, 0, 100);
       }
-    };
-
-    loadUserInfo();
-  }, [routeMail, email, isOwner, reduxName, dispatch]);
-
-  // Завантажуємо локації для власника
-  useEffect(() => {
-    if (!isOwner) return;
-
-    const loadPlaces = async () => {
-      try {
-        setLoading(true);
-        const res = await getUserPlaces(0, 10);
-        setPlaces(res.content);
-      } catch (e) {
-        console.error(e);
-        setError("Помилка завантаження локацій");
-      } finally {
-        setLoading(false);
+      setPlaces(placesData.content);
+    } catch (err: any) {
+      console.error("Error loading profile:", err);
+      if (err.response?.status === 404) {
+        setError("Користувача не знайдено");
+      } else {
+        setError("Помилка завантаження профілю");
       }
-    };
-
-    loadPlaces();
-  }, [isOwner]);
-
-  const hasPlaces = places.length > 0;
-  const isViewerEmpty = !isOwner && !hasPlaces;
-  const isOwnerEmpty = isOwner && !hasPlaces;
-
-  const handleOpenEdit = (place: UserPlace) => {
-    setEditPlace(place);
-    setIsEditPopupOpen(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleSaveNameLocal = (newName: string) => {
-    setUserName(newName);
-    dispatch(updateUserName(newName));
-    localStorage.setItem("userName", newName);
-    setIsNamePopupOpen(false);
+  const handleDeleteAccount = async () => {
+    try {
+      await deleteAccount();
+      dispatch(logout());
+      navigate("/");
+    } catch (err: any) {
+      alert(err.response?.data?.message || "Помилка видалення акаунту");
+    }
   };
+
+  const handleDeletePlace = async () => {
+    if (!deletingPlace) return;
+
+    try {
+      await deletePlace(deletingPlace.id);
+      setPlaces((prev) => prev.filter((p) => p.id !== deletingPlace.id));
+      setDeletingPlace(null);
+    } catch (err: any) {
+      alert(err.response?.data?.message || "Помилка видалення локації");
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="profile-page">
+        <Container>
+          <div className="profile-loading">Завантаження...</div>
+        </Container>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="profile-page">
+        <Container>
+          <div className="profile-error">
+            <h2>{error}</h2>
+            <button onClick={() => navigate("/locations")} className="standart-btn standart-btn--submit">
+              Повернутися до локацій
+            </button>
+          </div>
+        </Container>
+      </div>
+    );
+  }
+
+  if (!userInfo) {
+    return null;
+  }
 
   return (
-    <section className={styles.profilePage}>
+    <div className="profile-page">
       <Container>
-        <div className={styles.card}>
-          <div className={styles.header}>
-            <div className={styles.nameBlock}>
-              <p className={styles.userName}>{userName}</p>
-              <p className={styles.userEmail}>{routeMail || email}</p>
-              <p className={styles.status}>Статус 0</p>
+        <div className="profile-header">
+          <div className="profile-user">
+            <div className="profile-avatar">{userInfo.name.charAt(0).toUpperCase()}</div>
+            <div className="profile-info">
+              <h1>{userInfo.name}</h1>
+              <p className="profile-email">Статей: {places.length}</p>
             </div>
-            {isOwner && (
-              <div className={styles.headerButtons}>
-                <button
-                  type="button"
-                  className={styles.changeNameBtn}
-                  onClick={() => setIsNamePopupOpen(true)}
-                >
-                  Змінити ім'я
-                </button>
-                <button
-                  type="button"
-                  className={styles.changePasswordBtn}
-                  onClick={() => setIsPasswordPopupOpen(true)}
-                >
-                  Змінити пароль
-                </button>
-              </div>
-            )}
           </div>
 
-          <div className={styles.content}>
-            {loading && <p className={styles.infoText}>Завантаження...</p>}
-            {error && <p className={styles.errorText}>{error}</p>}
+          {isOwnProfile && (
+            <div className="profile-actions">
+              <button onClick={() => navigate("/locations/add")} className="standart-btn standart-btn--submit">
+                Додати локацію
+              </button>
+              <button onClick={() => setShowDeleteAccountModal(true)} className="profile-delete-btn">
+                Видалити акаунт
+              </button>
+            </div>
+          )}
+        </div>
 
-            {hasPlaces && (
-              <>
-                <h2 className={styles.sectionTitle}>Ваші локації</h2>
-                <ul className={styles.placeList}>
-                  {places.map((p) => (
-                    <li key={p.id} className={styles.placeItem}>
-                      <div className={styles.placeHeader}>
-                        <div>
-                          <h3 className={styles.placeName}>{p.name}</h3>
-                          <p className={styles.placeRegion}>{p.region}</p>
-                        </div>
-                        <div className={styles.placeHeaderRight}>
-                          {p.placeType && (
-                            <span className={styles.placeType}>{p.placeType}</span>
-                          )}
-                          {isOwner && (
-                            <button
-                              type="button"
-                              className={styles.editPlaceBtn}
-                              onClick={() => handleOpenEdit(p)}
-                            >
-                              Редагувати
-                            </button>
-                          )}
-                        </div>
+        <div className="profile-places">
+          <h2>Локації</h2>
+
+          {places.length === 0 ? (
+            <div className="profile-empty">
+              <p>{isOwnProfile ? "У вас ще немає локацій" : "Користувач ще не додав локації"}</p>
+              {isOwnProfile && (
+                <button onClick={() => navigate("/locations/add")} className="standart-btn standart-btn--submit">
+                  Додати першу локацію
+                </button>
+              )}
+            </div>
+          ) : (
+            <>
+              <div className="places-grid">
+                {places.map((place) => (
+                  <div key={place.id} className="place-card">
+                    {place.imageName && (
+                      <div className="place-img">
+                        <img
+                          src={`${host}/images/${place.imageName}`}
+                          alt={place.name}
+                          onError={(e) => {
+                            const img = e.target as HTMLImageElement;
+                            img.style.display = "none";
+                          }}
+                        />
                       </div>
-                      <p className={styles.placeDescription}>{p.description}</p>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
+                    )}
+                    <div className="place-content">
+                      <div className="place-category">{place.placeType}</div>
+                      <Rating />
+                      <h3 className="place-name">{place.name}</h3>
+                      
+                      {!isOwnProfile ? (
+                        <button
+                          onClick={() => navigate(`/locations/location?id=${place.id}`)}
+                          className="place-view-btn"
+                        >
+                          Переглянути локацію
+                        </button>
+                      ) : null}
+                    </div>
 
-            {isViewerEmpty && (
-              <>
-                <h2 className={styles.sectionTitle}>Локації</h2>
-                <p className={styles.subMessage}>
-                  Цей користувач ще не ділився локаціями
-                </p>
-              </>
-            )}
+                    {isOwnProfile && (
+                      <div className="place-actions">
+                        <button
+                          onClick={() => navigate(`/locations/location?id=${place.id}`)}
+                          className="edit-btn"
+                        >
+                          Переглянути
+                        </button>
+                        <button onClick={() => setDeletingPlace(place)} className="delete-btn">
+                          Видалити
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
 
-            {isOwnerEmpty && (
-              <>
-                <p className={styles.mainMessage}>
-                  Ви ще нічого не публікували, поділіться своєю першою локацією!
-                </p>
-              </>
-            )}
-          </div>
+              {/* Кнопка "Показати ще" - поки що просто для красоти */}
+              {places.length > 6 && (
+                <button className="show-more-btn">Показати ще</button>
+              )}
+            </>
+          )}
         </div>
       </Container>
 
-      <PasswordPopup
-        open={isPasswordPopupOpen}
-        onClose={() => setIsPasswordPopupOpen(false)}
+      <DeleteAccountModal
+        isOpen={showDeleteAccountModal}
+        onClose={() => setShowDeleteAccountModal(false)}
+        onConfirm={handleDeleteAccount}
       />
-      <EditPlacePopup
-        open={isEditPopupOpen}
-        place={editPlace}
-        onClose={() => setIsEditPopupOpen(false)}
+
+      <DeletePlaceModal
+        isOpen={!!deletingPlace}
+        onClose={() => setDeletingPlace(null)}
+        onConfirm={handleDeletePlace}
+        placeName={deletingPlace?.name || ""}
       />
-      <NamePopup
-        open={isNamePopupOpen}
-        currentName={userName}
-        onClose={() => setIsNamePopupOpen(false)}
-        onSaveLocal={handleSaveNameLocal}
-      />
-    </section>
+    </div>
   );
 }
 

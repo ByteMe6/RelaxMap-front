@@ -21,3 +21,10 @@ export async function changeUserName(newName: string): Promise<void> {
     data: { newName },
   });
 }
+
+export async function deleteAccount(): Promise<void> {
+  await authorizedRequest({
+    url: "/users/delete",
+    method: "DELETE",
+  });
+}
