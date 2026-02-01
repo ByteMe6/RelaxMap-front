@@ -12,27 +12,27 @@ import "./index.css";
 
 function App() {
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/locations" element={<LocationsPage />} />
-        <Route
-          path="/locations/location"
-          element={<LocationDeteilsPage />}
-        />{" "}
-        {/* add id route*/}
-  <Route path="/profile/:mail" element={<ProfilePage />} />
-        <Route path="/locations/add" element={<LocationFormPage />} />
-        <Route
-          path="/locations/location/edit"
-          element={<EditLocation />}
-        />{" "}
-        {/* add id route*/}
-      </Route>
+      <Routes>
+        <Route element={ <Layout/> }>
+          <Route path="/" element={ <HomePage/> }/>
+          <Route path="/locations" element={ <LocationsPage/> }/>
+          <Route
+              path="/locations/:id"
+              element={ <LocationDeteilsPage/> }
+          />
+          {/* add id route*/ }
+          <Route path="/profile/:mail" element={ <ProfilePage/> }/>
+          <Route path="/locations/add" element={ <LocationFormPage/> }/>
+          <Route
+              path="/locations/location/edit"
+              element={ <EditLocation/> }
+          />
+          {/* add id route*/ }
+        </Route>
 
-      <Route path="/auth/register" element={<RegisterPage />} />
-      <Route path="/auth/login" element={<LoginPage />} />
-    </Routes>
+        <Route path="/auth/register" element={ <RegisterPage/> }/>
+        <Route path="/auth/login" element={ <LoginPage/> }/>
+      </Routes>
   );
 }
 

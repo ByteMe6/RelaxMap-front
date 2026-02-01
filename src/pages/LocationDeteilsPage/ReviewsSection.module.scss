@@ -1,0 +1,76 @@
+.reviews {
+  padding: 72px 0;
+
+  &__empty {
+    background-color: #ffece5;
+    border-radius: 16px;
+    padding: 50px 30px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  &__empty-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: #4a3b32;
+  }
+
+  &__empty-btn {
+    margin-top: 10px;
+    padding: 12px 26px;
+    border-radius: 10px;
+    border: none;
+    background-color: #f7e0d6;
+    color: #3f2e27;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.15s;
+
+    &:hover {
+      background-color: #eecab8;
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  &__box {
+    margin: 0 0 40px 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__title {
+    font-weight: 700;
+    font-size: 52px;
+    line-height: 120%;
+    letter-spacing: -0.01em;
+    color: #4c2613;
+  }
+
+  &__button {
+    border: 1px solid #cc6534;
+    border-radius: 6px;
+    padding: 6px 12px;
+    //width: 202px;
+    //height: 48px;
+    background: #cc6534;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 150%;
+    transition: background-color 0.3s;
+    color: #fff;
+
+    &:hover {
+      background-color: #b6623c;
+    }
+  }
+}
