@@ -27,7 +27,6 @@ export default function Header() {
     });
   }, []);
 
-  /* Lock scroll on burger */
   useEffect(() => {
     document.body.style.overflow = isBurgerOpen ? "hidden" : "";
     return () => {
