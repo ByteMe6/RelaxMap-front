@@ -1,0 +1,48 @@
+
+.custom-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  backdrop-filter: blur(4px);
+}
+
+.custom-modal {
+  background: #fff;
+  padding: 30px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  font-family: 'Montserrat', sans-serif;
+
+  h3 { margin-bottom: 20px; font-size: 20px; color: #1a1a1a; }
+
+  input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    &:focus { outline: none; border-color: #cc6534; }
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 12px;
+    button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:first-child { background: #eee; }
+    button:last-child { background: #cc6534; color: #fff; }
+  }
+}
