@@ -1,3 +1,4 @@
+// Header.tsx
 import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import Container from "../Container/Container";
@@ -10,16 +11,15 @@ import "aos/dist/aos.css";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks/hook";
 import { logoutUser } from "../../redux/thunk/authThunk";
 
-
-function Header() {
+export default function Header() {
   const [isBurgerOpen, setIsBurgerOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const dispatch = useAppDispatch();
-  const { accessToken } = useAppSelector((state) => state.auth);
-  const { email } = useAppSelector((s) => s.auth);
+  const { accessToken, email } = useAppSelector((state) => state.auth);
   const isAuth = Boolean(accessToken);
 
-  /* AOS */
+
   useEffect(() => {
     AOS.init({
       duration: 800,
@@ -27,7 +27,6 @@ function Header() {
     });
   }, []);
 
-  /* Lock scroll on burger */
   useEffect(() => {
     document.body.style.overflow = isBurgerOpen ? "hidden" : "";
     return () => {
@@ -38,8 +37,23 @@ function Header() {
   const handleBurgerToggle = () => setIsBurgerOpen((prev) => !prev);
   const handleLinkClick = () => setIsBurgerOpen(false);
 
-  // const profileLink = email ? `/profile/${encodeURIComponent(email)}` : "/profile";
-const profileLink = email ? `/profile/${encodeURIComponent(email)}` : "/auth/login";
+  const profileLink = email
+    ? `/profile/${encodeURIComponent(email)}`
+    : "/auth/login";
+
+  const openLogoutModal = () => {
+    setIsLogoutModalOpen(true);
+  };
+
+  const closeLogoutModal = () => {
+    setIsLogoutModalOpen(false);
+  };
+
+  const handleConfirmLogout = () => {
+    dispatch(logoutUser());
+    setIsLogoutModalOpen(false);
+    setIsBurgerOpen(false);
+  };
 
   return (
     <>
@@ -78,27 +92,28 @@ const profileLink = email ? `/profile/${encodeURIComponent(email)}` : "/auth/log
 
             <div className={styles.authBox} data-aos="fade-up">
               {!isAuth ? (
-  <>
-    <Link to="/auth/login" className={styles.loginBtn}>
-      Вхід
-    </Link>
-    <Link to="/auth/register" className={styles.regBtn}>
-      Реєстрація
-    </Link>
-  </>
-) : (
-  <>
-    <Link to={profileLink} className={styles.loginBtn}>
-      Профіль
-    </Link>
-    <button
-      className={styles.regBtn}
-      onClick={() => dispatch(logoutUser())}
-    >
-      Вийти
-    </button>
-  </>
-)}
+                <>
+                  <Link to="/auth/login" className={styles.loginBtn}>
+                    Вхід
+                  </Link>
+                  <Link to="/auth/register" className={styles.regBtn}>
+                    Реєстрація
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link to={profileLink} className={styles.loginBtn}>
+                    Профіль
+                  </Link>
+                  <button
+                    className={styles.regBtn}
+                    type="button"
+                    onClick={openLogoutModal}
+                  >
+                    Вийти
+                  </button>
+                </>
+              )}
             </div>
 
             {/* BURGER BTN */}
@@ -115,7 +130,6 @@ const profileLink = email ? `/profile/${encodeURIComponent(email)}` : "/auth/log
         </Container>
       </header>
 
-      {/* BURGER MENU */}
       {isBurgerOpen && (
         <div className={styles.burgerOverlay} data-aos="fade-down">
           <div className={styles.burgerContent}>
@@ -142,30 +156,30 @@ const profileLink = email ? `/profile/${encodeURIComponent(email)}` : "/auth/log
               </ul>
             </nav>
 
-            {/* AUTH BURGER */}
             <div className={styles.burgerAuthBox}>
-{!isAuth ? (
-  <>
-    <Link to="/auth/login" className={styles.loginBtn}>
-      Вхід
-    </Link>
-    <Link to="/auth/register" className={styles.regBtn}>
-      Реєстрація
-    </Link>
-  </>
-) : (
-  <>
-    <Link to={profileLink} className={styles.loginBtn}>
-      Профіль
-    </Link>
-    <button
-      className={styles.regBtn}
-      onClick={() => dispatch(logoutUser())}
-    >
-      Вийти
-    </button>
-  </>
-)}
+              {!isAuth ? (
+                <>
+                  <Link to="/auth/login" className={styles.loginBtn}>
+                    Вхід
+                  </Link>
+                  <Link to="/auth/register" className={styles.regBtn}>
+                    Реєстрація
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link to={profileLink} className={styles.loginBtn}>
+                    Профіль
+                  </Link>
+                  <button
+                    className={styles.regBtn}
+                    type="button"
+                    onClick={openLogoutModal}
+                  >
+                    Вийти
+                  </button>
+                </>
+              )}
             </div>
 
             <button
@@ -178,8 +192,23 @@ const profileLink = email ? `/profile/${encodeURIComponent(email)}` : "/auth/log
           </div>
         </div>
       )}
+
+      {isLogoutModalOpen && (
+        <div className={styles.customModalOverlay}>
+          <div className={styles.customModal}>
+            <h3>Підтвердити вихід</h3>
+
+            <div className={styles.modalActions}>
+              <button type="button" onClick={closeLogoutModal}>
+                Скасувати
+              </button>
+              <button type="button" onClick={handleConfirmLogout}>
+                Вийти
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
-
-export default Header;

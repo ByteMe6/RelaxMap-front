@@ -1,3 +1,5 @@
+@import url("../../Scss/_Modal.scss");
+
 .profile-page {
   padding-top: 100px;
   background-color: #fdf5f0;
@@ -220,42 +222,42 @@
   backdrop-filter: blur(4px);
 }
 
-.custom-modal {
-  background: #fff;
-  padding: 30px;
-  border-radius: 16px;
-  width: 100%;
-  max-width: 400px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-  font-family: 'Montserrat', sans-serif;
+// .custom-modal {
+//   background: #fff;
+//   padding: 30px;
+//   border-radius: 16px;
+//   width: 100%;
+//   max-width: 400px;
+//   box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+//   font-family: 'Montserrat', sans-serif;
 
-  h3 { margin-bottom: 20px; font-size: 20px; color: #1a1a1a; }
+//   h3 { margin-bottom: 20px; font-size: 20px; color: #1a1a1a; }
 
-  input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    font-size: 16px;
-    &:focus { outline: none; border-color: #cc6534; }
-  }
+//   input {
+//     width: 100%;
+//     padding: 12px;
+//     border: 1px solid #ddd;
+//     border-radius: 8px;
+//     margin-bottom: 20px;
+//     font-size: 16px;
+//     &:focus { outline: none; border-color: #cc6534; }
+//   }
 
-  .modal-actions {
-    display: flex;
-    gap: 12px;
-    button {
-      flex: 1;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    button:first-child { background: #eee; }
-    button:last-child { background: #cc6534; color: #fff; }
-  }
-}
+//   .modal-actions {
+//     display: flex;
+//     gap: 12px;
+//     button {
+//       flex: 1;
+//       padding: 12px;
+//       border: none;
+//       border-radius: 8px;
+//       font-weight: 600;
+//       cursor: pointer;
+//     }
+//     button:first-child { background: #eee; }
+//     button:last-child { background: #cc6534; color: #fff; }
+//   }
+// }
 
 // Эффект ховера для карточек (как просил)
 .location-card {

@@ -1,4 +1,3 @@
-// src/api/authClient.ts
 import axios, { type AxiosError, type AxiosRequestConfig } from "axios";
 import { host } from "../backendHost";
 import store from "../redux/store";
@@ -16,6 +15,22 @@ function getTokens() {
   return { accessToken, refreshToken, email, name };
 }
 
+// POST /auth/is-valid  { "token": "..." } -> { "isTokenValid": boolean }
+async function isTokenValid(token: string): Promise<boolean> {
+  if (!token) return false;
+
+  try {
+    const res = await axios.post<{ isTokenValid: boolean }>(
+      `${host}/auth/is-valid`,
+      { token },
+    );
+    return Boolean(res.data?.isTokenValid);
+  } catch {
+    return false;
+  }
+}
+
+// POST /auth/refresh { "refreshToken": "..." } -> { "access": "...", "refresh": "..." }
 async function refreshAccessToken() {
   const { refreshToken, email, name } = getTokens();
 
@@ -23,11 +38,14 @@ async function refreshAccessToken() {
     throw new Error("No refresh token");
   }
 
-  const res = await axios.post(`${host}/auth/refresh`, {
-    refresh: refreshToken,
-  });
+  const res = await axios.post<{ access: string; refresh: string }>(
+    `${host}/auth/refresh`,
+    {
+      refreshToken, // поле строго как в Swagger
+    },
+  );
 
-  const { access, refresh } = res.data as { access: string; refresh: string };
+  const { access, refresh } = res.data;
 
   localStorage.setItem("accessToken", access);
   localStorage.setItem("refreshToken", refresh);
@@ -47,7 +65,7 @@ async function refreshAccessToken() {
 export async function authorizedRequest<T = unknown>(
   config: AxiosRequestConfig,
 ): Promise<T> {
-  const { accessToken } = getTokens();
+  let { accessToken } = getTokens();
 
   if (!accessToken) {
     store.dispatch(logout());
@@ -62,6 +80,17 @@ export async function authorizedRequest<T = unknown>(
     },
   });
 
+  // 1. Проверяем токен через /auth/is-valid
+  const valid = await isTokenValid(accessToken);
+  if (!valid) {
+    try {
+      accessToken = await refreshAccessToken();
+    } catch (e) {
+      store.dispatch(logout());
+      throw e;
+    }
+  }
+
   try {
     const res = await api.request<T>(withToken(accessToken));
     // @ts-expect-error AxiosResponse
@@ -70,11 +99,11 @@ export async function authorizedRequest<T = unknown>(
     const error = err as AxiosError;
     const status = error.response?.status;
 
-    // Refresh только на 401
     if (status !== 401) {
       throw error;
     }
 
+    // 2. Fallback: на 401 ещё раз пробуем обновить
     try {
       const newAccess = await refreshAccessToken();
       const res = await api.request<T>(withToken(newAccess));
