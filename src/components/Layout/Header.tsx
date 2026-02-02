@@ -11,7 +11,7 @@ import "aos/dist/aos.css";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks/hook";
 import { logoutUser } from "../../redux/thunk/authThunk";
 
-function Header() {
+export default function Header() {
   const [isBurgerOpen, setIsBurgerOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
@@ -51,8 +51,6 @@ function Header() {
   };
 
   const handleConfirmLogout = () => {
-    // If you want some check (e.g. type "LOGOUT"), do it here
-    // if (logoutInput !== "LOGOUT") return;
     dispatch(logoutUser());
     setIsLogoutModalOpen(false);
     setIsBurgerOpen(false);
@@ -133,7 +131,6 @@ function Header() {
         </Container>
       </header>
 
-      {/* BURGER MENU */}
       {isBurgerOpen && (
         <div className={styles.burgerOverlay} data-aos="fade-down">
           <div className={styles.burgerContent}>
@@ -160,7 +157,6 @@ function Header() {
               </ul>
             </nav>
 
-            {/* AUTH BURGER */}
             <div className={styles.burgerAuthBox}>
               {!isAuth ? (
                 <>
@@ -198,7 +194,6 @@ function Header() {
         </div>
       )}
 
-      {/* LOGOUT MODAL */}
       {isLogoutModalOpen && (
         <div className={styles.customModalOverlay}>
           <div className={styles.customModal}>
@@ -218,5 +213,3 @@ function Header() {
     </>
   );
 }
-
-export default Header;
