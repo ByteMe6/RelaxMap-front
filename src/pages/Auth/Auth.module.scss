@@ -181,3 +181,10 @@
 .loginForm{
   margin-top: 50px;
 }
+
+@media (max-width: 333px) {
+  .loginForm{
+    max-width: 100%;
+    overflow: hidden;
+  }
+}
