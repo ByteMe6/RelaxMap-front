@@ -10,6 +10,7 @@ import "swiper/css";
 import reviewsBlockStyles from "../HomePage/ReviewsBlock.module.scss";
 import styles from "./ReviewsSection.module.scss";
 import { useReviews } from "./ReviewsContext.tsx";
+import { useAddReviewModal } from "../../components/Modals/AddReviewModal/AddReviewModalContext.tsx";
 
 interface Review {
   id: number;
@@ -41,6 +42,7 @@ function ReviewsSection() {
   const { id } = useParams();
   const { response, setResponse } = useReviews();
   const swiperRef = useRef<SwiperType | null>(null);
+  const { setIsOpen } = useAddReviewModal();
 
   useEffect(() => {
     (async () => {
@@ -62,6 +64,10 @@ function ReviewsSection() {
     })();
   }, [id, setResponse]);
 
+  const handleOpen = () => {
+    setIsOpen(true);
+  };
+
   const hasReviews = response && response.content.length > 0;
   const canLoop = response && response.content.length > 3;
 
@@ -70,7 +76,7 @@ function ReviewsSection() {
         <Container>
           <div className={ styles["reviews__box"] }>
             <h2 className={ styles["reviews__title"] }>Відгуки</h2>
-            <button className={ styles["reviews__button"] }>
+            <button className={ styles["reviews__button"] } onClick={ handleOpen }>
               Залишити відгук
             </button>
           </div>
@@ -81,7 +87,7 @@ function ReviewsSection() {
                 <p className={ styles["reviews__empty-text"] }>
                   Поки що немає жодного відгуку
                 </p>
-                <button className={ styles["reviews__empty-btn"] }>
+                <button className={ styles["reviews__empty-btn"] } onClick={ handleOpen }>
                   Залишити перший відгук
                 </button>
               </div>
