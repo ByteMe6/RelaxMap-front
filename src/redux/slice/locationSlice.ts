@@ -17,11 +17,12 @@ export interface LocationInfo {
 }
 
 interface LocationState {
-    loading: boolean
-    info: LocationInfo
+    loading: boolean,
+    info: LocationInfo,
+    locations: LocationInfo[],
     location: LocationData | null,
     listCity: any[],
-    listRegion:any[]
+    listRegion: any[]
 }
 const initialState: LocationState = {
     loading: false,
@@ -32,11 +33,12 @@ const initialState: LocationState = {
         region: null,
         description: "",
     },
-    listCity:[],
-    listRegion:[],
+    locations: [],
+    listCity: [],
+    listRegion: [],
     location: null
 }
-console.log(initialState.info)
+console.log(initialState.locations)
 const locationSlice = createSlice({
     name: "location",
     initialState,
@@ -44,13 +46,13 @@ const locationSlice = createSlice({
         setLocationData: (state, action: PayloadAction<LocationInfo>) => {
             state.info = action.payload
         },
-        resetLocation:(state) => {
+        resetLocation: (state) => {
             state.info = {
-                name:"",
-                image:"",
-                placeType:null,
-                region:null,
-                description:""
+                name: "",
+                image: "",
+                placeType: null,
+                region: null,
+                description: ""
             }
             state.location = null
             state.listCity = []
@@ -73,35 +75,39 @@ const locationSlice = createSlice({
                 state.loading = true
             })
             .addCase(postNewLocation.fulfilled, (state, action) => {
-            state.loading = false
-            state.info = action.payload
-            console.log("aa",state.info)
+                state.loading = false
+                state.info = action.payload
+                state.locations.push(action.payload)
+                console.log("aa", state.info)
+                console.log("bb", state.locations)
+                console.log("bb copy", [...state.locations])
+                console.log("length", state.locations.length)
             })
             .addCase(postNewLocation.rejected, (state) => {
                 state.loading = false
             })
-           .addCase(searchCities.pending, (state) => {
-            state.loading = true
-           })
-           .addCase(searchCities.fulfilled, (state,action) => {
-            state.loading = false
-            state.listCity = action.payload
-           })
-           .addCase(searchCities.rejected, (state) => {
-            state.loading = false
-           })
-           .addCase(searchRegions.pending, (state) => {
-            state.loading = true
-           })
-           .addCase(searchRegions.fulfilled, (state,action) => {
-            state.loading = false
-            state.listRegion = action.payload
-            console.log(state.listRegion)
-           })
+            .addCase(searchCities.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(searchCities.fulfilled, (state, action) => {
+                state.loading = false
+                state.listCity = action.payload
+            })
+            .addCase(searchCities.rejected, (state) => {
+                state.loading = false
+            })
+            .addCase(searchRegions.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(searchRegions.fulfilled, (state, action) => {
+                state.loading = false
+                state.listRegion = action.payload
+                console.log(state.listRegion)
+            })
             .addCase(searchRegions.rejected, (state) => {
                 state.loading = false
             })
     },
 })
-export const {setLocationData, resetLocation} = locationSlice.actions
+export const { setLocationData, resetLocation } = locationSlice.actions
 export default locationSlice.reducer

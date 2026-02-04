@@ -26,6 +26,9 @@ export const postNewLocation = createAsyncThunk<
         if (!token || !refreshToken) {
             throw new Error("Немає доступу. Будь ласка логінізуйтеся.");
         }
+        if (!newLocation.name || !newLocation.placeType || !newLocation.description) {
+            return thunkApi.rejectWithValue("Потрібно заповнити всі обов'язкові поля");
+        }
         const formData = new FormData();
         formData.append("name", newLocation.name);
         formData.append("placeType", newLocation.placeType);
@@ -34,15 +37,17 @@ export const postNewLocation = createAsyncThunk<
         if (newLocation.file) {
             formData.append("file", newLocation.file);
         }
+        for (const [key, value] of formData.entries()) {
+    console.log(key, value);
+}
         try {
             const response = await axios.post(`${host}/places`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
             });
-            const data: LocationInfo = await response.data;
-            console.log(data)
-            return data;
+            console.log(response.data)
+            return response.data as LocationInfo;
         } catch (error: any) {
             if (error.response?.status === 401) {
                 let token = await refreshAccessToken(refreshToken)
@@ -51,6 +56,7 @@ export const postNewLocation = createAsyncThunk<
                 });
                 return data
             }
+            return thunkApi.rejectWithValue(error.message || "Error");
         }
     } catch (error) {
         return thunkApi.rejectWithValue(error)

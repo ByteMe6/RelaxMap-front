@@ -5,6 +5,8 @@ import { host } from "../../../backendHost";
 import styles from "./LocationGrid.module.scss"
 function LocationsGrid() {
 const info = useAppSelector((state) => state.location.info)
+const locations = useAppSelector((state) => state.location.locations)
+console.log(locations)
 const image = info.imageName ? `${host}/images/${info.imageName}` : "/default-image.png";
     return (
         <Container>
