@@ -1,0 +1,85 @@
+.add-review-modal {
+  &__text {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 150%;
+    color: #000;
+    margin: 0 0 8px 0;
+  }
+
+  &__textarea {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+    padding: 12px;
+    width: 640px;
+    height: 180px;
+    outline: none;
+    resize: none;
+    margin: 0 0 12px 0;
+    background: #ffe5d9;
+  }
+
+  &__error {
+    margin: 0 0 24px 0;
+  }
+
+  &__rating {
+    display: flex;
+    margin: 0 0 24px 0;
+
+    &__icon {
+      fill: none;
+      stroke: gray;
+      cursor: pointer;
+
+      &--filled {
+        cursor: pointer;
+        fill: gold;
+        stroke: #ffcc00;
+      }
+    }
+  }
+
+  &__btn-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+  }
+
+  &__cancel-btn {
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 150%;
+    color: #4c2613;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+    padding: 6px 12px;
+    width: 203px;
+    height: 48px;
+    background: rgba(0, 0, 0, 0.05);
+    transition: background 200ms;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.10);
+    }
+  }
+
+  &__send-btn {
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 150%;
+    color: #fff;
+    border: 1px solid #cc6534;
+    border-radius: 6px;
+    padding: 6px 12px;
+    width: 203px;
+    height: 48px;
+    background: #cc6534;
+    transition: background 200ms;
+
+    &:hover {
+      background: #b6623c;
+    }
+  }
+}
