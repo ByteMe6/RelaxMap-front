@@ -15,8 +15,12 @@
     height: 180px;
     outline: none;
     resize: none;
-    margin: 0 0 24px 0;
+    margin: 0 0 12px 0;
     background: #ffe5d9;
+  }
+
+  &__error {
+    margin: 0 0 24px 0;
   }
 
   &__rating {

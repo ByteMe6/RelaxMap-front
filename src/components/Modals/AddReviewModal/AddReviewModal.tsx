@@ -7,6 +7,11 @@ export default function AddReviewModal() {
   const { isOpen, setIsOpen } = useAddReviewModal();
 
   useEffect(() => {
+    window.scroll({
+      top: 0,
+      left: 0
+    });
+
     if (isOpen) {
       document.body.style.overflow = "hidden";
     } else {
