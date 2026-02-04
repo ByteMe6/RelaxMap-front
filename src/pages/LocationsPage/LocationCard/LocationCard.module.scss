@@ -1,0 +1,44 @@
+.wrapperCard{
+    width:421px;
+    height:624px;
+    background-color: #FFE5D9;
+    list-style: none;
+    border-radius: 10px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.cardImage {
+    width:421px;
+    height: 421px;
+    border-radius: 10px;
+}
+.textPlace {
+    font-weight: 600;
+    font-family: "Montserrat";
+}
+.btnLocation {
+    width:389px;
+    height:48px;
+    border-radius:8px;
+    margin: 0 auto;
+    color:#4C2613;
+    font-weight: 500;
+    font-family: "Montserrat";
+    background-color: #FFE5D9;
+    
+}
+.wrapperInfoCard{
+    margin-left:20px;
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+}
+.textNameLocation {
+    color:#4C2613;
+    font-family: "Montserrat";
+    font-weight: 700;
+    font-style: bold;
+}
