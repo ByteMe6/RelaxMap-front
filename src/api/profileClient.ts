@@ -1,6 +1,7 @@
-// src/api/profileClient.ts
-import { authorizedRequest } from "../api/authClient";
 import type { AxiosRequestConfig } from "axios";
+import { authorizedRequest } from "./authClient";
+import store from "../redux/store";
+import { logout } from "../redux/slice/authSlice"; 
 
 export interface UserPlace {
   id: number;
@@ -27,9 +28,27 @@ export async function getUserPlaces(
     url: "/places/for-user",
     method: "GET",
     params: {
-      "pageable.page": page,
-      "pageable.size": size,
+      page,
+      size,
     },
   };
+
   return authorizedRequest<UserPlacesResponse>(config);
+}
+
+export async function deletePlace(placeId: number): Promise<void> {
+  try {
+    await authorizedRequest({
+      url: `/places/${placeId}`,
+      method: "DELETE",
+    });
+  } catch (error: any) {
+    if (error.response?.status === 401) {
+      console.error("Авторизація провалилася при видаленні. Спробуйте перелогінитися.");
+      throw new Error("Не вдалося видалити локацію: проблема з авторизацією");
+    } else {
+      store.dispatch(logout()); 
+      throw error;
+    }
+  }
 }

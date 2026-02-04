@@ -1,390 +1,265 @@
 // src/pages/ProfilePage/ProfilePage.tsx
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import styles from "./ProfilePage.module.scss";
-import { getUserPlaces, type UserPlace } from "../../api/profileClient";
-import { getUserInfo } from "../../api/userClient";
-import { useAppSelector, useAppDispatch } from "../../redux/hooks/hook";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/hook";
 import Container from "../../components/Container/Container";
-import { changeUserName } from "../../api/userClient";
-import { updateUserName } from "../../redux/slice/authSlice";
+import {
+  getUserPlaces,
+  deletePlace,
+  type UserPlace,
+} from "../../api/profileClient";
+import {
+  getUserInfo,
+  changeUserName,
+  changePassword,
+  type UserInfo,
+} from "../../api/userClient";
+import { ProfileModal } from "./ProfileModal";
+import "./ProfilePage.scss";
+import { host } from "../../backendHost";
+import axios from "axios";
+import { logoutUser } from "../../redux/thunk/authThunk";
 
-interface PasswordPopupProps {
-  open: boolean;
-  onClose: () => void;
-}
-
-function PasswordPopup({ open, onClose }: PasswordPopupProps) {
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
-
-  if (!open) return null;
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: POST /auth/change-password
-    console.log({ oldPassword, newPassword, repeatPassword });
-  };
-
-  return (
-    <div className={styles.popupOverlay}>
-      <div className={styles.popup}>
-        <h3 className={styles.popupTitle}>Змінити пароль</h3>
-        <form onSubmit={handleSubmit} className={styles.popupForm}>
-          <label className={styles.popupLabel}>
-            Старий пароль
-            <input
-              type="password"
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-              className={styles.popupInput}
-            />
-          </label>
-          <label className={styles.popupLabel}>
-            Новий пароль
-            <input
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className={styles.popupInput}
-            />
-          </label>
-          <label className={styles.popupLabel}>
-            Повторіть новий пароль
-            <input
-              type="password"
-              value={repeatPassword}
-              onChange={(e) => setRepeatPassword(e.target.value)}
-              className={styles.popupInput}
-            />
-          </label>
-          <div className={styles.popupButtons}>
-            <button type="button" className={styles.popupCancel} onClick={onClose}>
-              Скасувати
-            </button>
-            <button type="submit" className={styles.popupSubmit}>
-              Зберегти
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
-
-interface EditPlacePopupProps {
-  open: boolean;
-  place: UserPlace | null;
-  onClose: () => void;
-}
-
-function EditPlacePopup({ open, place, onClose }: EditPlacePopupProps) {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-
-  useEffect(() => {
-    if (place) {
-      setName(place.name);
-      setDescription(place.description);
-    }
-  }, [place]);
-
-  if (!open || !place) return null;
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: PUT /places/{id}
-    console.log("update place", place.id, { name, description });
-  };
-
-  return (
-    <div className={styles.popupOverlay}>
-      <div className={styles.popup}>
-        <h3 className={styles.popupTitle}>Редагувати локацію</h3>
-        <form onSubmit={handleSubmit} className={styles.popupForm}>
-          <label className={styles.popupLabel}>
-            Назва
-            <input
-              type="text"
-              className={styles.popupInput}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </label>
-          <label className={styles.popupLabel}>
-            Опис
-            <textarea
-              className={styles.popupInput}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={4}
-            />
-          </label>
-          <div className={styles.popupButtons}>
-            <button type="button" className={styles.popupCancel} onClick={onClose}>
-              Скасувати
-            </button>
-            <button type="submit" className={styles.popupSubmit}>
-              Зберегти
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
-
-interface NamePopupProps {
-  open: boolean;
-  currentName: string;
-  onClose: () => void;
-  onSaveLocal: (newName: string) => void;
-}
-
-function NamePopup({ open, currentName, onClose, onSaveLocal }: NamePopupProps) {
-  const [value, setValue] = useState(currentName);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    setValue(currentName);
-    setError("");
-  }, [currentName]);
-
-  if (!open) return null;
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-    try {
-      await changeUserName(value); // PATCH /auth/change-name
-      onSaveLocal(value);
-    } catch (err) {
-      console.error(err);
-      setError("Не вдалося змінити ім'я");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className={styles.popupOverlay}>
-      <div className={styles.popup}>
-        <h3 className={styles.popupTitle}>Змінити ім'я</h3>
-        <form onSubmit={handleSubmit} className={styles.popupForm}>
-          <label className={styles.popupLabel}>
-            Нове ім'я
-            <input
-              type="text"
-              className={styles.popupInput}
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-            />
-          </label>
-          {error && <p className={styles.errorText}>{error}</p>}
-          <div className={styles.popupButtons}>
-            <button
-              type="button"
-              className={styles.popupCancel}
-              onClick={onClose}
-              disabled={loading}
-            >
-              Скасувати
-            </button>
-            <button type="submit" className={styles.popupSubmit} disabled={loading}>
-              {loading ? "Збереження..." : "Зберегти"}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
-
-function ProfilePage() {
-  const { mail } = useParams();
+const ProfilePage: React.FC = () => {
+  const { mail } = useParams<{ mail: string }>();
   const dispatch = useAppDispatch();
-  const { email, name: reduxName } = useAppSelector((s) => s.auth);
+  const navigate = useNavigate();
 
-  const routeMail = mail ? decodeURIComponent(mail) : undefined;
-  const isOwner = Boolean(email && routeMail === email);
+  const currentUserEmail = useAppSelector((state) => state.auth.email);
+  const accessToken = useAppSelector((state) => state.auth.accessToken);
 
-  const [userName, setUserName] = useState<string>(reduxName || "Завантаження...");
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [places, setPlaces] = useState<UserPlace[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [modalConfig, setModalConfig] = useState<{
+    open: boolean;
+    type: "name" | "pass";
+    title: string;
+  } | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const [isPasswordPopupOpen, setIsPasswordPopupOpen] = useState(false);
-  const [editPlace, setEditPlace] = useState<UserPlace | null>(null);
-  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
-  const [isNamePopupOpen, setIsNamePopupOpen] = useState(false);
+  const isMyProfile = Boolean(currentUserEmail && mail && currentUserEmail === mail);
 
-  // Завантажуємо ім'я користувача через GET /users/info
-  useEffect(() => {
-    const targetEmail = routeMail || email;
-    if (!targetEmail) return;
-
-    const loadUserInfo = async () => {
-      try {
-        const userInfo = await getUserInfo(targetEmail);
-        setUserName(userInfo.name);
-        
-        // Якщо це власник, оновлюємо Redux
-        if (isOwner && userInfo.name !== reduxName) {
-          dispatch(updateUserName(userInfo.name));
-          localStorage.setItem("userName", userInfo.name);
-        }
-      } catch (e) {
-        console.error("Помилка завантаження інформації користувача:", e);
-        setUserName(targetEmail); // Fallback на email
-      }
-    };
-
-    loadUserInfo();
-  }, [routeMail, email, isOwner, reduxName, dispatch]);
-
-  // Завантажуємо локації для власника
-  useEffect(() => {
-    if (!isOwner) return;
-
-    const loadPlaces = async () => {
-      try {
-        setLoading(true);
-        const res = await getUserPlaces(0, 10);
-        setPlaces(res.content);
-      } catch (e) {
-        console.error(e);
-        setError("Помилка завантаження локацій");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadPlaces();
-  }, [isOwner]);
-
-  const hasPlaces = places.length > 0;
-  const isViewerEmpty = !isOwner && !hasPlaces;
-  const isOwnerEmpty = isOwner && !hasPlaces;
-
-  const handleOpenEdit = (place: UserPlace) => {
-    setEditPlace(place);
-    setIsEditPopupOpen(true);
+  const handleDeleteAccount = async () => {
+    if (!accessToken) return;
+    try {
+      await axios.delete(`${host}/users/delete-account`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      dispatch(logoutUser());
+      navigate("/");
+    } catch (e) {
+      console.error(e);
+      setError("Не вдалося видалити акаунт");
+    }
   };
 
-  const handleSaveNameLocal = (newName: string) => {
-    setUserName(newName);
-    dispatch(updateUserName(newName));
-    localStorage.setItem("userName", newName);
-    setIsNamePopupOpen(false);
+  const navigateToAddLocation = () => {
+    navigate("/locations/add");
+  };
+
+  const loadData = async () => {
+    if (!mail) {
+      navigate("/");
+      return;
+    }
+
+    try {
+      // ПУБЛІЧНА інфа по юзеру (Swagger: GET /users/info?id&email)
+      const info = await getUserInfo(mail);
+      setUserInfo(info);
+      setError(null);
+    } catch (e: any) {
+      setError(e.message || "Не вдалося завантажити профіль");
+      return;
+    }
+
+    // Локації — тільки для свого профілю і тільки якщо є токен
+    if (isMyProfile && accessToken) {
+      try {
+        const p = await getUserPlaces(0, 50);
+        setPlaces(p.content);
+      } catch (e: any) {
+        // Якщо токен помер / немає доступу, не ламаємо публічний профіль
+        console.error("Failed to load places", e);
+      }
+    } else {
+      setPlaces([]);
+    }
+  };
+
+  useEffect(() => {
+    void loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mail, isMyProfile, accessToken]);
+
+  const handleSave = async (oldValue?: string, newValue?: string) => {
+    try {
+      if (modalConfig?.type === "name" && newValue) {
+        await changeUserName(newValue);
+        alert("Ім'я змінено");
+      } else if (modalConfig?.type === "pass" && oldValue && newValue) {
+        await changePassword(oldValue, newValue);
+        alert("Пароль успішно змінено");
+      }
+      await loadData();
+      setModalConfig(null);
+      setError(null);
+    } catch (error: any) {
+      setError(error?.response?.data?.message || "Не вдалося змінити дані");
+    }
+  };
+
+  const handleDeletePlace = async (placeId: number) => {
+    if (!confirm("Видалити локацію?")) return;
+    try {
+      await deletePlace(placeId);
+      await loadData();
+    } catch (error: any) {
+      setError(error.message || "Помилка видалення");
+    }
   };
 
   return (
-    <section className={styles.profilePage}>
+    <div className="profile-page">
       <Container>
-        <div className={styles.card}>
-          <div className={styles.header}>
-            <div className={styles.nameBlock}>
-              <p className={styles.userName}>{userName}</p>
-              <p className={styles.userEmail}>{routeMail || email}</p>
-              <p className={styles.status}>Статус 0</p>
+        {error && (
+          <div
+            className="profile-error"
+            style={{ color: "red", marginBottom: "20px" }}
+          >
+            {error}
+          </div>
+        )}
+
+        <div className="profile-header">
+          <div className="user-info">
+            <h1>{userInfo?.name || mail?.split("@")[0] || "Користувач"}</h1>
+            <p className="email">Email: {mail || "не вказано"}</p>
+            {isMyProfile && <p>Локацій: {places.length}</p>}
+          </div>
+
+          {isMyProfile && (
+            <div className="profile-actions">
+              <button
+                className="btn-edit pBtn"
+                type="button"
+                onClick={() =>
+                  setModalConfig({
+                    open: true,
+                    type: "name",
+                    title: "Змінити ім'я",
+                  })
+                }
+              >
+                Змінити ім&apos;я
+              </button>
+              <button
+                className="btn-edit pBtn"
+                type="button"
+                onClick={() =>
+                  setModalConfig({
+                    open: true,
+                    type: "pass",
+                    title: "Змінити пароль",
+                  })
+                }
+              >
+                Змінити пароль
+              </button>
+              <button
+                className="btn-danger pBtn"
+                type="button"
+                onClick={handleDeleteAccount}
+              >
+                Видалити акаунт
+              </button>
             </div>
-            {isOwner && (
-              <div className={styles.headerButtons}>
-                <button
-                  type="button"
-                  className={styles.changeNameBtn}
-                  onClick={() => setIsNamePopupOpen(true)}
-                >
-                  Змінити ім'я
-                </button>
-                <button
-                  type="button"
-                  className={styles.changePasswordBtn}
-                  onClick={() => setIsPasswordPopupOpen(true)}
-                >
-                  Змінити пароль
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className={styles.content}>
-            {loading && <p className={styles.infoText}>Завантаження...</p>}
-            {error && <p className={styles.errorText}>{error}</p>}
-
-            {hasPlaces && (
-              <>
-                <h2 className={styles.sectionTitle}>Ваші локації</h2>
-                <ul className={styles.placeList}>
-                  {places.map((p) => (
-                    <li key={p.id} className={styles.placeItem}>
-                      <div className={styles.placeHeader}>
-                        <div>
-                          <h3 className={styles.placeName}>{p.name}</h3>
-                          <p className={styles.placeRegion}>{p.region}</p>
-                        </div>
-                        <div className={styles.placeHeaderRight}>
-                          {p.placeType && (
-                            <span className={styles.placeType}>{p.placeType}</span>
-                          )}
-                          {isOwner && (
-                            <button
-                              type="button"
-                              className={styles.editPlaceBtn}
-                              onClick={() => handleOpenEdit(p)}
-                            >
-                              Редагувати
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                      <p className={styles.placeDescription}>{p.description}</p>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-
-            {isViewerEmpty && (
-              <>
-                <h2 className={styles.sectionTitle}>Локації</h2>
-                <p className={styles.subMessage}>
-                  Цей користувач ще не ділився локаціями
-                </p>
-              </>
-            )}
-
-            {isOwnerEmpty && (
-              <>
-                <p className={styles.mainMessage}>
-                  Ви ще нічого не публікували, поділіться своєю першою локацією!
-                </p>
-              </>
-            )}
-          </div>
+          )}
         </div>
+
+        <h2 className="section-title">Мої локації</h2>
+
+        {isMyProfile && (
+          <button className="btn pBtn" type="button" onClick={navigateToAddLocation}>
+            Створити нову локацію
+          </button>
+        )}
+
+        {!isMyProfile && (
+          <p>
+            Список локацій іншого користувача
+          </p>
+        )}
+
+        {isMyProfile ? (
+          places.length === 0 ? (
+            <p>У вас поки немає доданих локацій</p>
+          ) : (
+            <div className="locations-grid">
+              {places.map((place) => (
+                <div
+                  key={place.id}
+                  className="location-card"
+                  onClick={() => navigate(`/locations/${place.id}`)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <div className="img-box">
+                    <img
+                      src={
+                        place.imageName
+                          ? `${host}/images/${place.imageName}`
+                          : "/assets/placeholder.jpg"
+                      }
+                      alt={place.name}
+                    />
+                  </div>
+                  <div className="info-box">
+                    <span className="type">{place.placeType || "—"}</span>
+                    <h3>{place.name}</h3>
+                  </div>
+
+                  <div className="card-btns">
+                    <button
+                      className="edit"
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/locations/location/edit`, {
+                          state: { place },
+                        });
+                      }}
+                    >
+                      Редагувати
+                    </button>
+                    <button
+                      className="del"
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        void handleDeletePlace(place.id);
+                      }}
+                    >
+                      Видалити
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )
+        ) : null}
       </Container>
 
-      <PasswordPopup
-        open={isPasswordPopupOpen}
-        onClose={() => setIsPasswordPopupOpen(false)}
+      <ProfileModal
+        isOpen={!!modalConfig?.open}
+        title={modalConfig?.title || ""}
+        type={modalConfig?.type === "pass" ? "password" : "text"}
+        onClose={() => setModalConfig(null)}
+        onSave={handleSave}
       />
-      <EditPlacePopup
-        open={isEditPopupOpen}
-        place={editPlace}
-        onClose={() => setIsEditPopupOpen(false)}
-      />
-      <NamePopup
-        open={isNamePopupOpen}
-        currentName={userName}
-        onClose={() => setIsNamePopupOpen(false)}
-        onSaveLocal={handleSaveNameLocal}
-      />
-    </section>
+    </div>
   );
-}
+};
 
 export default ProfilePage;

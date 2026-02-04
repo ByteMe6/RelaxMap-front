@@ -171,11 +171,20 @@
   }
 }
 
-/* ================== FOOTER ================== */
-
 .copyright {
   width: 100%;
   text-align: center;
   position: absolute;
   bottom: 10px;
+}
+
+.loginForm{
+  margin-top: 50px;
+}
+
+@media (max-width: 333px) {
+  .loginForm{
+    max-width: 100%;
+    overflow: hidden;
+  }
 }
