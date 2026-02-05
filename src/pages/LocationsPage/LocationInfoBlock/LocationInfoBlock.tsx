@@ -1,9 +1,15 @@
 import styles from "./LocationInfoBlock.module.scss"
-import { useAppSelector } from "../../../redux/hooks/hook";
 import { useState } from "react";
 import Star from "../../LocationDeteilsPage/RatingLocation/Star/Star";
-function LocationInfoBlock() {
-    const info = useAppSelector((state) => state.location.info)
+interface LocationBlock {
+    name:string,
+    region:string | null,
+    placeType: string | null
+}
+type LocationProps = {
+    location?: LocationBlock;
+}
+function LocationInfoBlock({location}: LocationProps) {
     const [hover, setHover] = useState<number | null>(null)
     const [rating, setRating] = useState(0)
     return (
@@ -20,9 +26,9 @@ function LocationInfoBlock() {
                     )
                 })}
             </div>
-            <p className={styles.titleLocationDetail}>{info?.name}</p>
-            <p className={styles.textLocation}><span className={styles.spanLocation}>Регіон:</span>{info?.region}</p>
-            <p className={styles.textLocation}><span className={styles.spanLocation}>Тип локації:</span>:{info?.placeType}</p>
+            <p className={styles.titleLocationDetail}>{location?.name}</p>
+            <p className={styles.textLocation}><span className={styles.spanLocation}>Регіон:</span>{location?.region}</p>
+            <p className={styles.textLocation}><span className={styles.spanLocation}>Тип локації:</span>{location?.placeType}</p>
         </div>
     )
 }

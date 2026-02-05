@@ -1,5 +1,13 @@
 .textDescription {
     font-family: "Montserrat";
     font-weight: 400;
-    margin-right: 110px;
+    width: 375px;
+    line-height: 150%;
+    margin-top: 10%;
+}
+@media(min-width:768px){
+    .textDescription {
+        width: 704px;
+        margin-top: 6%;
+    }
 }

@@ -8,6 +8,7 @@ export interface LocationData {
     lng: number | null,
 }
 export interface LocationInfo {
+    id:number,
     image: string,
     name: string,
     placeType: null | string,
@@ -18,7 +19,7 @@ export interface LocationInfo {
 
 interface LocationState {
     loading: boolean,
-    info: LocationInfo,
+    info: LocationInfo | null,
     locations: LocationInfo[],
     location: LocationData | null,
     listCity: any[],
@@ -27,6 +28,7 @@ interface LocationState {
 const initialState: LocationState = {
     loading: false,
     info: {
+        id:1,
         name: "",
         image: "",
         placeType: null,
@@ -47,13 +49,7 @@ const locationSlice = createSlice({
             state.info = action.payload
         },
         resetLocation: (state) => {
-            state.info = {
-                name: "",
-                image: "",
-                placeType: null,
-                region: null,
-                description: ""
-            }
+            state.info = null;
             state.location = null
             state.listCity = []
             state.listRegion = []

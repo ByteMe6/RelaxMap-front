@@ -2,7 +2,9 @@ import styles from "./LocationCard.module.scss"
 import Star from "../../LocationDeteilsPage/RatingLocation/Star/Star"
 import { useState } from "react"
 import { host } from "../../../backendHost"
+import { useNavigate } from "react-router-dom"
 type CardData = {
+    id?:number,
     name: string,
     placeType: string | null,
     region: string | null,
@@ -15,6 +17,7 @@ type CardProps = {
 function LocationCard({ info }: CardProps) {
     const [hover, setHover] = useState<number | null>(null)
     const [rating, setRating] = useState(0)
+    const navigate = useNavigate()
     return (
         <>
             {info.map((location) => (
@@ -36,7 +39,10 @@ function LocationCard({ info }: CardProps) {
                         </div>
                         <p className={styles.textNameLocation}>{location.name}</p>
                     </div>
-                    <button className={styles.btnLocation}>Переглянути локацію</button>
+                    <button className={styles.btnLocation} onClick={() => {
+                        navigate(`/locations/${location.id}`)
+                        console.log(location.id)
+                    }}>Переглянути локацію</button>
                 </li>
             ))
             }
