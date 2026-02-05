@@ -1,0 +1,68 @@
+.inputSearch {
+    width: 335px;
+    height: 40px;
+    background: #FFE5D9;
+    border: 1px solid #00000026;
+    border-radius: 8px;
+    padding-left: 15px;
+
+    &::placeholder {
+        font-family: "Montserrat";
+        font-weight: 400;
+
+    }
+}
+
+.inputTypeLocation {
+    width: 160px;
+    height: 40px;
+    background: #FFE5D9;
+    appearance: none;
+    border-radius: 8px;
+    border: 1px solid #00000026;
+    background-image: url("../../../../public/assets/arrowDown.svg");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-left: 12px;
+}
+
+.formFilterLocation {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.inputSort {
+    width: 335px;
+}
+.wrapperSelect {
+    display: flex;
+    gap:10px;
+}
+.wrapperSearch {
+    display: flex;
+    flex-direction: column;
+    gap:15px;
+}
+@media(min-width:768px) {
+    .inputSearch {
+        width:704px;
+    }
+    .inputSort {
+        width: 158px;
+    }
+}
+@media(min-width:1440px){
+    .inputSearch {
+        width:310px;
+    }
+    .formFilterLocation {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .wrapperSearch {
+        flex-direction: row;
+    }
+}
