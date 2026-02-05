@@ -35,6 +35,10 @@
     }
 }
 @media(min-width:1440px) {
+    .wrapperLocationCards {
+        width:1440px;
+        justify-content: flex-start;
+    }
     .btnLoadLocation {
         width:160px;
     }

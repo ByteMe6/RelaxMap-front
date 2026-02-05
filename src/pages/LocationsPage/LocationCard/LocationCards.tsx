@@ -1,24 +1,25 @@
 import styles from "./LocationCard.module.scss"
 import Star from "../../LocationDeteilsPage/RatingLocation/Star/Star"
 import { useState } from "react"
+import { host } from "../../../backendHost"
 type CardData = {
     name: string,
     placeType: string | null,
     region: string | null,
-    description: string
+    description: string,
+    imageName?:string
 }
 type CardProps = {
     info: CardData[],
-    image: string
 }
-function LocationCard({ info, image }: CardProps) {
+function LocationCard({ info }: CardProps) {
     const [hover, setHover] = useState<number | null>(null)
     const [rating, setRating] = useState(0)
     return (
         <>
             {info.map((location) => (
                 <li className={styles.wrapperCard}>
-                    <img src={image} alt="location-image" className={styles.cardImage} />
+                    <img src={location.imageName ? `${host}/images/${location.imageName}` : "/default-image.png"} alt="location-image" className={styles.cardImage} />
                     <div className={styles.wrapperInfoCard}>
                         <p className={styles.textPlace}>{location.placeType}</p>
                         <div>
