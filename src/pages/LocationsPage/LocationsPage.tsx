@@ -1,13 +1,13 @@
-import LocationInfoBlock from "./LocationInfoBlock/LocationInfoBlock";
+// import LocationInfoBlock from "./LocationInfoBlock/LocationInfoBlock";
 import FilterPanel from "./FilterPanel";
-import LocationsGrid from "./LocationsGrid";
+import LocationsGrid from "./LocationGrid/LocationsGrid";
 
 function LocationsPage() {
   return (
     <>
       <FilterPanel></FilterPanel>
       <LocationsGrid></LocationsGrid>
-      <LocationInfoBlock></LocationInfoBlock>
+      {/* <LocationInfoBlock></LocationInfoBlock> */}
     </>
   );
 }

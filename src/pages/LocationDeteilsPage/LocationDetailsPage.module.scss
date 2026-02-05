@@ -1,20 +1,32 @@
-.wrapperLocationDetail{
-    display:flex;
+.wrapperLocationDetail {
+    display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    margin: 10% 0 0 0;
 }
+
 @media(min-width:768px) {
     .wrapperLocationDetail {
-        height:781px;
         align-items: center;
     }
 }
-@media(min-width:1440px){
+
+@media(min-width:1440px) {
     .wrapperLocationDesktop {
         display: flex;
-        flex-direction: row-reverse;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
+    }
+
+    .wrapperLocationDetail {
+        margin-top: 10%;
+    }
+
+    .wrapperLocation {
+        display: flex;
+        align-items: center;
+        flex-direction: row-reverse;
     }
 }

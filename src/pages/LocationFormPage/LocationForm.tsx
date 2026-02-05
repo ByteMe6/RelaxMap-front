@@ -42,6 +42,7 @@ export default function LocationForm() {
   remove();
   const cities = useAppSelector((state) => state.location.listCity) || [];
   const regions = [
+    "Київська область",
     "Вінницька область",
     "Волинська область",
     "Дніпропетровська область",
@@ -67,9 +68,11 @@ export default function LocationForm() {
     "Чернівецька область",
     "Чернігівська область",
   ];
-  const optionsLocation: string[] = ["місто", "село", "смт"];
+  const optionsLocation: string[] = ["місто", "село", "море", "гори" , "затока"];
   const info = useAppSelector((state) => state.location.info);
   console.log(info);
+  const locations = useAppSelector((state) => state.location.locations)
+  console.log(locations)
   const handleCityInput = (
     e: React.ChangeEvent<HTMLInputElement>,
     setFieldValue: any,

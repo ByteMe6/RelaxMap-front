@@ -7,24 +7,28 @@ import { useAppSelector } from "../../redux/hooks/hook";
 import LocationInfoBlock from "../LocationsPage/LocationInfoBlock/LocationInfoBlock";
 import styles from "./LocationDetailsPage.module.scss";
 import { host } from "../../backendHost";
+import { useParams } from "react-router-dom";
 import AddReviewModal from "../../components/Modals/AddReviewModal/AddReviewModal.tsx";
-
 function LocationDeteilsPage() {
-  const info = useAppSelector((state) => state.location.info);
-  const imageUrl = info.imageName ? `${ host }/images/${ info.imageName }` : "/default-image.png";
+  const {id} = useParams<{id?: string}>()
+    const location = useAppSelector((state) => state.location.locations.find((loc) => loc.id === Number(id)));
+    console.log(location)
+      const getImage =  location?.imageName ? `${ host }/images/${ location.imageName }`: "/default-image.png" 
+  console.log(getImage)
   return (
       <Container>
         <div className={ styles.wrapperLocationDetail }>
           <LocationDetBlock/>
           <div className={ styles.wrapperLocationDesktop }>
-            <LocationGallery image={ imageUrl }/>
-            <LocationInfoBlock/>
+            <div className={styles.wrapperLocation}>
+            <LocationGallery image={ getImage }/>
+            <LocationInfoBlock location={location}/>
+            </div>
+                <LocationDescription description={ location?.description || "" }/>
           </div>
-          <LocationDescription description={ info?.description }/>
           <div style={ { width: "100%" } }>
             <ReviewsSection/>
           </div>
-
           <AddReviewModal />
         </div>
       </Container>
