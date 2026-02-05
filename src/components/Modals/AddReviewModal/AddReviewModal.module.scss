@@ -1,0 +1,49 @@
+.backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.25);
+  z-index: 999;
+}
+
+.is-hidden {
+  display: none;
+}
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff2ec;
+  border-radius: 24px;
+  padding: 64px;
+  width: 768px;
+  height: 553px;
+  max-width: 768px;
+
+  &__close {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: none;
+    border: none;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__title {
+    margin: 0 0 24px 0;
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 120%;
+    letter-spacing: -0.01em;
+    text-align: center;
+    color: #000;
+  }
+}

@@ -7,6 +7,7 @@ import { useAppSelector } from "../../redux/hooks/hook";
 import LocationInfoBlock from "../LocationsPage/LocationInfoBlock/LocationInfoBlock";
 import styles from "./LocationDetailsPage.module.scss";
 import { host } from "../../backendHost";
+import AddReviewModal from "../../components/Modals/AddReviewModal/AddReviewModal.tsx";
 
 function LocationDeteilsPage() {
   const info = useAppSelector((state) => state.location.info);
@@ -23,6 +24,8 @@ function LocationDeteilsPage() {
           <div style={ { width: "100%" } }>
             <ReviewsSection/>
           </div>
+
+          <AddReviewModal />
         </div>
       </Container>
   );
