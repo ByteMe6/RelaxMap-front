@@ -7,7 +7,6 @@ type LocationProps = {
 function LocationsGrid({ locations }: LocationProps) {
     return (
         <Container>
-            <p></p>
             <ul className={styles.wrapperLocationCards}>
                 <LocationCard info={locations} />
             </ul>

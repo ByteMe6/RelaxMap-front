@@ -30,7 +30,7 @@ const regions: string[] = [
     "Чернівецька область",
     "Чернігівська область",
 ]
-const optionsLocation: string[] = ["місто", "село", "море", "гори" , "затока"];
+const optionsLocation: string[] = ["місто", "село", "море", "гори", "затока"];
 type FilterProps = {
     filters: FiltersState,
     dispatch: React.Dispatch<FiltersAction>
@@ -38,6 +38,7 @@ type FilterProps = {
 function FilterPanel({ filters, dispatch }: FilterProps) {
     return (
         <Container>
+             <p className={styles.titleAllLocation}>Усі місця відпочинку</p>
             <Formik enableReinitialize initialValues={{ search: filters.search, region: filters.region, locationType: filters.locationType }} onSubmit={() => { }}>
                 {({ values, handleChange }) => (
                     <Form className={styles.formFilterLocation}>
@@ -47,29 +48,31 @@ function FilterPanel({ filters, dispatch }: FilterProps) {
                                 dispatch({ type: "search", payload: e.target.value })
                             }} />
                             <div className={styles.wrapperSelect}>
-                                <Field as="select" className={styles.inputTypeLocation} name="region" value={values.region} onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                    handleChange(e)
-                                    dispatch({ type: "setRegion", payload: e.target.value })
-                                }}>
-                                    <option value="">Регіон</option>
-                                    {regions.map((region) => (
-                                        <option>{region}</option>
-                                    ))}
-                                </Field>
-                                <Field as="select" className={styles.inputTypeLocation} name="locationType" value={values.locationType} onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
-                                    handleChange(e)
-                                    dispatch({type:"setLocationType" , payload:e.target.value})
-                                }}>
-                                    <option value="">Тип локації</option>
-                                    {optionsLocation.map((elem) => (
-                                        <option>{elem}</option>
-                                    ))}
+                                <div style={{display:"flex", gap:15}} >
+                                    <Field as="select" className={styles.inputTypeLocation} name="region" value={values.region} onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                        handleChange(e)
+                                        dispatch({ type: "setRegion", payload: e.target.value })
+                                    }}>
+                                        <option value="">Регіон</option>
+                                        {regions.map((region) => (
+                                            <option>{region}</option>
+                                        ))}
+                                    </Field>
+                                    <Field as="select" className={styles.inputTypeLocation} name="locationType" value={values.locationType} onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                        handleChange(e)
+                                        dispatch({ type: "setLocationType", payload: e.target.value })
+                                    }}>
+                                        <option value="">Тип локації</option>
+                                        {optionsLocation.map((elem) => (
+                                            <option>{elem}</option>
+                                        ))}
+                                    </Field>
+                                </div>
+                                <Field as="select" className={`${styles.inputTypeLocation} ${styles.inputSort}`} name="sort">
+                                    <option>Сортування</option>
                                 </Field>
                             </div>
                         </div>
-                        <Field as="select" className={`${styles.inputTypeLocation} ${styles.inputSort}`} name="sort">
-                            <option>Сортування</option>
-                        </Field>
                     </Form>
                 )}
             </Formik>
