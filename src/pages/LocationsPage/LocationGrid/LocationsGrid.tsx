@@ -4,15 +4,15 @@ import { useAppSelector } from "../../../redux/hooks/hook";
 import { host } from "../../../backendHost";
 import styles from "./LocationGrid.module.scss"
 function LocationsGrid() {
-const info = useAppSelector((state) => state.location.info)
 const locations = useAppSelector((state) => state.location.locations)
-console.log(locations)
-const image = info.imageName ? `${host}/images/${info.imageName}` : "/default-image.png";
+const getImage = locations.map(image => image.imageName)
+const image = getImage ? `${host}/images/${getImage}` : "/default-image.png";
     return (
-        <Container>
+        <Container >
             <ul className={styles.wrapperLocationCards}>
-              <LocationCard info={info} image={image}/>
+              <LocationCard info={locations} image={image}/>
             </ul>
+            <button className={styles.btnLoadLocation}>Показати ще</button>
         </Container>
     )
 }

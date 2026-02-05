@@ -1,4 +1,41 @@
 .wrapperLocationCards {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.btnLoadLocation {
+    margin: auto;
+}
+
+.btnLoadLocation {
+    width: 335px;
+    height: 48px;
+    background: #CC6534;
+    border: 1px solid #CC6534;
+    font-family: "Montserrat";
+    font-weight: 500;
+    color: white;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+}
+
+@media(min-width:768px) {
+    .wrapperLocationCards {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 30px;
+    }
+    .btnLoadLocation {
+        width:133px;
+    }
+}
+@media(min-width:1440px) {
+    .btnLoadLocation {
+        width:160px;
+    }
 }
