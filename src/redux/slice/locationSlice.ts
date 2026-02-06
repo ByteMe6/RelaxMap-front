@@ -23,7 +23,8 @@ interface LocationState {
     locations: LocationInfo[],
     location: LocationData | null,
     listCity: any[],
-    listRegion: any[]
+    listRegion: any[],
+    isSuccess:boolean
 }
 const initialState: LocationState = {
     loading: false,
@@ -38,7 +39,8 @@ const initialState: LocationState = {
     locations: [],
     listCity: [],
     listRegion: [],
-    location: null
+    location: null,
+    isSuccess:false
 }
 console.log(initialState.locations)
 const locationSlice = createSlice({
@@ -74,6 +76,7 @@ const locationSlice = createSlice({
                 state.loading = false
                 state.info = action.payload
                 state.locations.push(action.payload)
+                state.isSuccess = true
                 console.log("aa", state.info)
                 console.log("bb", state.locations)
                 console.log("bb copy", [...state.locations])
