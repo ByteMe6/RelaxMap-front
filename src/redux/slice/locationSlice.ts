@@ -2,13 +2,14 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { searchLocation } from "../thunk/thunkLocationMap";
 import { postNewLocation } from "../thunk/thunkLocation";
+import { updateLocation } from "../thunk/thunkLocationUpdate";
 import { searchCities, searchRegions } from "../thunk/thunkTypeLocation";
 export interface LocationData {
     lat: number | null,
     lng: number | null,
 }
 export interface LocationInfo {
-    id:number,
+    id: number,
     image: string,
     name: string,
     placeType: null | string,
@@ -22,14 +23,15 @@ interface LocationState {
     info: LocationInfo | null,
     locations: LocationInfo[],
     location: LocationData | null,
+    currentLocationDetails: LocationInfo | null,
     listCity: any[],
     listRegion: any[],
-    isSuccess:boolean
+    isSuccess: boolean
 }
 const initialState: LocationState = {
     loading: false,
     info: {
-        id:1,
+        id: 1,
         name: "",
         image: "",
         placeType: null,
@@ -38,9 +40,10 @@ const initialState: LocationState = {
     },
     locations: [],
     listCity: [],
+    currentLocationDetails: null,
     listRegion: [],
     location: null,
-    isSuccess:false
+    isSuccess: false
 }
 console.log(initialState.locations)
 const locationSlice = createSlice({
@@ -48,7 +51,10 @@ const locationSlice = createSlice({
     initialState,
     reducers: {
         setLocationData: (state, action: PayloadAction<LocationInfo>) => {
-            state.info = action.payload
+            state.currentLocationDetails = action.payload
+        },
+        setLocations: (state, action: PayloadAction<LocationInfo[]>) => {
+            state.locations = action.payload
         },
         resetLocation: (state) => {
             state.info = null;
@@ -106,7 +112,23 @@ const locationSlice = createSlice({
             .addCase(searchRegions.rejected, (state) => {
                 state.loading = false
             })
+            .addCase(updateLocation.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(updateLocation.fulfilled, (state, action) => {
+                state.loading = false
+                state.locations = state.locations.map(loc =>
+                    loc.id === action.payload.id
+                        ? { ...loc, ...action.payload }
+                        : loc
+                );
+                state.locations = [...state.locations];
+                state.currentLocationDetails = { ...state.currentLocationDetails, ...action.payload };
+                console.log("fff", state.locations)
+                console.log("hhh", state.currentLocationDetails)
+                state.isSuccess = true
+            })
     },
 })
-export const { setLocationData, resetLocation } = locationSlice.actions
+export const { setLocationData, resetLocation, setLocations } = locationSlice.actions
 export default locationSlice.reducer
