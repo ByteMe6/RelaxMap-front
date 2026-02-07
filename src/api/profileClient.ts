@@ -1,7 +1,8 @@
+// src/api/profileClient.ts
 import type { AxiosRequestConfig } from "axios";
 import { authorizedRequest } from "./authClient";
 import store from "../redux/store";
-import { logout } from "../redux/slice/authSlice"; 
+import { logout } from "../redux/slice/authSlice";
 
 export interface UserPlace {
   id: number;
@@ -22,14 +23,23 @@ export interface UserPlacesResponse {
 
 export async function getUserPlaces(
   page = 0,
-  size = 10,
+  size = 50,
 ): Promise<UserPlacesResponse> {
+  const state = store.getState();
+  const email = state.auth.email;
+
+  if (!email) {
+    throw new Error("Email користувача відсутній у Redux стані");
+  }
+
   const config: AxiosRequestConfig = {
     url: "/places/for-user",
     method: "GET",
     params: {
-      page,
-      size,
+      email,                 // ?email=...
+      "pageable.page": page, // ?pageable.page=0
+      "pageable.size": size, // ?pageable.size=50
+      // "pageable.sort": ["id,asc"], // якщо знадобиться
     },
   };
 
@@ -43,12 +53,15 @@ export async function deletePlace(placeId: number): Promise<void> {
       method: "DELETE",
     });
   } catch (error: any) {
-    if (error.response?.status === 401) {
-      console.error("Авторизація провалилася при видаленні. Спробуйте перелогінитися.");
-      throw new Error("Не вдалося видалити локацію: проблема з авторизацією");
-    } else {
-      store.dispatch(logout()); 
-      throw error;
+    const status = error?.response?.status;
+
+    if (status === 401) {
+      store.dispatch(logout());
+      throw new Error(
+        "Сеанс завершено. Будь ласка, виконайте вхід ще раз та повторіть спробу видалення.",
+      );
     }
+
+    throw error;
   }
 }

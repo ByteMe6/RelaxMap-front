@@ -37,7 +37,9 @@ const ProfilePage: React.FC = () => {
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const isMyProfile = Boolean(currentUserEmail && mail && currentUserEmail === mail);
+  const isMyProfile = Boolean(
+    currentUserEmail && mail && currentUserEmail === mail,
+  );
 
   const handleDeleteAccount = async () => {
     if (!accessToken) return;
@@ -75,17 +77,13 @@ const ProfilePage: React.FC = () => {
       return;
     }
 
-    // Локації — тільки для свого профілю і тільки якщо є токен
     if (isMyProfile && accessToken) {
       try {
         const p = await getUserPlaces(0, 50);
         setPlaces(p.content);
       } catch (e: any) {
-        // Якщо токен помер / немає доступу, не ламаємо публічний профіль
         console.error("Failed to load places", e);
       }
-    } else {
-      setPlaces([]);
     }
   };
 
@@ -182,16 +180,16 @@ const ProfilePage: React.FC = () => {
         <h2 className="section-title">Мої локації</h2>
 
         {isMyProfile && (
-          <button className="btn pBtn" type="button" onClick={navigateToAddLocation}>
+          <button
+            className="btn pBtn"
+            type="button"
+            onClick={navigateToAddLocation}
+          >
             Створити нову локацію
           </button>
         )}
 
-        {!isMyProfile && (
-          <p>
-            Список локацій іншого користувача
-          </p>
-        )}
+        {!isMyProfile && <p>Список локацій іншого користувача</p>}
 
         {isMyProfile ? (
           places.length === 0 ? (
