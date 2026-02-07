@@ -1,4 +1,3 @@
-// src/api/profileClient.ts
 import type { AxiosRequestConfig } from "axios";
 import { authorizedRequest } from "./authClient";
 import store from "../redux/store";
@@ -36,10 +35,9 @@ export async function getUserPlaces(
     url: "/places/for-user",
     method: "GET",
     params: {
-      email,                 // ?email=...
-      "pageable.page": page, // ?pageable.page=0
-      "pageable.size": size, // ?pageable.size=50
-      // "pageable.sort": ["id,asc"], // якщо знадобиться
+      email,              
+      "pageable.page": page, 
+      "pageable.size": size,
     },
   };
 

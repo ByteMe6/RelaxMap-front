@@ -15,7 +15,6 @@ function getTokens() {
   return { accessToken, refreshToken, email, name };
 }
 
-// POST /auth/is-valid  { "token": "..." } -> { "isTokenValid": boolean }
 async function isTokenValid(token: string): Promise<boolean> {
   if (!token) return false;
 
@@ -30,7 +29,6 @@ async function isTokenValid(token: string): Promise<boolean> {
   }
 }
 
-// POST /auth/refresh { "refreshToken": "..." } -> { "access": "...", "refresh": "..." }
 async function refreshAccessToken() {
   const { refreshToken, email, name } = getTokens();
 
@@ -41,7 +39,7 @@ async function refreshAccessToken() {
   const res = await axios.post<{ access: string; refresh: string }>(
     `${host}/auth/refresh`,
     {
-      refreshToken, // поле строго как в Swagger
+      refreshToken,
     },
   );
 
@@ -80,7 +78,6 @@ export async function authorizedRequest<T = unknown>(
     },
   });
 
-  // 1. Проверяем токен через /auth/is-valid
   const valid = await isTokenValid(accessToken);
   if (!valid) {
     try {
@@ -103,7 +100,6 @@ export async function authorizedRequest<T = unknown>(
       throw error;
     }
 
-    // 2. Fallback: на 401 ещё раз пробуем обновить
     try {
       const newAccess = await refreshAccessToken();
       const res = await api.request<T>(withToken(newAccess));

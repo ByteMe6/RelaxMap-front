@@ -1,4 +1,3 @@
-// src/pages/ProfilePage/ProfilePage.tsx
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hook";
@@ -68,7 +67,6 @@ const ProfilePage: React.FC = () => {
     }
 
     try {
-      // ПУБЛІЧНА інфа по юзеру (Swagger: GET /users/info?id&email)
       const info = await getUserInfo(mail);
       setUserInfo(info);
       setError(null);
@@ -89,7 +87,6 @@ const ProfilePage: React.FC = () => {
 
   useEffect(() => {
     void loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mail, isMyProfile, accessToken]);
 
   const handleSave = async (oldValue?: string, newValue?: string) => {
