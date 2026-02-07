@@ -53,7 +53,7 @@ function App() {
           <Route path="/locations/:id" element={<LocationDeteilsPage />} />
           <Route path="/profile/:mail" element={<ProfilePage />} />
           <Route path="/locations/add" element={<LocationFormPage />} />
-          <Route path="/locations/location/edit" element={<EditLocation />} />
+          <Route path="/locations/:id/edit" element={<EditLocation />} />
         </Route>
 
         <Route path="/auth/register" element={<RegisterPage />} />

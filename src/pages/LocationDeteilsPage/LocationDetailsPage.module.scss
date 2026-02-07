@@ -5,7 +5,17 @@
     align-items: center;
     margin: 10% 0 0 0;
 }
-
+.btnEdit {
+    width:160px;
+    height:48px;
+    background-color: #CC6534;
+    border: 1px solid  #CC6534;
+    font-family:"Montserrat";
+    font-weight:500;
+    color:#fff;
+    margin-top:50px;
+    border-radius:10px;
+}
 @media(min-width:768px) {
     .wrapperLocationDetail {
         align-items: center;
