@@ -8,7 +8,7 @@ import authReducer from "./slice/authSlice";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["location", "auth"], // что сохраняем
+  whitelist: ["location", "auth"], 
 };
 
 const rootReducer = combineReducers({
