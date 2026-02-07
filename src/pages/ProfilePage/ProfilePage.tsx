@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks/hook";
 import Container from "../../components/Container/Container";
 import {
   getUserPlaces,
+  getPlacesForUser,
   deletePlace,
   type UserPlace,
 } from "../../api/profileClient";
@@ -75,13 +76,14 @@ const ProfilePage: React.FC = () => {
       return;
     }
 
-    if (isMyProfile && accessToken) {
-      try {
-        const p = await getUserPlaces(0, 50);
-        setPlaces(p.content);
-      } catch (e: any) {
-        console.error("Failed to load places", e);
-      }
+    try {
+      const placesResponse = isMyProfile
+        ? await getUserPlaces(0, 50)
+        : await getPlacesForUser(mail, 0, 50);
+
+      setPlaces(placesResponse.content);
+    } catch (e) {
+      console.error("Failed to load places", e);
     }
   };
 
@@ -120,10 +122,7 @@ const ProfilePage: React.FC = () => {
     <div className="profile-page">
       <Container>
         {error && (
-          <div
-            className="profile-error"
-            style={{ color: "red", marginBottom: "20px" }}
-          >
+          <div className="profile-error" style={{ color: "red", marginBottom: 20 }}>
             {error}
           </div>
         )}
@@ -132,7 +131,7 @@ const ProfilePage: React.FC = () => {
           <div className="user-info">
             <h1>{userInfo?.name || mail?.split("@")[0] || "Користувач"}</h1>
             <p className="email">Email: {mail || "не вказано"}</p>
-            {isMyProfile && <p>Локацій: {places.length}</p>}
+            <p>Локацій: {places.length}</p>
           </div>
 
           {isMyProfile && (
@@ -150,6 +149,7 @@ const ProfilePage: React.FC = () => {
               >
                 Змінити ім&apos;я
               </button>
+
               <button
                 className="btn-edit pBtn"
                 type="button"
@@ -163,6 +163,7 @@ const ProfilePage: React.FC = () => {
               >
                 Змінити пароль
               </button>
+
               <button
                 className="btn-danger pBtn"
                 type="button"
@@ -174,7 +175,7 @@ const ProfilePage: React.FC = () => {
           )}
         </div>
 
-        <h2 className="section-title">Мої локації</h2>
+        <h2 className="section-title">Локації</h2>
 
         {isMyProfile && (
           <button
@@ -186,48 +187,48 @@ const ProfilePage: React.FC = () => {
           </button>
         )}
 
-        {!isMyProfile && <p>Список локацій іншого користувача</p>}
+        {places.length === 0 ? (
+          <p>Локацій поки немає</p>
+        ) : (
+          <div className="locations-grid">
+            {places.map((place) => (
+              <div
+                key={place.id}
+                className="location-card"
+                onClick={() => navigate(`/locations/${place.id}`)}
+                style={{ cursor: "pointer" }}
+              >
+                <div className="img-box">
+                  <img
+                    src={
+                      place.imageName
+                        ? `${host}/images/${place.imageName}`
+                        : "/assets/placeholder.jpg"
+                    }
+                    alt={place.name}
+                  />
+                </div>
 
-        {isMyProfile ? (
-          places.length === 0 ? (
-            <p>У вас поки немає доданих локацій</p>
-          ) : (
-            <div className="locations-grid">
-              {places.map((place) => (
-                <div
-                  key={place.id}
-                  className="location-card"
-                  onClick={() => navigate(`/locations/${place.id}`)}
-                  style={{ cursor: "pointer" }}
-                >
-                  <div className="img-box">
-                    <img
-                      src={
-                        place.imageName
-                          ? `${host}/images/${place.imageName}`
-                          : "/assets/placeholder.jpg"
-                      }
-                      alt={place.name}
-                    />
-                  </div>
-                  <div className="info-box">
-                    <span className="type">{place.placeType || "—"}</span>
-                    <h3>{place.name}</h3>
-                  </div>
+                <div className="info-box">
+                  <span className="type">{place.placeType || "—"}</span>
+                  <h3>{place.name}</h3>
+                </div>
 
+                {isMyProfile && (
                   <div className="card-btns">
                     <button
                       className="edit"
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate(`/locations/location/edit`, {
+                        navigate("/locations/location/edit", {
                           state: { place },
                         });
                       }}
                     >
                       Редагувати
                     </button>
+
                     <button
                       className="del"
                       type="button"
@@ -239,11 +240,11 @@ const ProfilePage: React.FC = () => {
                       Видалити
                     </button>
                   </div>
-                </div>
-              ))}
-            </div>
-          )
-        ) : null}
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </Container>
 
       <ProfileModal

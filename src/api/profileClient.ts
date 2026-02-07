@@ -20,6 +20,22 @@ export interface UserPlacesResponse {
   pageSize: number;
 }
 
+export async function getPlacesForUser(
+  email: string,
+  page = 0,
+  size = 50,
+): Promise<UserPlacesResponse> {
+  return authorizedRequest<UserPlacesResponse>({
+    url: "/places/for-user",
+    method: "GET",
+    params: {
+      email,
+      "pageable.page": page,
+      "pageable.size": size,
+    },
+  });
+}
+
 export async function getUserPlaces(
   page = 0,
   size = 50,
