@@ -1,182 +1,276 @@
-.containerNewLocation {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 375px;
-    margin: auto;
-    padding-bottom: 40px;
+/* ===== FORM-SPECIFIC STYLES ===== */
+/* These styles are scoped to the form container to avoid conflicts */
+
+.containerFormLocation {
+  width: 100%;
+  max-width: 720px;
+  margin: 80px auto 40px;
+  padding: 24px 20px 32px;
+  box-sizing: border-box;
+  background-color: #fdf5f0;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .titleNewLocation {
-    font-weight: 700;
-    font-family: "Montserrat";
-    font-style: bold;
-    color: #1B391B;
-    margin-left: 20px;
-}
-
-.containerFormLocation {
-    display: flex;
-    flex-direction: column;
-    gap:15px;
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 8px;
+  color: #1a1a1a;
 }
 
 .photoInput {
-    width: 335px;
-    height: 223px;
-    background-image: url("../../../public/assets/placeholderImage.png");
-    background-repeat: no-repeat;
-    resize:none;
+  width: 100%;
+  border-radius: 16px;
+  background-color: #ffece5;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.imageLocation {
+  width: 100%;
+  max-height: 320px;
+  object-fit: cover;
+  border-radius: 16px;
+  display: block;
 }
 
 .btnDownload {
-    width: 176px;
-    height: 32px;
-    border: 1px solid #00000026;
-    color: #4C2613;
-    font-family: "Montserrat";
-    font-weight: 500;
-    border-radius: 8px;
+  margin-top: 8px;
+  align-self: flex-start;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid #cc6534;
+  background-color: #cc6534;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+
+  &:hover {
+    background-color: #b6623c;
+    transform: translateY(-1px);
+  }
 }
 
 .labelLocation {
-    font-family: "Montserrat";
-    color: #1B391B;
-    font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  margin-top: 8px;
+  margin-bottom: 4px;
+  display: block;
 }
 
 .inputLocation {
-    width: 335px;
-    height: 40px;
-    background-color: #FFE5D9;
-    border: 1px solid #00000026;
-    border-radius: 8px;
-    padding-left: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  font-size: 14px;
+  box-sizing: border-box;
 
-    &::placeholder {
-        font-family: "Montserrat";
-        font-weight: 400;
-    }
+  &:focus {
+    outline: 2px solid #cc6534;
+    border-color: transparent;
+  }
 }
 
 .inputLocationArea {
-    background-color: #FFE5D9;
-    width: 335px;
-    height: 180px;
-    border: 1px solid #00000026;
-    border-radius: 8px;
-    padding-top:10px;
-    padding-left: 10px;
-    &::placeholder {
-        font-family: "Montserrat";
-        font-weight: 400;
-    }
+  width: 100%;
+  min-height: 120px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  font-size: 14px;
+  box-sizing: border-box;
+  resize: vertical;
+
+  &:focus {
+    outline: 2px solid #cc6534;
+    border-color: transparent;
+  }
+}
+
+.wrapperButton {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  margin-top: 16px;
+  justify-content: flex-end;
 }
 
 .btnLocation {
-    width: 335px;
-    height: 48px;
-    border: 1px solid #00000026;
-    border-radius: 8px;
+  min-width: 140px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  background-color: #1a3a3a;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
 
-    &--post {
-        background: #CC6534;
-    }
+  &:hover {
+    background-color: #cc6534;
+    transform: translateY(-1px);
+  }
 }
-.wrapperButton {
-    margin-top:30px;
-    gap:20px;
-    display:flex;
-    flex-direction: column;
-}
-.btnSearch {
-    width:335px;
-    height:48px;
-    font-family: "Montserrat";
-    font-weight: 500;
-    border: 1px solid  #00000026;
-    color:#4C2613;
-    border-radius: 8px;
-}
-.imageLocation {
-    width:335px;
-}
-.btnLocation:hover {
-    border: 1px solid #FFE5D9;
-}
-.mapLocation {
-    width:335px;
-    height:188px;
-}
+
+/* Map and search specific styles */
 .wrapperLocation {
-    display: flex;
-    flex-direction: column;
-    gap:20px;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: stretch;
 }
-@media(min-width:768px) {
+
+.search {
+  flex: 1;
+}
+
+.btnSearch {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid #cc6534;
+  background-color: #cc6534;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+
+  &:hover {
+    background-color: #b6623c;
+    transform: translateY(-1px);
+  }
+}
+
+.mapLocation {
+  width: 100%;
+  height: 300px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.suggestionsList {
+  list-style: none;
+  padding: 0;
+  margin: -8px 0 8px 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.suggestionsItemList {
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #eee;
+  }
+}
+
+/* Container for the whole page */
 .containerNewLocation {
-    width:768px;
-}
-.photoInputLarge {
-    width:704px;
-    height:468px;
-    background-image: url("../../../public/assets/placeholderImageTablet.png");
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.wrapperLocation {
-    flex-direction: row;
-}
-.btnSearch {
-    width:199px;
-}
-.inputLocation {
-    width:704px;
-    &.search {
-        width:421px;
-    }
-}
-.inputLocationArea {
-    width:704px;
+/* ===== RESPONSIVE STYLES ===== */
+
+@media (max-width: 480px) {
+  .containerFormLocation {
+    margin: 70px auto 24px;
+    padding: 20px 12px 24px;
+    border-radius: 16px;
+  }
+
+  .titleNewLocation {
+    font-size: 20px;
+  }
+
+  .photoInput {
+    min-height: 180px;
+  }
+
+  .imageLocation {
+    max-height: 260px;
+  }
+
+  .wrapperButton {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btnLocation {
+    width: 100%;
+  }
+
+  .btnDownload {
+    width: 100%;
+    text-align: center;
+  }
+
+  .wrapperLocation {
+    flex-direction: column;
+  }
+
+  .btnSearch {
+    width: 100%;
+  }
 }
 
-.wrapperButton {
-    flex-direction: row;
+@media (min-width: 768px) and (max-width: 1024px) {
+  .containerFormLocation {
+    margin-top: 100px;
+    padding: 28px 24px 32px;
+  }
+
+  .titleNewLocation {
+    font-size: 26px;
+  }
+
+  .imageLocation {
+    max-height: 360px;
+  }
+
+  .mapLocation {
+    height: 350px;
+  }
 }
-.btnLocation {
-    width:203px;
-}
-.mapLocation {
-    width:704px;
-    height:395px;
-}
-.imageLocation{
-    width:704px;
-    height:468px;
-}
-}
-@media(min-width:1440px){
-    .containerNewLocation {
-        width:1240px;
-    }
-    .photoInputLarge {
-        background-image: url("../../../public/assets/placeholderImageDesktop.png");
-        width:1091px;
-        height: 726px;
-    }
-    .inputLocation {
-        width: 1091px;
-        height: 43px;
-    }
-    .inputLocationArea {
-        width:1091px;
-    }
-    .btnDownload {
-        width:215px;
-    }
-    .imageLocation{
-        width: 1091px;
-        height: 726px;
-    }
+
+@media (min-width: 1024px) {
+  .containerFormLocation {
+    margin-top: 110px;
+  }
+
+  .titleNewLocation {
+    font-size: 28px;
+  }
+
+  .mapLocation {
+    height: 400px;
+  }
 }

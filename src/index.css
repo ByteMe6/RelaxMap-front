@@ -1,11 +1,60 @@
-*{
-    box-sizing: border-box;
+* {
+  box-sizing: border-box;
 }
-a{
-    color: black;
-    text-decoration: none;
+a {
+  color: black;
+  text-decoration: none;
 }
 
-ul, ol{
-    list-style: none;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.standart-btn {
+  width: 335px;
+  height: 48px;
+  border-radius: 8px;
+  border: 1px solid #00000026;
+  font-family: "Montserrat";
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  /* &:hover {
+    transform: scale(1.05);
+  }
+
+  &--submit {
+    background-color: #cc6534;
+    color: white;
+
+    &:hover {
+      background-color: #b6623c;
+    }
+  }
+
+  &--cancel {
+    background-color: #dfdfdf;
+    color: #4c2613;
+  } */
+}
+
+button {
+  cursor: pointer;
+}
+
+.standart-btn:hover {
+  transform: scale(1.05);
 }

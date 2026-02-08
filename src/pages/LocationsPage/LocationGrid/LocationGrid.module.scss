@@ -1,0 +1,81 @@
+
+
+.wrapperLocationCards {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.btnLoadLocation {
+  margin: auto;
+  width: 335px;
+  height: 48px;
+  background: #CC6534;
+  border: 1px solid #CC6534;
+  font-family: "Montserrat";
+  font-weight: 500;
+  color: white;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+}
+
+@media (min-width: 768px) {
+  .wrapperLocationCards {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+
+  .btnLoadLocation {
+    width: 133px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .wrapperLocationCards {
+    max-width: 1440px;
+    width: 100%;
+    justify-content: flex-start;
+    overflow-x: hidden;
+  }
+
+  .btnLoadLocation {
+    width: 160px;
+  }
+}
+
+
+.wrapperLocationCards {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
+  gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .wrapperLocationCards {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .wrapperLocationCards {
+    justify-content: center;
+  }
+
+  .wrapperCard {
+    flex: 0 1 calc(33.333% - 40px); 
+    max-width: 340px;
+  }
+}

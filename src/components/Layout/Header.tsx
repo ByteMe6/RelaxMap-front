@@ -1,13 +1,24 @@
+// Header.tsx
 import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import Container from "../Container/Container";
 import styles from "./Header.module.scss";
 import "normalize.css";
+
 import AOS from "aos";
 import "aos/dist/aos.css";
 
-function Header() {
+import { useAppSelector, useAppDispatch } from "../../redux/hooks/hook";
+import { logoutUser } from "../../redux/thunk/authThunk";
+
+export default function Header() {
   const [isBurgerOpen, setIsBurgerOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+  const dispatch = useAppDispatch();
+  const { accessToken, email } = useAppSelector((state) => state.auth);
+  const isAuth = Boolean(accessToken);
+
 
   useEffect(() => {
     AOS.init({
@@ -17,21 +28,30 @@ function Header() {
   }, []);
 
   useEffect(() => {
-    if (isBurgerOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = isBurgerOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
   }, [isBurgerOpen]);
 
-  const handleBurgerToggle = () => {
-    setIsBurgerOpen((prev) => !prev);
+  const handleBurgerToggle = () => setIsBurgerOpen((prev) => !prev);
+  const handleLinkClick = () => setIsBurgerOpen(false);
+
+  const profileLink = email
+    ? `/profile/${encodeURIComponent(email)}`
+    : "/auth/login";
+
+  const openLogoutModal = () => {
+    setIsLogoutModalOpen(true);
   };
 
-  const handleLinkClick = () => {
+  const closeLogoutModal = () => {
+    setIsLogoutModalOpen(false);
+  };
+
+  const handleConfirmLogout = () => {
+    dispatch(logoutUser());
+    setIsLogoutModalOpen(false);
     setIsBurgerOpen(false);
   };
 
@@ -40,19 +60,18 @@ function Header() {
       <header className={styles.header}>
         <Container isHeader>
           <div className={styles.logoDiv} data-aos="fade-down">
-            <img src="assets/logo.png" alt="logo" />
+            <img src="assets/logo.svg" alt="logo" />
             <span className={styles.logoText}>Relax Map</span>
           </div>
 
           <div className={styles.half} data-aos="fade-left">
+
             <nav className={styles.nav}>
               <ul className={styles.navList}>
                 <li className={styles.navListElement}>
                   <NavLink
                     to="/"
-                    className={({ isActive }) =>
-                      isActive ? styles.active : ""
-                    }
+                    className={({ isActive }) => (isActive ? styles.active : "")}
                     onClick={handleLinkClick}
                   >
                     Головна
@@ -61,9 +80,7 @@ function Header() {
                 <li className={styles.navListElement}>
                   <NavLink
                     to="/locations"
-                    className={({ isActive }) =>
-                      isActive ? styles.active : ""
-                    }
+                    className={({ isActive }) => (isActive ? styles.active : "")}
                     onClick={handleLinkClick}
                   >
                     Місця відпочинку
@@ -73,18 +90,40 @@ function Header() {
             </nav>
 
             <div className={styles.authBox} data-aos="fade-up">
-              <Link to="/auth/login" className={styles.loginBtn}>Вхід</Link>
-              <Link to="/auth/register" className={styles.regBtn}>Регістрація</Link>
+              {!isAuth ? (
+                <>
+                  <Link to="/auth/login" className={styles.loginBtn}>
+                    Вхід
+                  </Link>
+                  <Link to="/auth/register" className={styles.regBtn}>
+                    Реєстрація
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link to={profileLink} className={styles.loginBtn}>
+                    Профіль
+                  </Link>
+                  <button
+                    className={styles.regBtn}
+                    type="button"
+                    onClick={openLogoutModal}
+                  >
+                    Вийти
+                  </button>
+                </>
+              )}
             </div>
 
+            {/* BURGER BTN */}
             <button
               className={styles.burgerBtn}
               type="button"
               onClick={handleBurgerToggle}
             >
-              <span className={styles.burgerLine}></span>
-              <span className={styles.burgerLine}></span>
-              <span className={styles.burgerLine}></span>
+              <span className={styles.burgerLine} />
+              <span className={styles.burgerLine} />
+              <span className={styles.burgerLine} />
             </button>
           </div>
         </Container>
@@ -98,9 +137,7 @@ function Header() {
                 <li className={styles.burgerNavItem}>
                   <NavLink
                     to="/"
-                    className={({ isActive }) =>
-                      isActive ? styles.active : ""
-                    }
+                    className={({ isActive }) => (isActive ? styles.active : "")}
                     onClick={handleLinkClick}
                   >
                     Головна
@@ -109,9 +146,7 @@ function Header() {
                 <li className={styles.burgerNavItem}>
                   <NavLink
                     to="/locations"
-                    className={({ isActive }) =>
-                      isActive ? styles.active : ""
-                    }
+                    className={({ isActive }) => (isActive ? styles.active : "")}
                     onClick={handleLinkClick}
                   >
                     Місця відпочинку
@@ -121,8 +156,29 @@ function Header() {
             </nav>
 
             <div className={styles.burgerAuthBox}>
-              <button className={styles.loginBtn}>Вхід</button>
-              <button className={styles.regBtn}>Регістрація</button>
+              {!isAuth ? (
+                <>
+                  <Link to="/auth/login" className={styles.loginBtn}>
+                    Вхід
+                  </Link>
+                  <Link to="/auth/register" className={styles.regBtn}>
+                    Реєстрація
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link to={profileLink} className={styles.loginBtn}>
+                    Профіль
+                  </Link>
+                  <button
+                    className={styles.regBtn}
+                    type="button"
+                    onClick={openLogoutModal}
+                  >
+                    Вийти
+                  </button>
+                </>
+              )}
             </div>
 
             <button
@@ -135,8 +191,23 @@ function Header() {
           </div>
         </div>
       )}
+
+      {isLogoutModalOpen && (
+        <div className={styles.customModalOverlay}>
+          <div className={styles.customModal}>
+            <h3>Підтвердити вихід</h3>
+
+            <div className={styles.modalActions}>
+              <button type="button" onClick={closeLogoutModal}>
+                Скасувати
+              </button>
+              <button type="button" onClick={handleConfirmLogout}>
+                Вийти
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
-
-export default Header;

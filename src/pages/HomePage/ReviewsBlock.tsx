@@ -2,31 +2,32 @@ import { useState, useEffect } from "react";
 import Container from "../../components/Container/Container";
 import styles from "./ReviewsBlock.module.scss";
 
-function Star({ type }: { type: "full" | "half" | "empty" }) {
+export function Star({ type }: { type: "full" | "half" | "empty" }) {
   if (type === "full") {
     return (
-      <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2">
-        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-      </svg>
+        <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2">
+          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+        </svg>
     );
   }
   if (type === "half") {
     return (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <defs>
-          <linearGradient id="halfGrad">
-            <stop offset="50%" stopColor="currentColor" />
-            <stop offset="50%" stopColor="transparent" />
-          </linearGradient>
-        </defs>
-        <path fill="url(#halfGrad)" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-      </svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <defs>
+            <linearGradient id="halfGrad">
+              <stop offset="50%" stopColor="currentColor"/>
+              <stop offset="50%" stopColor="transparent"/>
+            </linearGradient>
+          </defs>
+          <path fill="url(#halfGrad)"
+                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+        </svg>
     );
   }
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-    </svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+      </svg>
   );
 }
 
@@ -77,9 +78,9 @@ function ReviewsBlock() {
   const visibleReviews = isMobile ? [reviews[currentIndex]] : reviews;
 
   return (
-    <section className={styles.reviews}>
-      <Container>
-        <h2 className={styles['reviews__title']}>Останні відгуки</h2>
+      <section className={ styles.reviews }>
+        <Container>
+          <h2 className={ styles['reviews__title'] }>Останні відгуки</h2>
 
         <div className={styles['reviews__grid']}>
           {visibleReviews.map((review, index) => (

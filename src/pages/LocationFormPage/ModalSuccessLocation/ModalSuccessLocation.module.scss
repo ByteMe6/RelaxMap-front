@@ -1,0 +1,55 @@
+.backdrop {
+    position: fixed;
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background: rgba(0, 0, 0, 0.1);
+    width: 100vw;
+    height: 100vh;
+}
+
+.textLocationSuccess {
+    font-weight: 400;
+    font-family: "Montserrat";
+    font-size: 20px;
+}
+
+.modalSuccess {
+    width: 576px;
+    height: 316px;
+    background-color: #FFF2EC;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    flex-direction: column;
+    gap: 30px;
+    padding-top: 30px;
+}
+
+.imgModal {
+    width: 100px;
+}
+
+.btnClose {
+    border: none;
+    background: none;
+    position: relative;
+    left: 45%;
+}
+
+.wrapperIcon {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.wrapperInfoModal {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}

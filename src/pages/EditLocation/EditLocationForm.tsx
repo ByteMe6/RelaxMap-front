@@ -1,3 +1,221 @@
-export default function EditLocationForm() {
-    return <></>
+import { Formik, Form, Field } from "formik";
+import styles from "../LocationFormPage/LocationForm.module.scss";
+import { updateLocation } from "../../redux/thunk/thunkLocationUpdate";
+import { useAppDispatch } from "../../redux/hooks/hook";
+import { useRef } from "react";
+import { host } from "../../backendHost";
+import { saveOrUpdateLocation } from "../../redux/slice/locationSlice";
+import { useNavigate } from "react-router-dom";
+
+interface Location {
+  id: number;
+  name: string;
+  placeType: string | null;
+  region: string | null;
+  description: string;
+  imageName?: string;
+  image?: string;
+  rating?: number;
 }
+
+interface LocationEditProps {
+  location: Location | null;
+}
+
+interface FormValues {
+  name: string;
+  placeType: string;
+  region: string;
+  description: string;
+  file: File | null;
+}
+
+function EditLocationForm({ location }: LocationEditProps) {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const fileRef = useRef<HTMLInputElement | null>(null);
+
+  if (!location) return <div>Завантаження...</div>;
+
+  const imageUrl = location.imageName
+    ? `${host}/images/${location.imageName}`
+    : null;
+
+  const optionsLocation = ["місто", "село", "море", "гори", "затока"];
+  const regions = [
+    "Київська область",
+    "Вінницька область",
+    "Волинська область",
+    "Дніпропетровська область",
+    "Донецька область",
+    "Житомирська область",
+    "Закарпатська область",
+    "Запорізька область",
+    "Івано-Франківська область",
+    "Кіровоградська область",
+    "Луганська область",
+    "Львівська область",
+    "Миколаївська область",
+    "Одеська область",
+    "Полтавська область",
+    "Рівненська область",
+    "Сумська область",
+    "Тернопільська область",
+    "Харківська область",
+    "Херсонська область",
+    "Хмельницька область",
+    "Черкаська область",
+    "Чернівецька область",
+    "Чернігівська область",
+  ];
+
+  const performUpdate = async (values: FormValues) => {
+    // Валідація обов'язкових полів
+    if (!values.name.trim() || !values.placeType.trim() || !values.region.trim()) {
+      alert("Будь ласка, заповніть Назву, Тип місця та Регіон.");
+      return;
+    }
+
+    // Виконуємо оновлення
+    // Axios interceptor автоматично обробить 401 і оновить токен
+    const resultAction = await (dispatch as any)(
+      updateLocation({
+        id: location.id,
+        name: values.name,
+        placeType: values.placeType,
+        region: values.region,
+        description: values.description,
+        file: values.file,
+      })
+    );
+
+    if (updateLocation.fulfilled.match(resultAction)) {
+      // Успішно оновлено
+      (dispatch as any)(
+        saveOrUpdateLocation({
+          ...location,
+          ...resultAction.payload,
+        })
+      );
+      navigate(`/locations/${location.id}`);
+    } else {
+      // Помилка (якщо навіть після refresh не вдалося)
+      const error = resultAction.payload as
+        | { status: number; message: string }
+        | undefined;
+
+      if (error) {
+        alert(`Помилка при оновленні місця: ${error.message}`);
+      } else {
+        alert("Сталася невідома помилка при оновленні місця.");
+      }
+    }
+  };
+
+  return (
+    <Formik<FormValues>
+      enableReinitialize
+      initialValues={{
+        name: location.name,
+        placeType: location.placeType ?? "",
+        region: location.region ?? "",
+        description: location.description,
+        file: null,
+      }}
+      onSubmit={performUpdate}
+    >
+      {({ setFieldValue, values }) => (
+        <Form
+          className={styles.containerFormLocation}
+          style={{ marginTop: "10%" }}
+        >
+          <p className={styles.titleNewLocation}>Редагування місця</p>
+
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileRef}
+            onChange={(e) =>
+              setFieldValue("file", e.currentTarget.files?.[0] || null)
+            }
+            style={{ display: "none" }}
+          />
+
+          <div
+            className={styles.photoInput}
+            onClick={() => fileRef.current?.click()}
+            style={{ cursor: "pointer" }}
+          >
+            {!values.file && imageUrl && (
+              <img src={imageUrl} className={styles.imageLocation} alt="loc" />
+            )}
+            {values.file && (
+              <img
+                src={URL.createObjectURL(values.file)}
+                className={styles.imageLocation}
+                alt="pre"
+              />
+            )}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            className={styles.btnDownload}
+          >
+            Змінити фото
+          </button>
+
+          <label className={styles.labelLocation}>Назва місця</label>
+          <Field
+            name="name"
+            className={styles.inputLocation}
+            placeholder="Назва"
+          />
+
+          <label className={styles.labelLocation}>Тип місця</label>
+          <Field as="select" name="placeType" className={styles.inputLocation}>
+            <option value="">Оберіть тип</option>
+            {optionsLocation.map((opt) => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
+            ))}
+          </Field>
+
+          <label className={styles.labelLocation}>Регіон</label>
+          <Field as="select" name="region" className={styles.inputLocation}>
+            <option value="">Оберіть регіон</option>
+            {regions.map((reg) => (
+              <option key={reg} value={reg}>
+                {reg}
+              </option>
+            ))}
+          </Field>
+
+          <label className={styles.labelLocation}>Детальний опис</label>
+          <Field
+            as="textarea"
+            name="description"
+            className={styles.inputLocationArea}
+          />
+
+          <div className={styles.wrapperButton}>
+            <button
+              type="button"
+              className={styles.btnLocation}
+              onClick={() => navigate(-1)}
+            >
+              Відмінити
+            </button>
+            <button type="submit" className={styles.btnLocation}>
+              Зберегти зміни
+            </button>
+          </div>
+        </Form>
+      )}
+    </Formik>
+  );
+}
+
+export default EditLocationForm;

@@ -1,7 +1,10 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage"
-import locationReducer from "./slice/locationSlice"
+import storage from "redux-persist/lib/storage";
+
+import locationReducer from "./slice/locationSlice";
+import authReducer from "./slice/authSlice";
+
 const persistConfig = {
     key: "root",
     storage,

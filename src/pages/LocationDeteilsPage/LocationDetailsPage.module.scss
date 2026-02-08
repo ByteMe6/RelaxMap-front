@@ -1,0 +1,291 @@
+.wrapperLocationDetail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 80px auto 0;
+  padding: 0 16px 40px;
+  box-sizing: border-box;
+  background-color: #fdf5f0;
+  min-height: 100vh;
+}
+
+.wrapperLocation {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100%;
+  margin: 0 auto;
+  gap: 40px;
+}
+
+.imageBox,
+.infoBox {
+  flex: 1 1 0;
+}
+
+.imageBox {
+  width: 100%;
+
+  .imageLocation {
+    width: 100%;
+    height: auto;
+    max-height: 380px;
+    object-fit: cover;
+    border-radius: 18px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.infoBox {
+  width: 100%;
+}
+
+.topInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  gap: 8px;
+}
+
+.category {
+  color: #cc6534;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.title {
+  font-size: 28px;
+  margin: 8px 0;
+  color: #1a1a1a;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.authorSection {
+  margin-bottom: 10px;
+  font-size: 14px;
+
+  .authorLink {
+    color: #cc6534;
+    font-weight: 700;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.description {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #444;
+  margin-bottom: 12px;
+  word-break: break-word;
+}
+
+.region {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 16px;
+}
+
+/* Rating row */
+.ratingRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.ratingStars {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 22px;
+}
+
+.starFilled,
+.starEmpty {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.15s ease-out;
+  transform-origin: center;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.starFilled {
+  color: #ffb400;
+}
+
+.starEmpty {
+  color: #ccc;
+}
+
+.ratingNumber {
+  font-weight: 700;
+  color: #1a1a1a;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  .reviewsCount {
+    font-weight: 400;
+    color: #666;
+    font-size: 13px;
+  }
+}
+
+.btnEdit {
+  width: 100%;
+  max-width: 160px;
+  height: 46px;
+  background-color: #cc6534;
+  border: none;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    background-color: #1a3a3a;
+    transform: translateY(-2px);
+  }
+}
+
+.divider {
+  border: 0;
+  height: 1px;
+  background: #eee;
+  margin: 40px 0;
+  width: 100%;
+}
+
+/* ===== RESPONSIVE STYLES ===== */
+
+/* Mobile - force column layout */
+@media (max-width: 767px) {
+  .wrapperLocation {
+    flex-direction: column !important;
+    gap: 20px;
+  }
+
+  .imageBox,
+  .infoBox {
+    flex: unset;
+    width: 100%;
+  }
+}
+
+@media (max-width: 340px) {
+  .wrapperLocationDetail {
+    margin-top: 70px;
+    padding: 0 10px 20px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .ratingStars {
+    font-size: 18px;
+  }
+
+  .topInfo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .btnEdit {
+    max-width: 100%;
+  }
+
+  .ratingNumber {
+    font-size: 14px;
+
+    .reviewsCount {
+      font-size: 11px;
+    }
+  }
+}
+
+/* Tablets (768–1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .wrapperLocationDetail {
+    margin-top: 100px;
+    padding: 0 24px 50px;
+  }
+
+  .wrapperLocation {
+    gap: 24px;
+  }
+
+  .imageBox .imageLocation {
+    max-height: 420px;
+  }
+
+  .title {
+    font-size: 30px;
+  }
+
+  .description {
+    font-size: 15px;
+  }
+}
+
+/* Desktop (1024–1439px) */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .wrapperLocationDetail {
+    margin-top: 100px;
+    padding: 0 32px 50px;
+  }
+
+  .wrapperLocation {
+    gap: 32px;
+  }
+
+  .imageBox .imageLocation {
+    max-height: 450px;
+  }
+
+  .title {
+    font-size: 32px;
+  }
+}
+
+/* Large Desktop (1440+) */
+@media (min-width: 1440px) {
+  .wrapperLocationDetail {
+    margin-top: 120px;
+    padding: 0 32px 50px;
+  }
+
+  .wrapperLocation {
+    gap: 40px;
+  }
+
+  .imageBox .imageLocation {
+    max-height: 600px;
+  }
+
+  .title {
+    font-size: 42px;
+  }
+}

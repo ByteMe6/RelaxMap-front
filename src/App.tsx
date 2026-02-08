@@ -1,4 +1,7 @@
 import { Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
 import Layout from "./components/Layout/Layout";
 import HomePage from "./pages/HomePage/HomePage";
 import LocationsPage from "./pages/LocationsPage/LocationsPage";
@@ -12,6 +15,21 @@ import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import "./index.css"
 
 function App() {
+  const [isAlive, setIsAlive] = useState<boolean | null>(null);
+  const [isBackendModalOpen, setIsBackendModalOpen] = useState(true);
+
+  useEffect(() => {
+    void (async () => {
+      const alive = await handleCheckIsAlive();
+      setIsAlive(alive);
+      setIsBackendModalOpen(!alive);
+    })();
+  }, []);
+
+  const closeBackendModal = () => {
+    setIsBackendModalOpen(false);
+  };
+
   return (
     <Routes>
       <Route element={<Layout />}>
