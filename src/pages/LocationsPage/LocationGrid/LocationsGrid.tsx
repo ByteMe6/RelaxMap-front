@@ -6,9 +6,12 @@ import { useAppSelector, useAppDispatch } from "../../../redux/hooks/hook"
 import { fetchAllLocations } from "../../../redux/thunk/thunkLocation"
 import styles from "./LocationGrid.module.scss"
 import { useState } from "react"
-function LocationsGrid() {
+import type { LocationInfo } from "../../../redux/slice/locationSlice"
+type Props = {
+  locations: LocationInfo[];
+};
+function LocationsGrid({ locations }: Props) {
   const dispatch = useAppDispatch()
-  const locations = useAppSelector((state) => state.location.locations)
   const [visibleCount, setVisibleCount] = useState(6);
  const visibleLocations = locations.slice(0, visibleCount);
  

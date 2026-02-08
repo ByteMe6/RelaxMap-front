@@ -3,6 +3,7 @@ import Star from "../../LocationDeteilsPage/RatingLocation/Star/Star";
 import { useState } from "react";
 import { host } from "../../../backendHost";
 import { useNavigate } from "react-router-dom";
+import { updateLocationRating } from "../../../redux/thunk/thunkUpdateRating"
 import type { LocationInfo } from "../../../redux/slice/locationSlice";
 
 type CardProps = {
