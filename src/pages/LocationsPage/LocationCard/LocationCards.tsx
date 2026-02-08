@@ -3,21 +3,26 @@ import Star from "../../LocationDeteilsPage/RatingLocation/Star/Star"
 import { useState } from "react"
 import { host } from "../../../backendHost"
 import { useNavigate } from "react-router-dom"
+import { updateLocationRating } from "../../../redux/thunk/thunkUpdateRating"
+import { useAppDispatch } from "../../../redux/hooks/hook"
 type CardData = {
-    id?:number,
+    id?: number,
     name: string,
     placeType: string | null,
     region: string | null,
     description: string,
-    imageName?:string
+    imageName?: string,
+    rating:number
 }
 type CardProps = {
     info: CardData[],
 }
 function LocationCard({ info }: CardProps) {
     const [hover, setHover] = useState<number | null>(null)
-    const [rating, setRating] = useState(0)
     const navigate = useNavigate()
+    const dispatch = useAppDispatch()
+    const r = info.map(e => e.rating)
+    console.log(r)
     return (
         <>
             {info.map((location) => (
@@ -28,11 +33,15 @@ function LocationCard({ info }: CardProps) {
                         <div>
                             {[1, 2, 3, 4, 5].map((star) => {
                                 return (
-                                    <Star active={star <= (hover ?? rating)}
+                                    <Star active={star <= (hover ?? location.rating)}
                                         key={star}
                                         onMouseEnter={() => setHover(star)}
                                         onMouseLeave={() => setHover(null)}
-                                        onClick={() => setRating(star)}
+                                        onClick={() => 
+                                            dispatch(updateLocationRating({
+                                            id: location.id!,
+                                            rating: star
+                                        }))}
                                     />
                                 )
                             })}

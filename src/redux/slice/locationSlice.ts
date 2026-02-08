@@ -2,19 +2,21 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { searchLocation } from "../thunk/thunkLocationMap";
 import { postNewLocation } from "../thunk/thunkLocation";
+import { updateLocationRating } from "../thunk/thunkUpdateRating";
 import { searchCities, searchRegions } from "../thunk/thunkTypeLocation";
 export interface LocationData {
     lat: number | null,
     lng: number | null,
 }
 export interface LocationInfo {
-    id:number,
+    id: number,
     image: string,
     name: string,
     placeType: null | string,
     region: null | string,
     description: string,
-    imageName?: string
+    imageName?: string,
+    rating: number
 }
 
 interface LocationState {
@@ -28,12 +30,13 @@ interface LocationState {
 const initialState: LocationState = {
     loading: false,
     info: {
-        id:1,
+        id: 1,
         name: "",
         image: "",
         placeType: null,
         region: null,
         description: "",
+        rating: 0
     },
     locations: [],
     listCity: [],
@@ -102,6 +105,13 @@ const locationSlice = createSlice({
             })
             .addCase(searchRegions.rejected, (state) => {
                 state.loading = false
+            })
+            .addCase(updateLocationRating.fulfilled, (state, action) => {
+                const updatedLocation = action.payload;
+                state.locations = state.locations.map(loc =>
+                    loc.id === updatedLocation.id ? updatedLocation : loc
+                );
+
             })
     },
 })
