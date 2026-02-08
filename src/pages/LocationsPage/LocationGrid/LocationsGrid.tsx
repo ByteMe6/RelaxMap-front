@@ -1,12 +1,11 @@
-// src/pages/LocationsGrid/LocationsGrid.tsx
 import { useEffect } from "react"
-import LocationCard from "../LocationCard/LocationCards"
 import Container from "../../../components/Container/Container"
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks/hook"
 import { fetchAllLocations } from "../../../redux/thunk/thunkLocation"
 import styles from "./LocationGrid.module.scss"
 import { useState } from "react"
 import type { LocationInfo } from "../../../redux/slice/locationSlice"
+import LocationCard from "../LocationCard/LocationCards"
 type Props = {
   locations: LocationInfo[];
 };
@@ -27,7 +26,9 @@ function LocationsGrid({ locations }: Props) {
     <Container>
       <p></p>
       <ul className={styles.wrapperLocationCards}>
-        <LocationCard info={visibleLocations} />
+              {visibleLocations.map(location => (
+          <LocationCard key={location.id} info={location} />
+        ))}
       </ul>
        {visibleCount < locations.length && (
       <button className={styles.btnLoadLocation} onClick={handleLoadMore}>Показати ще</button>
