@@ -6,7 +6,7 @@ interface ProfileModalProps {
   title: string;
   type: "text" | "password";
   onClose: () => void;
-  onSave: (oldValue?: string, newValue?: string) => void;  // Змінив сигнатуру для пароля
+  onSave: (oldValue?: string, newValue?: string) => void;
 }
 
 export const ProfileModal: React.FC<ProfileModalProps> = ({
@@ -16,7 +16,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   onClose,
   onSave,
 }) => {
-  const [oldValue, setOldValue] = useState("");  // Для старого пароля
+  const [oldValue, setOldValue] = useState("");
   const [newValue, setNewValue] = useState("");
 
   if (!isOpen) return null;

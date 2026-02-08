@@ -1,4 +1,3 @@
-// src/redux/thunk/authThunk.ts
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { host } from "../../backendHost";

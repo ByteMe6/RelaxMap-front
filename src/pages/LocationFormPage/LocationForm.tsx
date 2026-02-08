@@ -13,7 +13,7 @@ import {
 } from "../../redux/thunk/thunkTypeLocation";
 import { resetLocation } from "../../redux/slice/locationSlice";
 import { useNavigate } from "react-router-dom";
-
+import ModalSuccessLocation from "./ModalSuccessLocation/ModalSuccessLocation";
 export default function LocationForm() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -26,8 +26,13 @@ export default function LocationForm() {
   const [selectedCountryCode, setSelectedCountryCode] = useState<string | null>(
     null,
   );
+  const [showModal, setShowModal] = useState(false)
   // const [showRegionSuggestions, setShowRegionSuggestions] = useState(false)
-
+  const handleModalClose = () => {
+    setShowModal(false)
+    const mail = localStorage.getItem("email")
+    navigate(`/profile/${mail}`);
+  }
   function remove() {
     let remove = query + selectedCountryCode;
     remove = "";
@@ -35,8 +40,7 @@ export default function LocationForm() {
   }
 
   const onSumbit = () => {
-    const mail = localStorage.getItem("email")
-    navigate(`/profile/${mail}`);
+    setShowModal(true)
   };
 
   remove();
@@ -68,7 +72,7 @@ export default function LocationForm() {
     "Чернівецька область",
     "Чернігівська область",
   ];
-  const optionsLocation: string[] = ["місто", "село", "море", "гори" , "затока"];
+  const optionsLocation: string[] = ["місто", "село", "море", "гори", "затока"];
   const info = useAppSelector((state) => state.location.info);
   console.log(info);
   const locations = useAppSelector((state) => state.location.locations)
@@ -112,175 +116,180 @@ export default function LocationForm() {
     });
   };
   return (
-    <Formik
-      initialValues={{
-        name: "",
-        placeType: "",
-        region: "",
-        description: "",
-        file: null as File | null,
-        location: "",
-      }}
-      onSubmit={(values) => {
-        dispatch(
-          postNewLocation({
-            name: values.name,
-            placeType: values.placeType,
-            region: values.region,
-            description: values.description,
-            file: values.file,
-          }),
-        );
-      }}
-    >
-      {({ setFieldValue, values, resetForm }) => (
-        <Form className={styles.containerFormLocation}>
-          <label htmlFor="file" className={styles.labelLocation}>
-            Обкладинка
-          </label>
-          <input
-            type="file"
-            accept="image/*"
-            ref={fileRef}
-            onChange={(e) => {
-              const file = e.currentTarget.files?.[0] || null;
-              setFieldValue("file", file);
-            }}
-            style={{ display: "none" }}
-            id="file"
-          />
-          <label className={`${styles.photoInput} ${styles.photoInputLarge}`}>
-            {values.file && (
-              <img
-                src={URL.createObjectURL(values.file)}
-                className={styles.imageLocation}
-              />
-            )}
-          </label>
-          <button
-            onClick={() => fileRef.current?.click()}
-            className={styles.btnDownload}
-            type="button"
-          >
-            Завантажити фото
-          </button>
-          <label htmlFor="name" className={styles.labelLocation}>
-            Назва місця
-          </label>
-          <Field
-            name="name"
-            value={values.name}
-            placeholder="Введіть назву місця"
-            className={styles.inputLocation}
-            onChange={(e: any) => handleCityInput(e, setFieldValue)}
-          />
-          {showCitySuggestions && cities.length > 0 && (
-            <ul className={styles.suggestionsList}>
-              {cities.map((city) => (
-                <li
-                  key={city.id}
-                  onClick={() => handleCitySelect(city, setFieldValue)}
-                  className={styles.suggestionsItemList}
-                >
-                  {city.name}, {city.country}
-                </li>
-              ))}
-            </ul>
-          )}
-          <label htmlFor="placeType" className={styles.labelLocation}>
-            Тип місця
-          </label>
-          <Field
-            as="select"
-            name="placeType"
-            className={`${styles.inputLocation} ${styles.inputLocationSelect}`}
-          >
-            <option>Оберіть тип місця</option>
-            {optionsLocation.map((location, index) => (
-              <option key={index}>{location}</option>
-            ))}
-          </Field>
-          <label htmlFor="region" className={styles.labelLocation}>
-            Регіон
-          </label>
-          <Field
-            as="select"
-            name="region"
-            className={`${styles.inputLocation} ${styles.inputLocationSelect}`}
-          >
-            <option value="">Оберіть регіон</option>
-            {regions.map((location, index) => (
-              <option key={index} value={location}>
-                {location || "Регіон"}
-              </option>
-            ))}
-          </Field>
-          <label htmlFor="description" className={styles.labelLocation}>
-            Детальний опис
-          </label>
-          <Field
-            as="textarea"
-            name="description"
-            placeholder="Детальний опис локації"
-            className={styles.inputLocationArea}
-          />
-          <label htmlFor="location" className={styles.labelLocation}>
-            Оберіть розташування
-          </label>
-          <div className={styles.wrapperLocation}>
-            <Field
-              name="location"
-              placeholder="Введіть назву місця"
-              className={`${styles.inputLocation} ${styles.search}`}
-            />
-            <button
-              type="button"
-              className={styles.btnSearch}
-              onClick={() =>
-                handleSearchLocation(values.location, setFieldValue)
-              }
-            >
-              Пошук
-            </button>
-          </div>
-          {coords && (
-            <div className={styles.mapLocation}>
-              <MapContainer
-                center={[coords.lat, coords.lng] as LatLngExpression}
-                zoom={13}
-                style={{ height: "100%" }}
-              >
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution="&copy; OpenStreetMap contributors"
-                />
-                <Marker position={[coords.lat, coords.lng] as LatLngExpression}>
-                  <Popup>{values.location}</Popup>
-                </Marker>
-              </MapContainer>
-            </div>
-          )}
-          <div className={styles.wrapperButton}>
-            <button
-              className={styles.btnLocation}
-              type="button"
-              onClick={() => {
-                resetForm();
-                dispatch(resetLocation());
-              }}
-            >
-              Відмінити
-            </button>
-            <button
-              className={`${styles.btnLocation} ${styles["btnLocation--post"]}`}
-              type="submit"
-              onClick={onSumbit}
-            >
-              Опублікувати
-            </button>
-          </div>
-        </Form>
+    <>
+      {showModal && (
+        <ModalSuccessLocation onClose={handleModalClose} />
       )}
-    </Formik>
+      <Formik
+        initialValues={{
+          name: "",
+          placeType: "",
+          region: "",
+          description: "",
+          file: null as File | null,
+          location: "",
+        }}
+        onSubmit={(values) => {
+          dispatch(
+            postNewLocation({
+              name: values.name,
+              placeType: values.placeType,
+              region: values.region,
+              description: values.description,
+              file: values.file,
+            }),
+          );
+        }}
+      >
+        {({ setFieldValue, values, resetForm }) => (
+          <Form className={styles.containerFormLocation}>
+            <label htmlFor="file" className={styles.labelLocation}>
+              Обкладинка
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              ref={fileRef}
+              onChange={(e) => {
+                const file = e.currentTarget.files?.[0] || null;
+                setFieldValue("file", file);
+              }}
+              style={{ display: "none" }}
+              id="file"
+            />
+            <label className={`${styles.photoInput} ${styles.photoInputLarge}`}>
+              {values.file && (
+                <img
+                  src={URL.createObjectURL(values.file)}
+                  className={styles.imageLocation}
+                />
+              )}
+            </label>
+            <button
+              onClick={() => fileRef.current?.click()}
+              className={styles.btnDownload}
+              type="button"
+            >
+              Завантажити фото
+            </button>
+            <label htmlFor="name" className={styles.labelLocation}>
+              Назва місця
+            </label>
+            <Field
+              name="name"
+              value={values.name}
+              placeholder="Введіть назву місця"
+              className={styles.inputLocation}
+              onChange={(e: any) => handleCityInput(e, setFieldValue)}
+            />
+            {showCitySuggestions && cities.length > 0 && (
+              <ul className={styles.suggestionsList}>
+                {cities.map((city) => (
+                  <li
+                    key={city.id}
+                    onClick={() => handleCitySelect(city, setFieldValue)}
+                    className={styles.suggestionsItemList}
+                  >
+                    {city.name}, {city.country}
+                  </li>
+                ))}
+              </ul>
+            )}
+            <label htmlFor="placeType" className={styles.labelLocation}>
+              Тип місця
+            </label>
+            <Field
+              as="select"
+              name="placeType"
+              className={`${styles.inputLocation} ${styles.inputLocationSelect}`}
+            >
+              <option>Оберіть тип місця</option>
+              {optionsLocation.map((location, index) => (
+                <option key={index}>{location}</option>
+              ))}
+            </Field>
+            <label htmlFor="region" className={styles.labelLocation}>
+              Регіон
+            </label>
+            <Field
+              as="select"
+              name="region"
+              className={`${styles.inputLocation} ${styles.inputLocationSelect}`}
+            >
+              <option value="">Оберіть регіон</option>
+              {regions.map((location, index) => (
+                <option key={index} value={location}>
+                  {location || "Регіон"}
+                </option>
+              ))}
+            </Field>
+            <label htmlFor="description" className={styles.labelLocation}>
+              Детальний опис
+            </label>
+            <Field
+              as="textarea"
+              name="description"
+              placeholder="Детальний опис локації"
+              className={styles.inputLocationArea}
+            />
+            <label htmlFor="location" className={styles.labelLocation}>
+              Оберіть розташування
+            </label>
+            <div className={styles.wrapperLocation}>
+              <Field
+                name="location"
+                placeholder="Введіть назву місця"
+                className={`${styles.inputLocation} ${styles.search}`}
+              />
+              <button
+                type="button"
+                className={styles.btnSearch}
+                onClick={() =>
+                  handleSearchLocation(values.location, setFieldValue)
+                }
+              >
+                Пошук
+              </button>
+            </div>
+            {coords && (
+              <div className={styles.mapLocation}>
+                <MapContainer
+                  center={[coords.lat, coords.lng] as LatLngExpression}
+                  zoom={13}
+                  style={{ height: "100%" }}
+                >
+                  <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution="&copy; OpenStreetMap contributors"
+                  />
+                  <Marker position={[coords.lat, coords.lng] as LatLngExpression}>
+                    <Popup>{values.location}</Popup>
+                  </Marker>
+                </MapContainer>
+              </div>
+            )}
+            <div className={styles.wrapperButton}>
+              <button
+                className={styles.btnLocation}
+                type="button"
+                onClick={() => {
+                  resetForm();
+                  dispatch(resetLocation());
+                }}
+              >
+                Відмінити
+              </button>
+              <button
+                className={`${styles.btnLocation} ${styles["btnLocation--post"]}`}
+                type="submit"
+                onClick={onSumbit}
+              >
+                Опублікувати
+              </button>
+            </div>
+          </Form>
+        )}
+      </Formik>
+    </>
   );
 }

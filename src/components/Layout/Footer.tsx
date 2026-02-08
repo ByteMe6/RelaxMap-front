@@ -11,7 +11,7 @@ function Footer() {
         <div className="footer-container">
           <div className="footer-content">
             <div className="footer-logo">
-              <img src="assets/logo.png" alt="Relax Map Logo" />
+              <img src="assets/logo.svg" alt="Relax Map Logo" />
               <span>Relax Map</span>
             </div>
 
