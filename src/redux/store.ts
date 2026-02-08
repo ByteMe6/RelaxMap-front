@@ -3,16 +3,16 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"
 import locationReducer from "./slice/locationSlice"
 const persistConfig = {
-    key:"root",
+    key: "root",
     storage,
-    whitelist:["location"]
+    whitelist: ["location"]
 }
 const rootReducer = combineReducers({
-    location:locationReducer
+    location: locationReducer
 })
 export type RootState = ReturnType<typeof rootReducer>
 const persistedReducer = persistReducer(persistConfig, rootReducer)
-const store =  configureStore({
+const store = configureStore({
     reducer: persistedReducer
 })
 export const persistor = persistStore(store)
