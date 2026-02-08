@@ -1,42 +1,246 @@
 .wrapperLocationDetail {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    margin: 10% 0 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 100%;
+  margin: 80px auto 0;
+  padding: 0 0 40px; 
+  box-sizing: border-box;
 }
+
+
 .btnEdit {
-    width:160px;
-    height:48px;
-    background-color: #CC6534;
-    border: 1px solid  #CC6534;
-    font-family:"Montserrat";
-    font-weight:500;
-    color:#fff;
-    margin-top:50px;
-    border-radius:10px;
-}
-@media(min-width:768px) {
-    .wrapperLocationDetail {
-        align-items: center;
-    }
+  width: 100%;
+  max-width: 160px;
+  height: 48px;
+  background-color: #cc6534;
+  border: 1px solid #cc6534;
+  font-family: "Montserrat";
+  font-weight: 500;
+  color: #fff;
+  margin-top: 32px;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
-@media(min-width:1440px) {
-    .wrapperLocationDesktop {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
+/* TABLET */
 
-    .wrapperLocationDetail {
-        margin-top: 10%;
-    }
+@media (min-width: 768px) {
+  .containerNewLocation {
+    width: 100%;
+    max-width: 768px;
+    margin-top: 96px;
+    padding: 0 32px 40px;
+    box-sizing: border-box;
+  }
 
-    .wrapperLocation {
-        display: flex;
-        align-items: center;
-        flex-direction: row-reverse;
-    }
+  .wrapperLocationDetail {
+    width: 100%;
+    max-width: 768px;
+    margin-top: 96px;
+    padding: 0 0 40px;
+    box-sizing: border-box;
+  }
+
+  .photoInputLarge {
+    width: 100%;
+    max-width: 704px;
+    height: 468px;
+    background-image: url("../../../public/assets/placeholderImageTablet.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
+
+  .wrapperLocation {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    box-sizing: border-box;
+  }
+
+  .btnSearch {
+    width: 199px;
+  }
+
+  .inputLocation {
+    width: 100%;
+    max-width: 704px;
+  }
+
+  .inputLocation.search {
+    width: 421px;
+  }
+
+  .inputLocationArea {
+    width: 100%;
+    max-width: 704px;
+  }
+
+  .wrapperButton {
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .btnLocation {
+    width: 203px;
+  }
+
+  .mapLocation {
+    width: 100%;
+    max-width: 704px;
+    height: 395px;
+  }
+
+  .imageLocation {
+    width: 100%;
+    max-width: 704px;
+    height: 468px;
+  }
+}
+
+/* DESKTOP */
+
+@media (min-width: 1440px) {
+  .wrapperLocationDetail {
+    width: 100%;
+    max-width: 1240px;
+    margin-top: 112px;
+    padding: 0 0 40px;
+    box-sizing: border-box;
+
+    // overflow-x: hidden; // можешь пока оставить для подстраховки
+  }
+
+  .wrapperLocationDetail {
+    width: 100%;
+    max-width: 1240px;
+    margin-top: 112px;
+    padding: 0 0 40px;
+
+    width: 100vw;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .photoInputLarge {
+    background-image: url("../../../public/assets/placeholderImageDesktop.png");
+    width: 100%;
+    max-width: 1091px;
+    height: 726px;
+  }
+
+  .inputLocation {
+    width: 100%;
+    max-width: 1091px;
+    height: 43px;
+  }
+
+  .inputLocationArea {
+    width: 100%;
+    max-width: 1091px;
+  }
+
+  .btnDownload {
+    width: 215px;
+  }
+
+  .imageLocation {
+    width: 100%;
+    max-width: 1091px;
+    height: 726px;
+  }
+
+  .wrapperLocation {
+    width: 100%;
+    max-width: 1240px;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+  }
+}
+
+
+@media (max-width: 360px) {
+  /* Базовый контейнер */
+  .container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 8px;
+    box-sizing: border-box;
+  }
+
+  /* Главный враппер страницы деталей */
+  .wrapperLocationDetail {
+    width: 100%;
+    max-width: 100%;
+    margin: 72px auto 0;
+    padding: 0 8px 32px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
+  /* Обёртка для блока галереи + инфы */
+  .wrapperLocation {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    box-sizing: border-box;
+  }
+
+  .wrapperLocationDesktop {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Картинки/карты/фото */
+  .photoInputLarge,
+  .mapLocation,
+  .imageLocation,
+  .wrapperLocation img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    box-sizing: border-box;
+  }
+
+  /* Кнопка редактирования */
+  .btnEdit {
+    width: 100%;
+    max-width: 160px;
+    height: 44px;
+    font-size: 14px;
+    margin-top: 24px;
+  }
+
+  /* Блок описания */
+  .locationDescription,
+  .locationDescriptionContainer {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    word-wrap: break-word;
+  }
+
+  /* На всякий случай — все Swiper/отзывы в этом контейнере */
+  .reviews,
+  .reviews__grid,
+  .review-card {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .review-card {
+    margin: 0 auto;
+  }
 }

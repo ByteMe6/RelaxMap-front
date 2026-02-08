@@ -1,11 +1,12 @@
 .backdrop {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: fixed; /* чтобы перекрывать весь экран и не ехать при скролле */
+  inset: 0;        /* shorthand для top/right/bottom/left: 0 */
   background: rgba(0, 0, 0, 0.25);
   z-index: 999;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .is-hidden {
@@ -13,21 +14,20 @@
 }
 
 .modal {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: relative;
   background: #fff2ec;
   border-radius: 24px;
-  padding: 64px;
-  width: 768px;
-  height: 553px;
+  padding: 32px 20px;
+  width: 100%;
   max-width: 768px;
+  max-height: 90vh;
+  box-sizing: border-box;
+  overflow-y: auto;
 
   &__close {
     position: absolute;
-    top: 24px;
-    right: 24px;
+    top: 16px;
+    right: 16px;
     background: none;
     border: none;
     width: 32px;
@@ -38,12 +38,47 @@
   }
 
   &__title {
-    margin: 0 0 24px 0;
+    margin: 0 0 16px 0;
     font-weight: 700;
-    font-size: 48px;
+    font-size: 24px;
     line-height: 120%;
     letter-spacing: -0.01em;
     text-align: center;
     color: #000;
+  }
+}
+
+/* Телефоны ~до 480px */
+@media (max-width: 480px) {
+  .modal {
+    border-radius: 16px;
+    padding: 24px 16px;
+    max-width: 100%;
+    max-height: 90vh;
+
+    &__close {
+      top: 12px;
+      right: 12px;
+      width: 28px;
+      height: 28px;
+    }
+
+    &__title {
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+  }
+}
+
+/* Планшеты и десктоп — вернём более крупный вид, но без фиксированных px-ширин */
+@media (min-width: 768px) {
+  .modal {
+    padding: 48px 64px;
+    max-width: 768px;
+
+    &__title {
+      font-size: 32px;
+      margin-bottom: 24px;
+    }
   }
 }
