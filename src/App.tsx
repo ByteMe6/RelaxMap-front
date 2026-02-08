@@ -11,22 +11,8 @@ import LocationFormPage from "./pages/LocationFormPage/LocationFormPage";
 import EditLocation from "./pages/EditLocation/EditLocation";
 import RegisterPage from "./pages/Auth/RegisterPage/RegisterPage";
 import LoginPage from "./pages/Auth/Login/LoginPage";
-import NotFound from "./pages/notFound/NotFound";
-
-import "./index.css";
-import "./Scss/Modal.scss";
-import { host } from "./backendHost";
-
-async function handleCheckIsAlive(): Promise<boolean> {
-  try {
-    const response = await axios.get(`${host}/places/all`, {
-      params: { page: 0, size: 1, sort: [] },
-    });
-    return response.status === 200;
-  } catch {
-    return false;
-  }
-}
+import ErrorPage from "./pages/ErrorPage/ErrorPage";
+import "./index.css"
 
 function App() {
   const [isAlive, setIsAlive] = useState<boolean | null>(null);
@@ -45,44 +31,19 @@ function App() {
   };
 
   return (
-    <>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/locations" element={<LocationsPage />} />
-          <Route path="/locations/:id" element={<LocationDeteilsPage />} />
-          <Route path="/profile/:mail" element={<ProfilePage />} />
-          <Route path="/locations/add" element={<LocationFormPage />} />
-          <Route path="/locations/:id/edit" element={<EditLocation />} />
-        </Route>
-
+    <Routes>
+      <Route element={<Layout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/locations" element={<LocationsPage />} />
+        <Route path="/locations/location" element={<LocationDeteilsPage />} /> {/* add id route*/}
+        <Route path="/profile" element={<ProfilePage />} /> {/* add id route*/}
+        <Route path="/locations/add" element={<LocationFormPage />} />
+        <Route path="/locations/location/edit" element={<EditLocation />} /> {/* add id route*/}
         <Route path="/auth/register" element={<RegisterPage />} />
         <Route path="/auth/login" element={<LoginPage />} />
-
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-
-      {isAlive === false && isBackendModalOpen && (
-        <div className="customModalOverlay">
-          <div className="customModal">
-            <h3 className="customModal__title">Сервер впав</h3>
-            <p className="customModal__text">
-              Бекенд зараз недоступний. Спробуй перезавантажити сторінку трохи
-              пізніше.
-            </p>
-            <div className="modalActions">
-              <button
-                type="button"
-                className="modalActions__button"
-                onClick={closeBackendModal}
-              >
-                Закрити
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+      </Route>
+      <Route path="*" element={<ErrorPage />} />
+    </Routes>
   );
 }
 

@@ -1,5 +1,5 @@
 # RelaxMap
-Relax map – проэкт чтобы делиться вашими любимыми местами для путешествий
+Relax map - проэкт чтобы делиться вашими любимыми местами для путешествий
 
 [Md on russian](./README.ru.md) <br/>
 [Md on english](./README.md)

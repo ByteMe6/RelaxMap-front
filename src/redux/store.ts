@@ -6,28 +6,18 @@ import locationReducer from "./slice/locationSlice";
 import authReducer from "./slice/authSlice";
 
 const persistConfig = {
-  key: "root",
-  storage,
-  whitelist: ["location", "auth"], 
-};
-
+    key: "root",
+    storage,
+    whitelist: ["location"]
+}
 const rootReducer = combineReducers({
-  location: locationReducer,
-  auth: authReducer,
-});
-
-export type RootState = ReturnType<typeof rootReducer>;
-
-const persistedReducer = persistReducer(persistConfig, rootReducer);
-
+    location: locationReducer
+})
+export type RootState = ReturnType<typeof rootReducer>
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 const store = configureStore({
-  reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: false,
-    }),
-});
-
-export const persistor = persistStore(store);
-export default store;
-export type AppDispatch = typeof store.dispatch;
+    reducer: persistedReducer
+})
+export const persistor = persistStore(store)
+export default store
+export type AppDispatch = typeof store.dispatch
