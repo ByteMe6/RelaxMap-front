@@ -1,58 +1,89 @@
 import styles from "./LocationCard.module.scss";
 import Star from "../../LocationDeteilsPage/RatingLocation/Star/Star";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { host } from "../../../backendHost";
 import { useNavigate } from "react-router-dom";
-import { updateLocationRating } from "../../../redux/thunk/thunkUpdateRating"
 import type { LocationInfo } from "../../../redux/slice/locationSlice";
-import { useAppDispatch } from "../../../redux/hooks/hook";
 type CardProps = {
     info: LocationInfo;
 };
 function LocationCard({ info }: CardProps) {
     const [hover, setHover] = useState<number | null>(null);
+    const [averageRating, setAverageRating] = useState<number>(2);
     const navigate = useNavigate();
-    const dispatch = useAppDispatch()
+    useEffect(() => {
+        const storage = JSON.parse(localStorage.getItem("locationRatings") || "{}");
+        if (storage[info.id]) {
+            const { total, count } = storage[info.id];
+            setAverageRating(total / count);
+        } else {
+            const defaultRating = info.rating ?? 2;
+            storage[info.id] = {
+                total: defaultRating,
+                count: 1,
+            };
+            localStorage.setItem("locationRatings", JSON.stringify(storage));
+            setAverageRating(defaultRating);
+        }
+    }, [info.id, info.rating]);
+    const handleRating = (star: number) => {
+        const storage = JSON.parse(localStorage.getItem("locationRatings") || "{}");
+        const current = storage[info.id] || {
+            total: info.rating ?? 2,
+            count: 1,
+        };
+        const newTotal = current.total + star;
+        const newCount = current.count + 1;
+        storage[info.id] = {
+            total: newTotal,
+            count: newCount,
+        };
+        localStorage.setItem("locationRatings", JSON.stringify(storage));
+        setAverageRating(newTotal / newCount);
+    };
+
     return (
         <>
-                <li key={info.id} className={styles.wrapperCard}>
-                    <img
-                        src={
-                            info.imageName
-                                ? `${host}/images/${info.imageName}`
-                                : "/default-image.png"
-                        }
-                        alt="location-image"
-                        className={styles.cardImage}
-                    />
-                    <div className={styles.wrapperInfoCard}>
-                        <p className={styles.textPlace}>{info.placeType}</p>
-                        <div>
-                            {[1, 2, 3, 4, 5].map((star) => (
-                                <Star
-                                    key={star}
-                                    active={star <= (hover ?? info.rating)} 
-                                    onMouseEnter={() => setHover(star)}
-                                    onMouseLeave={() => setHover(null)}
-                                    onClick={() => {
-                                        dispatch(updateLocationRating({ id: info.id, rating: star }));
-                                        console.log(info.id)
-                                    }}
-                                />
-                            ))}
-                        </div>
-                        <p className={styles.textNameLocation}>{info.name}</p>
+            <li key={info.id} className={styles.wrapperCard}>
+                <img
+                    src={
+                        info.imageName
+                            ? `${host}/images/${info.imageName}`
+                            : "/default-image.png"
+                    }
+                    alt="location-image"
+                    className={styles.cardImage}
+                />
+                <div className={styles.wrapperInfoCard}>
+                    <p className={styles.textPlace}>{info.placeType}</p>
+                    <div>
+                        {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                                key={star}
+                                active={star <= (hover ?? info.rating)}
+                                onMouseEnter={() => setHover(star)}
+                                onMouseLeave={() => setHover(null)}
+                                onClick={() => handleRating(star)}
+                            />
+                        ))}
                     </div>
-                    <button
-                        className={styles.btnLocation}
-                        onClick={() => {
-                            navigate(`/locations/${info.id}`);
-                            console.log(info.id);
-                        }}
-                    >
-                        Переглянути локацію
-                    </button>
-                </li>
+                    <div style={{display:"flex", flexDirection:"row", alignItems:"center", gap:10}}>
+                    <svg width="23" height="23" viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg" >
+                        <path d="M6.71016 18.8067L11.2768 15.34L15.8435 18.8067L14.0102 13.04L18.2102 10.3067H13.1768L11.2768 4.54L9.37682 10.3067H4.34349L8.54349 13.04L6.71016 18.8067ZM11.2848 18.1247L5.64582 22.421C5.41916 22.5926 5.18982 22.6672 4.95782 22.645C4.72604 22.6228 4.5106 22.5481 4.31149 22.421C4.1126 22.2941 3.97027 22.1216 3.88449 21.9033C3.79871 21.6853 3.79182 21.4408 3.86382 21.1697L6.01582 14.1623L0.484822 10.1833C0.258156 10.0289 0.111823 9.83411 0.0458225 9.599C-0.0203997 9.36411 -0.0148442 9.14178 0.0624892 8.932C0.1396 8.72778 0.265267 8.54411 0.439489 8.381C0.613711 8.21789 0.844267 8.13633 1.13116 8.13633H7.98916L10.1825 0.829C10.2545 0.552778 10.3969 0.345557 10.6098 0.207334C10.8227 0.0691122 11.045 0 11.2768 0C11.5086 0 11.7309 0.0691122 11.9438 0.207334C12.1567 0.345557 12.3018 0.552778 12.3792 0.829L14.5645 8.13633H21.4305C21.712 8.13633 21.9399 8.21789 22.1142 8.381C22.2884 8.54411 22.414 8.72778 22.4912 8.932C22.5685 9.14178 22.574 9.36411 22.5078 9.599C22.4418 9.83411 22.2955 10.0289 22.0688 10.1833L16.5378 14.1623L18.6898 21.1617C18.7618 21.4381 18.7549 21.684 18.6692 21.8993C18.5834 22.1149 18.441 22.2862 18.2422 22.4133C18.043 22.5456 17.8288 22.6228 17.5995 22.645C17.3704 22.6672 17.1425 22.59 16.9158 22.4133L11.2848 18.1247Z" fill={"#00000"} />
+                    </svg> {averageRating.toFixed(1)}
+                    </div>
+                    <p className={styles.textNameLocation}>{info.name}</p>
+                </div>
+                <button
+                    className={styles.btnLocation}
+                    onClick={() => {
+                        navigate(`/locations/${info.id}`);
+                        console.log(info.id);
+                    }}
+                >
+                    Переглянути локацію
+                </button>
+            </li>
         </>
     );
 }
