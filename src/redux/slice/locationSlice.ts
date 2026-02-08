@@ -118,71 +118,8 @@ const locationSlice = createSlice({
                 state.locations = state.locations.map(loc =>
                     loc.id === updatedLocation.id ? updatedLocation : loc
                 );
-
             })
-    },
-    resetLocation: (state) => {
-      state.info = null
-      state.location = null
-      state.listCity = []
-      state.listRegion = []
-      state.loading = false
-    },
-  },
-  extraReducers(builder) {
-    builder
-      // пошук координат
-      .addCase(searchLocation.pending, (state) => {
-        state.loading = true
-      })
-      .addCase(searchLocation.fulfilled, (state, action) => {
-        state.loading = false
-        state.location = action.payload
-      })
-      .addCase(searchLocation.rejected, (state) => {
-        state.loading = false
-      })
-
-      // створення нової локації
-      .addCase(postNewLocation.pending, (state) => {
-        state.loading = true
-      })
-      .addCase(postNewLocation.fulfilled, (state, action) => {
-        state.loading = false
-        state.info = action.payload
-        state.locations.push(action.payload)
-        state.isSuccess = true
-      })
-      .addCase(postNewLocation.rejected, (state) => {
-        state.loading = false
-      })
-
-      // міста
-      .addCase(searchCities.pending, (state) => {
-        state.loading = true
-      })
-      .addCase(searchCities.fulfilled, (state, action) => {
-        state.loading = false
-        state.listCity = action.payload
-      })
-      .addCase(searchCities.rejected, (state) => {
-        state.loading = false
-      })
-
-      // регіони
-      .addCase(searchRegions.pending, (state) => {
-        state.loading = true
-      })
-      .addCase(searchRegions.fulfilled, (state, action) => {
-        state.loading = false
-        state.listRegion = action.payload
-      })
-      .addCase(searchRegions.rejected, (state) => {
-        state.loading = false
-      })
-
-      // завантаження всіх локацій
-      .addCase(fetchAllLocations.pending, (state) => {
+               .addCase(fetchAllLocations.pending, (state) => {
         state.loading = true
       })
       .addCase(fetchAllLocations.fulfilled, (state, action) => {
@@ -192,8 +129,7 @@ const locationSlice = createSlice({
       .addCase(fetchAllLocations.rejected, (state) => {
         state.loading = false
       })
-  },
+    },
 })
-
-export const { setLocationData, resetLocation } = locationSlice.actions
+export const {resetLocation, setLocationData} = locationSlice.actions
 export default locationSlice.reducer

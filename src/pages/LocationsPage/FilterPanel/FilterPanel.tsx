@@ -38,8 +38,8 @@ type FilterProps = {
 function FilterPanel({ filters, dispatch }: FilterProps) {
     return (
         <Container>
-             <p className={styles.titleAllLocation}>Усі місця відпочинку</p>
-            <Formik enableReinitialize initialValues={{ search: filters.search, region: filters.region, locationType: filters.locationType }} onSubmit={() => { }}>
+            <p className={styles.titleAllLocation}>Усі місця відпочинку</p>
+            <Formik enableReinitialize initialValues={{ search: filters.search, region: filters.region, locationType: filters.locationType, sort: filters.sort }} onSubmit={() => { }}>
                 {({ values, handleChange }) => (
                     <Form className={styles.formFilterLocation}>
                         <div className={styles.wrapperSearch}>
@@ -48,7 +48,7 @@ function FilterPanel({ filters, dispatch }: FilterProps) {
                                 dispatch({ type: "search", payload: e.target.value })
                             }} />
                             <div className={styles.wrapperSelect}>
-                                <div style={{display:"flex", gap:15}} >
+                                <div style={{ display: "flex", gap: 15 }} >
                                     <Field as="select" className={styles.inputTypeLocation} name="region" value={values.region} onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         handleChange(e)
                                         dispatch({ type: "setRegion", payload: e.target.value })
@@ -68,8 +68,18 @@ function FilterPanel({ filters, dispatch }: FilterProps) {
                                         ))}
                                     </Field>
                                 </div>
-                                <Field as="select" className={`${styles.inputTypeLocation} ${styles.inputSort}`} name="sort">
-                                    <option>Сортування</option>
+                                <Field as="select" className={`${styles.inputTypeLocation} ${styles.inputSort}`} name="sort"
+                                    value={values.sort}
+                                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                                        handleChange(e);
+                                        dispatch({ type: "setSort", payload: e.target.value });
+                                    }}
+                                >
+                                    <option value="">Сортування</option>
+                                    <option value="name-asc">Назва (A-Z)</option>
+                                    <option value="name-desc">Назва (Z-A)</option>
+                                    <option value="region-asc">Регіон (A-Z)</option>
+                                    <option value="region-desc">Регіон (Z-A)</option>
                                 </Field>
                             </div>
                         </div>
