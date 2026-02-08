@@ -4,26 +4,22 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    max-width: 375px;
-    margin: 0 auto;
+    max-width: 1240px;
+    margin: 50px auto 0;
     padding-bottom: 40px;
-    margin-top: 50px;
 }
 
 .titleNewLocation {
     font-weight: 700;
     font-family: "Montserrat";
-    font-style: bold;
     color: #1B391B;
-    font-size: 48px;
+    font-size: clamp(32px, 5vw, 48px);
 }
 
 .containerFormLocation {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    /* убираем фиксированный отступ слева на мобилке */
-    margin-left: 0;
     width: 100%;
     max-width: 335px;
 }
@@ -35,7 +31,6 @@
     background-image: url("../../../public/assets/placeholderImage.png");
     background-repeat: no-repeat;
     background-size: cover;
-    resize: none;
 }
 
 .btnDownload {
@@ -172,21 +167,22 @@
     background-color: #4C2613;
 }
 
-/* tablet */
 @media (min-width: 768px) {
-    .containerNewLocation {
-        width: 768px;
-        max-width: 100%;
+    .containerFormLocation {
+        max-width: 704px;
     }
 
     .photoInputLarge {
-        width: 704px;
+        width: 100%;
+        max-width: 704px;
         height: 468px;
         background-image: url("../../../public/assets/placeholderImageTablet.png");
     }
 
     .wrapperLocation {
         flex-direction: row;
+        align-items: flex-start;
+        gap: 24px;
     }
 
     .btnSearch {
@@ -194,18 +190,15 @@
         max-width: none;
     }
 
-    .inputLocation {
-        width: 704px;
-        max-width: none;
+    .inputLocation,
+    .inputLocationArea,
+    .mapLocation,
+    .imageLocation {
+        max-width: 704px;
     }
 
     .inputLocation.search {
-        width: 421px;
-    }
-
-    .inputLocationArea {
-        width: 704px;
-        max-width: none;
+        max-width: 421px;
     }
 
     .wrapperButton {
@@ -218,40 +211,27 @@
     }
 
     .mapLocation {
-        width: 704px;
         height: 395px;
-        max-width: none;
     }
 
     .imageLocation {
-        width: 704px;
         height: 468px;
-        max-width: none;
     }
 }
 
-/* desktop */
 @media (min-width: 1440px) {
-    .containerNewLocation {
-        width: 1240px;
-        max-width: 100%;
+    .containerFormLocation {
+        max-width: 1091px;
     }
 
     .photoInputLarge {
         background-image: url("../../../public/assets/placeholderImageDesktop.png");
-        width: 1091px;
+        max-width: 1091px;
         height: 726px;
     }
 
     .inputLocation {
-        width: 1091px;
         height: 43px;
-        max-width: none;
-    }
-
-    .inputLocationArea {
-        width: 1091px;
-        max-width: none;
     }
 
     .btnDownload {
@@ -259,8 +239,7 @@
     }
 
     .imageLocation {
-        width: 1091px;
+        max-width: 1091px;
         height: 726px;
-        max-width: none;
     }
 }
