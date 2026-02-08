@@ -1,5 +1,3 @@
-// src/pages/LocationsPage/LocationCard/LocationCard.tsx
-
 import styles from "./LocationCard.module.scss";
 import Star from "../../LocationDeteilsPage/RatingLocation/Star/Star";
 import { useState, useEffect } from "react";

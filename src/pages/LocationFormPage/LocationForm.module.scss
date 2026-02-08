@@ -478,3 +478,18 @@
     font-size: 28px;
   }
 }
+
+.mapLocation {
+  width: 100%;
+  height: 300px;
+  margin-top: 12px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .mapLocation {
+    height: 380px;
+  }
+}
+

@@ -227,7 +227,7 @@ const ProfilePage: React.FC = () => {
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate("/locations/location/edit", {
+                        navigate(`/locations/${place.id}/edit`, {
                           state: { place },
                         });
                       }}

@@ -1,3 +1,6 @@
+/* LocationDetailsPage.module.scss */
+
+/* ФОН + центрирование секции */
 .wrapperLocationDetail {
   display: flex;
   flex-direction: column;
@@ -10,14 +13,17 @@
   min-height: 100vh;
 }
 
+/* Основной блок с картинкой и текстом — ограничен контейнером, НЕ 500px */
 .wrapperLocation {
   display: flex;
   flex-direction: column;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  gap: 20px;
+  gap: 24px;
 }
+
+/* ===== КАРТИНКА ===== */
 
 .imageBox {
   width: 100%;
@@ -25,12 +31,14 @@
   .imageLocation {
     width: 100%;
     height: auto;
-    max-height: 380px;
+    max-height: 420px;
     object-fit: cover;
     border-radius: 18px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   }
 }
+
+/* ===== ТЕКСТОВЫЙ БЛОК ===== */
 
 .infoBox {
   width: 100%;
@@ -40,7 +48,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
   gap: 8px;
 }
 
@@ -54,7 +62,7 @@
 
 .title {
   font-size: 28px;
-  margin: 8px 0;
+  margin: 10px 0;
   color: #1a1a1a;
   line-height: 1.2;
   word-break: break-word;
@@ -89,7 +97,8 @@
   margin-bottom: 16px;
 }
 
-/* Рейтинг — лінія під описом */
+/* ===== РЕЙТИНГ ===== */
+
 .ratingRow {
   display: flex;
   align-items: center;
@@ -144,16 +153,18 @@
   }
 }
 
+/* КНОПКА РЕДАКТА АВТОРА */
+
 .btnEdit {
   width: 100%;
-  max-width: 160px;
+  max-width: 190px;
   height: 46px;
   background-color: #cc6534;
   border: none;
   font-family: "Montserrat", sans-serif;
   font-weight: 600;
   color: #fff;
-  margin-top: 10px;
+  margin-top: 12px;
   border-radius: 10px;
   cursor: pointer;
   transition: 0.3s;
@@ -164,6 +175,8 @@
   }
 }
 
+/* РАЗДЕЛИТЕЛЬ ПЕРЕД ОТЗЫВАМИ */
+
 .divider {
   border: 0;
   height: 1px;
@@ -172,52 +185,63 @@
   width: 100%;
 }
 
-/* ===== АДАПТИВ ===== */
+/* ===== МОБАЙЛ (до 480px) ===== */
 
-@media (max-width: 340px) {
+@media (max-width: 480px) {
   .wrapperLocationDetail {
     margin-top: 70px;
-    padding: 0 10px 20px;
+    padding: 0 10px 24px;
+  }
+
+  .wrapperLocation {
+    gap: 20px;
+  }
+
+  .imageBox .imageLocation {
+    max-height: 320px;
   }
 
   .title {
-    font-size: 22px;
+    font-size: 24px;
   }
 
   .ratingStars {
-    font-size: 18px;
-  }
-
-  .topInfo {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
+    font-size: 20px;
   }
 
   .btnEdit {
     max-width: 100%;
   }
+}
 
-  .ratingNumber {
-    font-size: 14px;
+/* 481–767px */
 
-    .reviewsCount {
-      font-size: 11px;
-    }
+@media (min-width: 481px) and (max-width: 767px) {
+  .wrapperLocationDetail {
+    padding: 0 20px 32px;
+  }
+
+  .imageBox .imageLocation {
+    max-height: 360px;
+  }
+
+  .title {
+    font-size: 26px;
   }
 }
 
-/* Планшети (768–1024px) */
-@media (min-width: 768px) and (max-width: 1024px) {
+/* ПЛАНШЕТЫ 768–1023px — 2 колонки */
+
+@media (min-width: 768px) and (max-width: 1023px) {
   .wrapperLocationDetail {
-    margin-top: 100px;
+    margin-top: 90px;
     padding: 0 24px 50px;
   }
 
   .wrapperLocation {
     flex-direction: row;
     align-items: flex-start;
-    gap: 24px;
+    gap: 28px;
   }
 
   .imageBox,
@@ -238,17 +262,18 @@
   }
 }
 
-/* Десктопи (1024–1439px) */
+/* ДЕСКТОПЫ 1024–1439px */
+
 @media (min-width: 1024px) and (max-width: 1439px) {
   .wrapperLocationDetail {
     margin-top: 100px;
-    padding: 0 32px 50px;
+    padding: 0 32px 56px;
   }
 
   .wrapperLocation {
     flex-direction: row;
     align-items: flex-start;
-    gap: 32px;
+    gap: 36px;
   }
 
   .imageBox,
@@ -257,31 +282,52 @@
   }
 
   .imageBox .imageLocation {
-    max-height: 450px;
+    max-height: 480px;
   }
 
   .title {
-    font-size: 32px;
+    font-size: 34px;
+  }
+
+  .description {
+    font-size: 17px;
+  }
+
+  .ratingStars {
+    font-size: 24px;
   }
 }
 
-/* Великі десктопи (1440+) */
+/* БОЛЬШИЕ ДЕСКТОПЫ 1440+ */
+
 @media (min-width: 1440px) {
   .wrapperLocationDetail {
-    margin-top: 120px;
-    padding: 0 32px 50px;
+    margin-top: 110px;
+    padding: 0 40px 64px;
   }
 
   .wrapperLocation {
-    max-width: 1240px;
-    gap: 40px;
+    max-width: 1320px;
+    gap: 48px;
   }
 
   .imageBox .imageLocation {
-    max-height: 600px;
+    max-height: 560px;
   }
 
   .title {
-    font-size: 42px;
+    font-size: 40px;
+  }
+
+  .description {
+    font-size: 18px;
+  }
+
+  .ratingStars {
+    font-size: 26px;
+  }
+
+  .ratingNumber {
+    font-size: 18px;
   }
 }
