@@ -6,6 +6,8 @@ import { searchCities, searchRegions } from "../thunk/thunkTypeLocation"
 import { updateLocationRating } from "../thunk/thunkUpdateRating";
 import { updateLocation } from "../thunk/thunkLocationUpdate";
 import { fetchAllLocations } from "../thunk/thunkLocation"
+import type { RootState } from "../store";
+
 
 export interface LocationData {
   lat: number | null
@@ -177,6 +179,12 @@ const locationSlice = createSlice({
             })
     },
 })
+
+export const selectLocations = (state: RootState): LocationInfo[] => {
+  const raw = (state as any)?.location?.locations;
+  if (Array.isArray(raw)) return raw;
+  return [];
+};
    
 export const {resetLocation, setLocationData} = locationSlice.actions
 export default locationSlice.reducer
