@@ -15,14 +15,14 @@ export interface LocationData {
 }
 
 export interface LocationInfo {
-  id: number
-  image: string
-  name: string
-  placeType: string | null
-  region: string | null
-  description: string
-  imageName?: string
-   rating: number
+  id: number;
+  name: string;
+  placeType: string | null;
+  region: string | null;
+  description: string;
+  image?: string;
+  rating?: number;
+  imageName?: string;
 }
 
 interface LocationState {

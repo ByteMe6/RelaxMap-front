@@ -1,83 +1,135 @@
-.backdrop {
-  position: fixed; /* чтобы перекрывать весь экран и не ехать при скролле */
-  inset: 0;        /* shorthand для top/right/bottom/left: 0 */
-  background: rgba(0, 0, 0, 0.25);
-  z-index: 999;
-
+.overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
-  justify-content: center;
   align-items: center;
-}
-
-.is-hidden {
-  display: none;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
 }
 
 .modal {
+  background: #fdf5f0;
+  padding: 30px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 450px;
   position: relative;
-  background: #fff2ec;
-  border-radius: 24px;
-  padding: 32px 20px;
-  width: 100%;
-  max-width: 768px;
-  max-height: 90vh;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
+  max-height: 90vh;
   overflow-y: auto;
-
-  &__close {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    background: none;
-    border: none;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  &__title {
-    margin: 0 0 16px 0;
-    font-weight: 700;
-    font-size: 24px;
-    line-height: 120%;
-    letter-spacing: -0.01em;
-    text-align: center;
-    color: #000;
-  }
 }
 
-/* Телефоны ~до 480px */
-@media (max-width: 480px) {
-  .modal {
-    border-radius: 16px;
-    padding: 24px 16px;
-    max-width: 100%;
-    max-height: 90vh;
+.closeBtn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
 
-    &__close {
-      top: 12px;
-      right: 12px;
-      width: 28px;
-      height: 28px;
-    }
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #1a1a1a;
+  font-size: 24px;
+}
 
-    &__title {
-      font-size: 20px;
-      margin-bottom: 16px;
+.starsContainer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-size: 35px;
+
+  span {
+    cursor: pointer;
+    transition: transform 0.2s, color 0.2s;
+
+    &:hover {
+      transform: scale(1.2);
     }
   }
 }
 
-@media (min-width: 768px) {
-  .modal {
-    padding: 48px 64px;
-    max-width: 768px;
+.starFilled {
+  color: #ffb400;
+}
 
-    &__title {
-      font-size: 32px;
-      margin-bottom: 24px;
-    }
+.starEmpty {
+  color: #ccc;
+}
+
+.textarea {
+  width: 100%;
+  height: 120px;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-family: inherit;
+  resize: none;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: 2px solid #cc6534;
+    border-color: transparent;
+  }
+}
+
+.submitBtn {
+  width: 100%;
+  padding: 14px;
+  background: #1a3a3a;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    background: #cc6534;
+  }
+
+  &:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+}
+
+/* Дуже маленькі екрани */
+@media (max-width: 340px) {
+  .modal {
+    padding: 20px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .starsContainer {
+    font-size: 28px;
+  }
+}
+
+/* Планшети / невеликі ноутбуки */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .modal {
+    max-width: 500px;
+    padding: 32px;
+  }
+
+  .title {
+    font-size: 26px;
   }
 }

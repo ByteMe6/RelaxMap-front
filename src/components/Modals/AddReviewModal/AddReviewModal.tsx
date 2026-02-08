@@ -1,49 +1,123 @@
-import AddReviewForm from "./AddReviewForm";
+import React, { useState } from "react";
+import axios from "axios";
+import { host } from "../../../backendHost";
+import { useAppSelector, useAppDispatch } from "../../../redux/hooks/hook";
+import { setCredentials } from "../../../redux/slice/authSlice"; 
+import { useAddReviewModal } from "./AddReviewModalContext";
+import { useReviews } from "../../../pages/LocationDeteilsPage/ReviewsContext";
 import styles from "./AddReviewModal.module.scss";
-import { useEffect } from "react";
-import { useAddReviewModal } from "./AddReviewModalContext.tsx";
 
-export default function AddReviewModal() {
+interface AddReviewModalProps {
+  placeId: number;
+}
+
+const AddReviewModal: React.FC<AddReviewModalProps> = ({ placeId }) => {
+  const dispatch = useAppDispatch();
   const { isOpen, setIsOpen } = useAddReviewModal();
+  const { setResponse } = useReviews();
+  
+  const accessToken = useAppSelector((state) => state.auth.accessToken);
+  const refreshToken = useAppSelector((state) => state.auth.refreshToken);
 
-  useEffect(() => {
-    window.scroll({
-      top: 0,
-      left: 0
-    });
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+  const [text, setText] = useState("");
+  const [loading, setLoading] = useState(false);
 
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+  if (!isOpen) return null;
 
-    return () => {
-      document.body.style.overflow = "";
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (rating === 0) return alert("Поставте оцінку");
+
+    setLoading(true);
+
+    const data = {
+      text: text,
+      rating: rating,
+      placeId: placeId
     };
-  }, [isOpen]);
 
-  const handleClose = () => {
+    try {
+      await axios.post(
+        `${host}/reviews`,
+        data,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      
+      await updateUI();
+    } catch (error: any) {
+      if (error.response?.status === 401 && refreshToken) {
+        try {
+          const refreshRes = await axios.post(`${host}/auth/refresh`, { refreshToken });
+          
+          const newTokens = {
+            accessToken: refreshRes.data.accessToken,
+            refreshToken: refreshRes.data.refreshToken
+          };
+
+          dispatch(setCredentials(newTokens));
+
+          await axios.post(
+            `${host}/reviews`,
+            data,
+            { headers: { Authorization: `Bearer ${newTokens.accessToken}` } }
+          );
+
+          await updateUI();
+        } catch (refreshErr) {
+          console.error("Refresh failed", refreshErr);
+          alert("Сесія вичерпана, увійдіть знову");
+        }
+      } else {
+        alert("Помилка: " + (error.response?.data?.message || "Unauthorized"));
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateUI = async () => {
+    const res = await axios.get(`${host}/reviews/for-place/${placeId}`);
+    setResponse(res.data);
     setIsOpen(false);
+    setRating(0);
+    setText("");
   };
 
   return (
-      <div className={ [
-        styles.backdrop,
-        !isOpen && styles["is-hidden"],
-      ].join(" ") }>
-        <div className={ styles["modal"] }>
-          <button className={ styles["modal__close"] } onClick={ handleClose }>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                  d="M17.5996 5.925C17.7639 5.925 17.8659 5.97351 17.9463 6.05391C18.0265 6.13422 18.0751 6.2357 18.0752 6.39961C18.0752 6.56382 18.0266 6.6659 17.9463 6.74629L12.6924 12.0002L13.0459 12.3537L17.9463 17.2531C18.0267 17.3335 18.0752 17.4357 18.0752 17.5998C18.0752 17.7641 18.0267 17.8661 17.9463 17.9465C17.8659 18.0269 17.7639 18.0754 17.5996 18.0754C17.4355 18.0754 17.3333 18.0269 17.2529 17.9465L12.3535 13.0461L12 12.6926L6.74609 17.9465C6.66571 18.0268 6.56362 18.0754 6.39941 18.0754C6.23551 18.0753 6.13402 18.0267 6.05371 17.9465C5.97331 17.8661 5.9248 17.7641 5.9248 17.5998C5.92484 17.4357 5.97334 17.3335 6.05371 17.2531L11.3066 12.0002L10.9531 11.6467L6.05371 6.74629C5.97331 6.66589 5.9248 6.56388 5.9248 6.39961C5.92488 6.23557 5.97337 6.13425 6.05371 6.05391C6.13405 5.97357 6.23537 5.92508 6.39941 5.925C6.56368 5.925 6.66569 5.97351 6.74609 6.05391L11.6465 10.9533L12 11.3068L17.2529 6.05391C17.3333 5.97354 17.4355 5.92504 17.5996 5.925Z"
-                  fill="white" stroke="black"/>
-            </svg>
+    <div className={styles.overlay} onClick={() => setIsOpen(false)}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <button className={styles.closeBtn} onClick={() => setIsOpen(false)}>×</button>
+        <h2 className={styles.title}>Ваш відгук</h2>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.starsContainer}>
+            {[...Array(5)].map((_, i) => (
+              <span
+                key={i}
+                className={(hover || rating) >= i + 1 ? styles.starFilled : styles.starEmpty}
+                onClick={() => setRating(i + 1)}
+                onMouseEnter={() => setHover(i + 1)}
+                onMouseLeave={() => setHover(0)}
+              >
+                ★
+              </span>
+            ))}
+          </div>
+          <textarea
+            className={styles.textarea}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="Напишіть щось..."
+            required
+          />
+          <button type="submit" className={styles.submitBtn} disabled={loading}>
+            {loading ? "Завантаження..." : "Опублікувати"}
           </button>
-
-          <h2 className={ styles["modal__title"] }>Залишити відгук</h2>
-          <AddReviewForm></AddReviewForm>
-        </div>
+        </form>
       </div>
+    </div>
   );
-}
+};
+
+export default AddReviewModal;

@@ -24,7 +24,7 @@ const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, // ОБЯЗАТЕЛЬНО для redux-persist
+      serializableCheck: false,
     }),
 });
 

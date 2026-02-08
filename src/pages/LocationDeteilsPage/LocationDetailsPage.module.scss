@@ -2,245 +2,286 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
   width: 100%;
-  max-width: 100%;
   margin: 80px auto 0;
-  padding: 0 0 40px; 
+  padding: 0 16px 40px;
   box-sizing: border-box;
+  background-color: #fdf5f0;
+  min-height: 100vh;
 }
 
+.wrapperLocation {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 20px;
+}
+
+.imageBox {
+  width: 100%;
+
+  .imageLocation {
+    width: 100%;
+    height: auto;
+    max-height: 380px;
+    object-fit: cover;
+    border-radius: 18px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.infoBox {
+  width: 100%;
+}
+
+.topInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  gap: 8px;
+}
+
+.category {
+  color: #cc6534;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.title {
+  font-size: 28px;
+  margin: 8px 0;
+  color: #1a1a1a;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.authorSection {
+  margin-bottom: 10px;
+  font-size: 14px;
+
+  .authorLink {
+    color: #cc6534;
+    font-weight: 700;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.description {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #444;
+  margin-bottom: 12px;
+  word-break: break-word;
+}
+
+.region {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 16px;
+}
+
+/* Рейтинг — лінія під описом */
+.ratingRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.ratingStars {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 22px;
+}
+
+.starFilled,
+.starEmpty {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.15s ease-out;
+  transform-origin: center;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.starFilled {
+  color: #ffb400;
+}
+
+.starEmpty {
+  color: #ccc;
+}
+
+.ratingNumber {
+  font-weight: 700;
+  color: #1a1a1a;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  .reviewsCount {
+    font-weight: 400;
+    color: #666;
+    font-size: 13px;
+  }
+}
 
 .btnEdit {
   width: 100%;
   max-width: 160px;
-  height: 48px;
+  height: 46px;
   background-color: #cc6534;
-  border: 1px solid #cc6534;
-  font-family: "Montserrat";
-  font-weight: 500;
+  border: none;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
   color: #fff;
-  margin-top: 32px;
+  margin-top: 10px;
   border-radius: 10px;
   cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    background-color: #1a3a3a;
+    transform: translateY(-2px);
+  }
 }
 
-/* TABLET */
+.divider {
+  border: 0;
+  height: 1px;
+  background: #eee;
+  margin: 40px 0;
+  width: 100%;
+}
 
-@media (min-width: 768px) {
-  .containerNewLocation {
-    width: 100%;
-    max-width: 768px;
-    margin-top: 96px;
-    padding: 0 32px 40px;
-    box-sizing: border-box;
-  }
+/* ===== АДАПТИВ ===== */
 
+@media (max-width: 340px) {
   .wrapperLocationDetail {
-    width: 100%;
-    max-width: 768px;
-    margin-top: 96px;
-    padding: 0 0 40px;
-    box-sizing: border-box;
+    margin-top: 70px;
+    padding: 0 10px 20px;
   }
 
-  .photoInputLarge {
-    width: 100%;
-    max-width: 704px;
-    height: 468px;
-    background-image: url("../../../public/assets/placeholderImageTablet.png");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
+  .title {
+    font-size: 22px;
+  }
+
+  .ratingStars {
+    font-size: 18px;
+  }
+
+  .topInfo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .btnEdit {
+    max-width: 100%;
+  }
+
+  .ratingNumber {
+    font-size: 14px;
+
+    .reviewsCount {
+      font-size: 11px;
+    }
+  }
+}
+
+/* Планшети (768–1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .wrapperLocationDetail {
+    margin-top: 100px;
+    padding: 0 24px 50px;
   }
 
   .wrapperLocation {
-    width: 100%;
-    display: flex;
     flex-direction: row;
     align-items: flex-start;
-    box-sizing: border-box;
+    gap: 24px;
   }
 
-  .btnSearch {
-    width: 199px;
+  .imageBox,
+  .infoBox {
+    flex: 1 1 0;
   }
 
-  .inputLocation {
-    width: 100%;
-    max-width: 704px;
+  .imageBox .imageLocation {
+    max-height: 420px;
   }
 
-  .inputLocation.search {
-    width: 421px;
+  .title {
+    font-size: 30px;
   }
 
-  .inputLocationArea {
-    width: 100%;
-    max-width: 704px;
-  }
-
-  .wrapperButton {
-    flex-direction: row;
-    justify-content: flex-start;
-    width: 100%;
-  }
-
-  .btnLocation {
-    width: 203px;
-  }
-
-  .mapLocation {
-    width: 100%;
-    max-width: 704px;
-    height: 395px;
-  }
-
-  .imageLocation {
-    width: 100%;
-    max-width: 704px;
-    height: 468px;
+  .description {
+    font-size: 15px;
   }
 }
 
-/* DESKTOP */
+/* Десктопи (1024–1439px) */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .wrapperLocationDetail {
+    margin-top: 100px;
+    padding: 0 32px 50px;
+  }
 
+  .wrapperLocation {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 32px;
+  }
+
+  .imageBox,
+  .infoBox {
+    flex: 1 1 0;
+  }
+
+  .imageBox .imageLocation {
+    max-height: 450px;
+  }
+
+  .title {
+    font-size: 32px;
+  }
+}
+
+/* Великі десктопи (1440+) */
 @media (min-width: 1440px) {
   .wrapperLocationDetail {
-    width: 100%;
-    max-width: 1240px;
-    margin-top: 112px;
-    padding: 0 0 40px;
-    box-sizing: border-box;
-
-    // overflow-x: hidden; // можешь пока оставить для подстраховки
-  }
-
-  .wrapperLocationDetail {
-    width: 100%;
-    max-width: 1240px;
-    margin-top: 112px;
-    padding: 0 0 40px;
-
-    width: 100vw;
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-
-  .photoInputLarge {
-    background-image: url("../../../public/assets/placeholderImageDesktop.png");
-    width: 100%;
-    max-width: 1091px;
-    height: 726px;
-  }
-
-  .inputLocation {
-    width: 100%;
-    max-width: 1091px;
-    height: 43px;
-  }
-
-  .inputLocationArea {
-    width: 100%;
-    max-width: 1091px;
-  }
-
-  .btnDownload {
-    width: 215px;
-  }
-
-  .imageLocation {
-    width: 100%;
-    max-width: 1091px;
-    height: 726px;
+    margin-top: 120px;
+    padding: 0 32px 50px;
   }
 
   .wrapperLocation {
-    width: 100%;
     max-width: 1240px;
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
-  }
-}
-
-
-@media (max-width: 360px) {
-  /* Базовый контейнер */
-  .container {
-    width: 100%;
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 0 8px;
-    box-sizing: border-box;
+    gap: 40px;
   }
 
-  /* Главный враппер страницы деталей */
-  .wrapperLocationDetail {
-    width: 100%;
-    max-width: 100%;
-    margin: 72px auto 0;
-    padding: 0 8px 32px;
-    box-sizing: border-box;
-    overflow-x: hidden;
+  .imageBox .imageLocation {
+    max-height: 600px;
   }
 
-  /* Обёртка для блока галереи + инфы */
-  .wrapperLocation {
-    width: 100%;
-    max-width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 16px;
-    box-sizing: border-box;
-  }
-
-  .wrapperLocationDesktop {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-
-  /* Картинки/карты/фото */
-  .photoInputLarge,
-  .mapLocation,
-  .imageLocation,
-  .wrapperLocation img {
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    box-sizing: border-box;
-  }
-
-  /* Кнопка редактирования */
-  .btnEdit {
-    width: 100%;
-    max-width: 160px;
-    height: 44px;
-    font-size: 14px;
-    margin-top: 24px;
-  }
-
-  /* Блок описания */
-  .locationDescription,
-  .locationDescriptionContainer {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    word-wrap: break-word;
-  }
-
-  /* На всякий случай — все Swiper/отзывы в этом контейнере */
-  .reviews,
-  .reviews__grid,
-  .review-card {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-
-  .review-card {
-    margin: 0 auto;
+  .title {
+    font-size: 42px;
   }
 }

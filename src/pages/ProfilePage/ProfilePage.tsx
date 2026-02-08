@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hook";
 import Container from "../../components/Container/Container";
+import { updateUserName } from "../../redux/slice/authSlice";
 import {
   getUserPlaces,
   getPlacesForUser,
@@ -95,6 +96,8 @@ const ProfilePage: React.FC = () => {
     try {
       if (modalConfig?.type === "name" && newValue) {
         await changeUserName(newValue);
+        // Оновлюємо ім'я в Redux, щоб воно синхронізувалося всюди
+        dispatch(updateUserName(newValue));
         alert("Ім'я змінено");
       } else if (modalConfig?.type === "pass" && oldValue && newValue) {
         await changePassword(oldValue, newValue);
@@ -122,7 +125,10 @@ const ProfilePage: React.FC = () => {
     <div className="profile-page">
       <Container>
         {error && (
-          <div className="profile-error" style={{ color: "red", marginBottom: 20 }}>
+          <div
+            className="profile-error"
+            style={{ color: "red", marginBottom: 20 }}
+          >
             {error}
           </div>
         )}

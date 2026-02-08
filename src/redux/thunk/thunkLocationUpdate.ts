@@ -1,68 +1,83 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { host } from "../../backendHost";
-import type { RootState } from "../store"
-import type { LocationInfo } from "../slice/locationSlice";
-interface UpdateLocation {
-    id: number;
-    file: File | null;
-    name: string;
-    placeType: string;
-    region: string | null;
-    description: string
+import { api } from "../../api/axiosInstance";
+
+export interface UpdateLocationArgs {
+  id: number;
+  name: string;
+  placeType: string;
+  region: string;
+  description: string;
+  file: File | null;
 }
-const refreshAccessToken = async (refreshToken: string) => {
-    const { data } = await axios.post(`${host}/auth/refresh`, { refresh: refreshToken })
-    localStorage.setItem("accessToken", data.access);
-    return data.access;
+
+export interface UpdatedLocationResponse {
+  id: number;
+  name: string;
+  placeType: string;
+  region: string;
+  description: string;
+  imageName?: string;
 }
+
+export interface UpdateLocationError {
+  status: number;
+  message: string;
+}
+
 export const updateLocation = createAsyncThunk<
-    LocationInfo,
-    UpdateLocation,
-    { state: RootState }
->(
-    "location/updateLocation",
-    async (updatedLocation, thunkApi) => {
-        try {
-            const token = localStorage.getItem("accessToken")
-            const refreshToken = localStorage.getItem("refreshToken");
-            if (!token || !refreshToken) {
-                throw new Error("Немає доступу. Будь ласка логінізуйтеся.");
-            }
-            if (!updatedLocation.name || !updatedLocation.placeType || !updatedLocation.description) {
-                return thunkApi.rejectWithValue("Потрібно заповнити всі обов'язкові поля");
-            }
-            const formData = new FormData();
-            formData.append("name", updatedLocation.name);
-            formData.append("placeType", updatedLocation.placeType);
-            formData.append("region", updatedLocation.region ?? "");
-            formData.append("description", updatedLocation.description);
-            if (updatedLocation.file) {
-                formData.append("file", updatedLocation.file);
-            }
-            try {
-
-                const response = await axios.put(`${host}/places/${updatedLocation.id}`, formData, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                })
-                return response.data as LocationInfo;
-            } catch (error: any) {
-                if (error.response?.status === 401) {
-                    const newToken = await refreshAccessToken(refreshToken);
-
-                    const { data } = await axios.put(`${host}/places/${updatedLocation.id}`, formData, {
-                        headers: {
-                            Authorization: `Bearer ${newToken}`,
-                        },
-                    });
-                      return data;
-                }
-                  return thunkApi.rejectWithValue(error.message || "Error");
-            }
-        } catch (error) {
-            return thunkApi.rejectWithValue(error)
-        }
+  UpdatedLocationResponse,
+  UpdateLocationArgs,
+  { rejectValue: UpdateLocationError }
+>("locations/updateLocation", async (args, { rejectWithValue }) => {
+  try {
+    const formData = new FormData();
+    formData.append("name", args.name);
+    formData.append("placeType", args.placeType);
+    formData.append("region", args.region);
+    formData.append("description", args.description);
+    if (args.file) {
+      // якщо бекенд чекає 'image' → зміни тут
+      formData.append("file", args.file);
     }
-)
+
+    console.log("PATCH /places", {
+      id: args.id,
+      name: args.name,
+      placeType: args.placeType,
+      region: args.region,
+      description: args.description,
+      file: args.file ? args.file.name : null,
+    });
+
+    const res = await api.patch(`/places/${args.id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return res.data as UpdatedLocationResponse;
+  } catch (error: any) {
+    if (error.response) {
+      const status: number = error.response.status;
+      const backendMessage: string =
+        error.response.data?.message ||
+        error.response.data?.error ||
+        error.response.statusText ||
+        "Error";
+
+      console.error("updateLocation error:", status, error.response.data);
+
+      return rejectWithValue({
+        status,
+        message: backendMessage,
+      });
+    }
+
+    console.error("updateLocation network error:", error);
+
+    return rejectWithValue({
+      status: 0,
+      message: error.message || "Network error",
+    });
+  }
+});

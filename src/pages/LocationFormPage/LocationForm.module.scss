@@ -1,245 +1,480 @@
-.containerNewLocation {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: 1240px;
-    margin: 50px auto 0;
-    padding-bottom: 40px;
-}
-
-.titleNewLocation {
-    font-weight: 700;
-    font-family: "Montserrat";
-    color: #1B391B;
-    font-size: clamp(32px, 5vw, 48px);
-}
-
-.containerFormLocation {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-    max-width: 335px;
-}
-
-.photoInput {
-    width: 100%;
-    max-width: 335px;
-    height: 223px;
-    background-image: url("../../../public/assets/placeholderImage.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-
-.btnDownload {
-    width: 176px;
-    height: 32px;
-    border: 1px solid #00000026;
-    color: #4C2613;
-    font-family: "Montserrat";
-    font-weight: 500;
-    border-radius: 8px;
-}
-
-.labelLocation {
-    font-family: "Montserrat";
-    color: #1B391B;
-    font-weight: 500;
-}
-
-.inputLocation {
-    width: 100%;
-    max-width: 335px;
-    height: 40px;
-    background-color: #FFE5D9;
-    border: 1px solid #00000026;
-    border-radius: 8px;
-    padding-left: 10px;
-}
-
-.inputLocation::placeholder {
-    font-family: "Montserrat";
-    font-weight: 400;
-}
-
-.inputLocationArea {
-    background-color: #FFE5D9;
-    width: 100%;
-    max-width: 335px;
-    height: 180px;
-    border: 1px solid #00000026;
-    border-radius: 8px;
-    padding-top: 10px;
-    padding-left: 10px;
-    resize: vertical;
-}
-
-.inputLocationArea::placeholder {
-    font-family: "Montserrat";
-    font-weight: 400;
-}
-
-.btnLocation {
-    width: 100%;
-    max-width: 335px;
-    height: 48px;
-    border: 1px solid #00000026;
-    border-radius: 8px;
-}
-
-.btnLocation--post {
-    background: #CC6534;
-}
-
-.wrapperButton {
-    margin-top: 30px;
-    gap: 20px;
-    display: flex;
-    flex-direction: column;
-}
-
-.btnSearch {
-    width: 100%;
-    max-width: 335px;
-    height: 48px;
-    font-family: "Montserrat";
-    font-weight: 500;
-    border: 1px solid #00000026;
-    color: #4C2613;
-    border-radius: 8px;
-}
-
-.imageLocation {
-    width: 100%;
-    max-width: 335px;
-    height: 223px;
-}
-
-.btnLocation:hover {
-    border: 1px solid #FFE5D9;
-}
-
-.mapLocation {
-    width: 100%;
-    max-width: 335px;
-    height: 188px;
+.wrapperLocationDetail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 80px auto 0;
+  padding: 0 16px 40px;
+  box-sizing: border-box;
+  background-color: #fdf5f0;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .wrapperLocation {
-    display: flex;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 20px;
+}
+
+.imageBox {
+  width: 100%;
+
+  .imageLocation {
+    width: 100%;
+    height: auto;
+    max-height: 380px;
+    object-fit: cover;
+    border-radius: 18px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.infoBox {
+  width: 100%;
+}
+
+.topInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  gap: 8px;
+}
+
+.category {
+  color: #cc6534;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.title {
+  font-size: 28px;
+  margin: 8px 0;
+  color: #1a1a1a;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.authorSection {
+  margin-bottom: 10px;
+  font-size: 14px;
+
+  .authorLink {
+    color: #cc6534;
+    font-weight: 700;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.description {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #444;
+  margin-bottom: 12px;
+  word-break: break-word;
+}
+
+.region {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 16px;
+}
+
+/* Рейтинг — ЛІНІЯ ПІД ОПИСОМ */
+.ratingRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.ratingStars {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 22px;
+}
+
+.starFilled,
+.starEmpty {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.15s ease-out;
+  transform-origin: center;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.starFilled {
+  color: #ffb400;
+}
+
+.starEmpty {
+  color: #ccc;
+}
+
+.ratingNumber {
+  margin-left: 4px;
+  font-weight: 700;
+  color: #1a1a1a;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  .reviewsCount {
+    font-weight: 400;
+    color: #666;
+    font-size: 13px;
+  }
+}
+
+.btnEdit {
+  width: 100%;
+  max-width: 160px;
+  height: 46px;
+  background-color: #cc6534;
+  border: none;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    background-color: #1a3a3a;
+    transform: translateY(-2px);
+  }
+}
+
+.divider {
+  border: 0;
+  height: 1px;
+  background: #eee;
+  margin: 40px 0;
+  width: 100%;
+}
+
+/* ===== АДАПТИВ ===== */
+
+@media (max-width: 340px) {
+  .wrapperLocationDetail {
+    margin-top: 70px;
+    padding: 0 10px 20px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .ratingStars {
+    font-size: 18px;
+  }
+
+  .topInfo {
     flex-direction: column;
-    gap: 20px;
-    align-items: center;
-    width: 100%;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .btnEdit {
+    max-width: 100%;
+  }
+
+  .ratingNumber {
+    font-size: 14px;
+
+    .reviewsCount {
+      font-size: 11px;
+    }
+  }
 }
 
-.inputLocationSelect {
-    appearance: none;
-    background-image: url("../../../public/assets/arrowDown.svg");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
+/* Планшети (768–1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .wrapperLocationDetail {
+    margin-top: 100px;
+    padding: 0 24px 50px;
+  }
+
+  .wrapperLocation {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 32px;
+  }
+
+  .imageBox,
+  .infoBox {
+    flex: 1;
+  }
+
+  .imageBox .imageLocation {
+    max-height: 420px;
+  }
+
+  .title {
+    font-size: 30px;
+  }
+
+  .description {
+    font-size: 15px;
+  }
 }
 
-.suggestionsList {
-    width: 100%;
-    border-radius: 10px;
-    border: 1px solid #CC6534;
-    overflow-y: auto;
-    padding: 0;
+/* Десктопи (1024+) */
+@media (min-width: 1024px) {
+  .wrapperLocationDetail {
+    margin-top: 100px;
+    padding: 0 32px 50px;
+  }
+
+  .wrapperLocation {
+    flex-direction: row;
+    gap: 40px;
+  }
+
+  .imageBox,
+  .infoBox {
+    flex: 1;
+  }
+
+  .imageBox .imageLocation {
+    max-height: 450px;
+  }
+
+  .title {
+    font-size: 32px;
+  }
 }
 
-.suggestionsItemList {
-    display: flex;
-    gap: 20px;
-    list-style: none;
-    align-items: center;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-.suggestionsItemList:hover {
-    background-color: #CC6534;
-}
-
-.suggestionsItemList:active {
-    background-color: #4C2613;
-}
-
-@media (min-width: 768px) {
-    .containerFormLocation {
-        max-width: 704px;
-    }
-
-    .photoInputLarge {
-        width: 100%;
-        max-width: 704px;
-        height: 468px;
-        background-image: url("../../../public/assets/placeholderImageTablet.png");
-    }
-
-    .wrapperLocation {
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 24px;
-    }
-
-    .btnSearch {
-        width: 199px;
-        max-width: none;
-    }
-
-    .inputLocation,
-    .inputLocationArea,
-    .mapLocation,
-    .imageLocation {
-        max-width: 704px;
-    }
-
-    .inputLocation.search {
-        max-width: 421px;
-    }
-
-    .wrapperButton {
-        flex-direction: row;
-    }
-
-    .btnLocation {
-        width: 203px;
-        max-width: none;
-    }
-
-    .mapLocation {
-        height: 395px;
-    }
-
-    .imageLocation {
-        height: 468px;
-    }
-}
-
+/* Великі десктопи (1440+) */
 @media (min-width: 1440px) {
-    .containerFormLocation {
-        max-width: 1091px;
-    }
+  .wrapperLocationDetail {
+    max-width: 1200px;
+    margin-top: 120px;
+  }
 
-    .photoInputLarge {
-        background-image: url("../../../public/assets/placeholderImageDesktop.png");
-        max-width: 1091px;
-        height: 726px;
-    }
+  .wrapperLocation {
+    gap: 60px;
+  }
 
-    .inputLocation {
-        height: 43px;
-    }
+  .imageBox .imageLocation {
+    max-height: 600px;
+  }
 
-    .btnDownload {
-        width: 215px;
-    }
+  .title {
+    font-size: 42px;
+  }
+}
 
-    .imageLocation {
-        max-width: 1091px;
-        height: 726px;
-    }
+/* 1000–1400px: трохи зміщуємо текст від фотки */
+@media (min-width: 1000px) and (max-width: 1400px) {
+  .infoBox {
+    padding-left: 20px;
+  }
+}
+
+
+.containerFormLocation {
+  width: 100%;
+  max-width: 720px;
+  margin: 80px auto 40px;
+  padding: 24px 20px 32px;
+  box-sizing: border-box;
+  background-color: #fdf5f0;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.titleNewLocation {
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 8px;
+  color: #1a1a1a;
+}
+
+.photoInput {
+  width: 100%;
+  border-radius: 16px;
+  background-color: #ffece5;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.imageLocation {
+  width: 100%;
+  max-height: 320px;
+  object-fit: cover;
+  border-radius: 16px;
+  display: block;
+}
+
+.btnDownload {
+  margin-top: 8px;
+  align-self: flex-start;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid #cc6534;
+  background-color: #cc6534;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+
+  &:hover {
+    background-color: #b6623c;
+    transform: translateY(-1px);
+  }
+}
+
+.labelLocation {
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  margin-top: 8px;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.inputLocation {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  font-size: 14px;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: 2px solid #cc6534;
+    border-color: transparent;
+  }
+}
+
+.inputLocationArea {
+  width: 100%;
+  min-height: 120px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  font-size: 14px;
+  box-sizing: border-box;
+  resize: vertical;
+
+  &:focus {
+    outline: 2px solid #cc6534;
+    border-color: transparent;
+  }
+}
+
+.wrapperButton {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  margin-top: 16px;
+  justify-content: flex-end;
+}
+
+.btnLocation {
+  min-width: 140px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  background-color: #1a3a3a;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+
+  &:hover {
+    background-color: #cc6534;
+    transform: translateY(-1px);
+  }
+}
+
+/* ===== АДАПТИВ ===== */
+
+@media (max-width: 480px) {
+  .containerFormLocation {
+    margin: 70px auto 24px;
+    padding: 20px 12px 24px;
+    border-radius: 16px;
+  }
+
+  .titleNewLocation {
+    font-size: 20px;
+  }
+
+  .photoInput {
+    min-height: 180px;
+  }
+
+  .imageLocation {
+    max-height: 260px;
+  }
+
+  .wrapperButton {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btnLocation {
+    width: 100%;
+  }
+
+  .btnDownload {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .containerFormLocation {
+    margin-top: 100px;
+    padding: 28px 24px 32px;
+  }
+
+  .titleNewLocation {
+    font-size: 26px;
+  }
+
+  .imageLocation {
+    max-height: 360px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .containerFormLocation {
+    margin-top: 110px;
+  }
+
+  .titleNewLocation {
+    font-size: 28px;
+  }
 }
