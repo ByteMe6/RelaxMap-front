@@ -1,33 +1,40 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
-import { searchLocation } from "../thunk/thunkLocationMap";
-import { postNewLocation } from "../thunk/thunkLocation";
+// src/redux/slice/locationSlice.ts
+import { createSlice } from "@reduxjs/toolkit"
+import type { PayloadAction } from "@reduxjs/toolkit"
+import { searchLocation } from "../thunk/thunkLocationMap"
+import { postNewLocation } from "../thunk/thunkLocation"
+import { searchCities, searchRegions } from "../thunk/thunkTypeLocation"
+import { updateLocationRating } from "../thunk/thunkUpdateRating";
 import { updateLocation } from "../thunk/thunkLocationUpdate";
-import { searchCities, searchRegions } from "../thunk/thunkTypeLocation";
+import { fetchAllLocations } from "../thunk/thunkLocation"
+
 export interface LocationData {
-    lat: number | null,
-    lng: number | null,
+  lat: number | null
+  lng: number | null
 }
+
 export interface LocationInfo {
-    id: number,
-    image: string,
-    name: string,
-    placeType: null | string,
-    region: null | string,
-    description: string,
-    imageName?: string
+  id: number
+  image: string
+  name: string
+  placeType: string | null
+  region: string | null
+  description: string
+  imageName?: string
+   rating: number
 }
 
 interface LocationState {
-    loading: boolean,
-    info: LocationInfo | null,
-    locations: LocationInfo[],
-    location: LocationData | null,
-    currentLocationDetails: LocationInfo | null,
-    listCity: any[],
-    listRegion: any[],
-    isSuccess: boolean
+  loading: boolean
+  info: LocationInfo | null
+  locations: LocationInfo[]
+  location: LocationData | null
+  listCity: any[]
+  currentLocationDetails: LocationInfo | null,
+  listRegion: any[]
+  isSuccess: boolean
 }
+
 const initialState: LocationState = {
     loading: false,
     info: {
@@ -37,6 +44,7 @@ const initialState: LocationState = {
         placeType: null,
         region: null,
         description: "",
+         rating: 0
     },
     locations: [],
     listCity: [],
@@ -103,7 +111,6 @@ const locationSlice = createSlice({
                 state.loading = false
                 state.info = action.payload
                 state.locations.push(action.payload)
-                state.isSuccess = true
                 console.log("aa", state.info)
                 console.log("bb", state.locations)
                 console.log("bb copy", [...state.locations])
@@ -133,7 +140,23 @@ const locationSlice = createSlice({
             .addCase(searchRegions.rejected, (state) => {
                 state.loading = false
             })
-            .addCase(updateLocation.pending, (state) => {
+            .addCase(updateLocationRating.fulfilled, (state, action) => {
+                const updatedLocation = action.payload;
+                state.locations = state.locations.map(loc =>
+                    loc.id === updatedLocation.id ? updatedLocation : loc
+                );
+            })
+               .addCase(fetchAllLocations.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(fetchAllLocations.fulfilled, (state, action) => {
+        state.loading = false
+        state.locations = action.payload
+      })
+      .addCase(fetchAllLocations.rejected, (state) => {
+        state.loading = false
+      })
+         .addCase(updateLocation.pending, (state) => {
                 state.loading = true
             })
             .addCase(updateLocation.fulfilled, (state, action) => {
@@ -155,5 +178,6 @@ const locationSlice = createSlice({
             })
     },
 })
-export const { setLocationData, resetLocation, setLocations } = locationSlice.actions
+   
+export const {resetLocation, setLocationData} = locationSlice.actions
 export default locationSlice.reducer

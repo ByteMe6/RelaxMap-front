@@ -59,14 +59,13 @@ export default function Header() {
     <>
       <header className={styles.header}>
         <Container isHeader>
-          {/* LOGO */}
           <div className={styles.logoDiv} data-aos="fade-down">
-            <img src="assets/logo.png" alt="logo" />
+            <img src="assets/logo.svg" alt="logo" />
             <span className={styles.logoText}>Relax Map</span>
           </div>
 
           <div className={styles.half} data-aos="fade-left">
-            {/* NAV */}
+
             <nav className={styles.nav}>
               <ul className={styles.navList}>
                 <li className={styles.navListElement}>
