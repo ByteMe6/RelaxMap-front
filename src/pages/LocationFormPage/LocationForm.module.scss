@@ -1,295 +1,5 @@
-.wrapperLocationDetail {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  margin: 80px auto 0;
-  padding: 0 16px 40px;
-  box-sizing: border-box;
-  background-color: #fdf5f0;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-.wrapperLocation {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: 20px;
-}
-
-.imageBox {
-  width: 100%;
-
-  .imageLocation {
-    width: 100%;
-    height: auto;
-    max-height: 380px;
-    object-fit: cover;
-    border-radius: 18px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  }
-}
-
-.infoBox {
-  width: 100%;
-}
-
-.topInfo {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
-  gap: 8px;
-}
-
-.category {
-  color: #cc6534;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 13px;
-  letter-spacing: 1px;
-}
-
-.title {
-  font-size: 28px;
-  margin: 8px 0;
-  color: #1a1a1a;
-  line-height: 1.2;
-  word-break: break-word;
-}
-
-.authorSection {
-  margin-bottom: 10px;
-  font-size: 14px;
-
-  .authorLink {
-    color: #cc6534;
-    font-weight: 700;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-}
-
-.description {
-  font-size: 16px;
-  line-height: 1.5;
-  color: #444;
-  margin-bottom: 12px;
-  word-break: break-word;
-}
-
-.region {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 16px;
-}
-
-/* Рейтинг — ЛІНІЯ ПІД ОПИСОМ */
-.ratingRow {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.ratingStars {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 22px;
-}
-
-.starFilled,
-.starEmpty {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  cursor: pointer;
-  transition: transform 0.15s ease-out;
-  transform-origin: center;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-}
-
-.starFilled {
-  color: #ffb400;
-}
-
-.starEmpty {
-  color: #ccc;
-}
-
-.ratingNumber {
-  margin-left: 4px;
-  font-weight: 700;
-  color: #1a1a1a;
-  font-size: 16px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-
-  .reviewsCount {
-    font-weight: 400;
-    color: #666;
-    font-size: 13px;
-  }
-}
-
-.btnEdit {
-  width: 100%;
-  max-width: 160px;
-  height: 46px;
-  background-color: #cc6534;
-  border: none;
-  font-family: "Montserrat", sans-serif;
-  font-weight: 600;
-  color: #fff;
-  margin-top: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.3s;
-
-  &:hover {
-    background-color: #1a3a3a;
-    transform: translateY(-2px);
-  }
-}
-
-.divider {
-  border: 0;
-  height: 1px;
-  background: #eee;
-  margin: 40px 0;
-  width: 100%;
-}
-
-/* ===== АДАПТИВ ===== */
-
-@media (max-width: 340px) {
-  .wrapperLocationDetail {
-    margin-top: 70px;
-    padding: 0 10px 20px;
-  }
-
-  .title {
-    font-size: 22px;
-  }
-
-  .ratingStars {
-    font-size: 18px;
-  }
-
-  .topInfo {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-  }
-
-  .btnEdit {
-    max-width: 100%;
-  }
-
-  .ratingNumber {
-    font-size: 14px;
-
-    .reviewsCount {
-      font-size: 11px;
-    }
-  }
-}
-
-/* Планшети (768–1024px) */
-@media (min-width: 768px) and (max-width: 1024px) {
-  .wrapperLocationDetail {
-    margin-top: 100px;
-    padding: 0 24px 50px;
-  }
-
-  .wrapperLocation {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 32px;
-  }
-
-  .imageBox,
-  .infoBox {
-    flex: 1;
-  }
-
-  .imageBox .imageLocation {
-    max-height: 420px;
-  }
-
-  .title {
-    font-size: 30px;
-  }
-
-  .description {
-    font-size: 15px;
-  }
-}
-
-/* Десктопи (1024+) */
-@media (min-width: 1024px) {
-  .wrapperLocationDetail {
-    margin-top: 100px;
-    padding: 0 32px 50px;
-  }
-
-  .wrapperLocation {
-    flex-direction: row;
-    gap: 40px;
-  }
-
-  .imageBox,
-  .infoBox {
-    flex: 1;
-  }
-
-  .imageBox .imageLocation {
-    max-height: 450px;
-  }
-
-  .title {
-    font-size: 32px;
-  }
-}
-
-/* Великі десктопи (1440+) */
-@media (min-width: 1440px) {
-  .wrapperLocationDetail {
-    max-width: 1200px;
-    margin-top: 120px;
-  }
-
-  .wrapperLocation {
-    gap: 60px;
-  }
-
-  .imageBox .imageLocation {
-    max-height: 600px;
-  }
-
-  .title {
-    font-size: 42px;
-  }
-}
-
-/* 1000–1400px: трохи зміщуємо текст від фотки */
-@media (min-width: 1000px) and (max-width: 1400px) {
-  .infoBox {
-    padding-left: 20px;
-  }
-}
-
+/* ===== FORM-SPECIFIC STYLES ===== */
+/* These styles are scoped to the form container to avoid conflicts */
 
 .containerFormLocation {
   width: 100%;
@@ -418,7 +128,77 @@
   }
 }
 
-/* ===== АДАПТИВ ===== */
+/* Map and search specific styles */
+.wrapperLocation {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.search {
+  flex: 1;
+}
+
+.btnSearch {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid #cc6534;
+  background-color: #cc6534;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+
+  &:hover {
+    background-color: #b6623c;
+    transform: translateY(-1px);
+  }
+}
+
+.mapLocation {
+  width: 100%;
+  height: 300px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.suggestionsList {
+  list-style: none;
+  padding: 0;
+  margin: -8px 0 8px 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.suggestionsItemList {
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #eee;
+  }
+}
+
+/* Container for the whole page */
+.containerNewLocation {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ===== RESPONSIVE STYLES ===== */
 
 @media (max-width: 480px) {
   .containerFormLocation {
@@ -452,6 +232,14 @@
     width: 100%;
     text-align: center;
   }
+
+  .wrapperLocation {
+    flex-direction: column;
+  }
+
+  .btnSearch {
+    width: 100%;
+  }
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
@@ -467,6 +255,10 @@
   .imageLocation {
     max-height: 360px;
   }
+
+  .mapLocation {
+    height: 350px;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -477,19 +269,8 @@
   .titleNewLocation {
     font-size: 28px;
   }
-}
 
-.mapLocation {
-  width: 100%;
-  height: 300px;
-  margin-top: 12px;
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-@media (min-width: 768px) {
   .mapLocation {
-    height: 380px;
+    height: 400px;
   }
 }
-

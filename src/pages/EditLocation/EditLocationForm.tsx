@@ -1,5 +1,3 @@
-// src/pages/EditLocation/EditLocationForm.tsx
-
 import { Formik, Form, Field } from "formik";
 import styles from "../LocationFormPage/LocationForm.module.scss";
 import { updateLocation } from "../../redux/thunk/thunkLocationUpdate";
@@ -7,9 +5,7 @@ import { useAppDispatch } from "../../redux/hooks/hook";
 import { useRef } from "react";
 import { host } from "../../backendHost";
 import { saveOrUpdateLocation } from "../../redux/slice/locationSlice";
-import { setCredentials } from "../../redux/slice/authSlice";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 interface Location {
   id: number;
@@ -73,77 +69,15 @@ function EditLocationForm({ location }: LocationEditProps) {
     "Чернігівська область",
   ];
 
-  // універсальний logout: чистимо токени й перекидаємо на /login
-  const logout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    // якщо setCredentials вимагає конкретний тип, можна передати null або порожні строки
-    dispatch(
-      setCredentials({
-        accessToken: "",
-        refreshToken: "",
-      })
-    );
-    navigate("/login");
-  };
-
-  // якщо accessToken прострочений — пробуємо оновити й повторити update
-  const handleRefreshAndRetry = async (values: FormValues) => {
-    const refreshToken = localStorage.getItem("refreshToken");
-
-    if (!refreshToken) {
-      logout();
-      return;
-    }
-
-    try {
-      const res = await axios.post(`${host}/auth/refresh`, { refreshToken });
-      const { accessToken, refreshToken: newRefresh } = res.data;
-
-      // оновлюємо токени в redux + localStorage (інтерсептор їх підхопить)
-      dispatch(setCredentials({ accessToken, refreshToken: newRefresh }));
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", newRefresh);
-
-      const resultAction = await (dispatch as any)(
-        updateLocation({
-          id: location.id,
-          name: values.name,
-          placeType: values.placeType,
-          region: values.region,
-          description: values.description,
-          file: values.file,
-        })
-      );
-
-      if (updateLocation.fulfilled.match(resultAction)) {
-        (dispatch as any)(saveOrUpdateLocation(resultAction.payload));
-        navigate(`/locations/${location.id}`);
-      } else {
-        const error = resultAction.payload as
-          | { status: number; message: string }
-          | undefined;
-
-        // якщо навіть після refresh знову 401 → logout
-        if (error?.status === 401 || error?.message === "Unauthorized") {
-          logout();
-        } else if (error) {
-          alert(`Помилка при оновленні місця: ${error.message}`);
-        }
-      }
-    } catch (e) {
-      // refreshToken невалідний / бекенд впав → logout
-      logout();
-    }
-  };
-
   const performUpdate = async (values: FormValues) => {
-    // мінімальна валідація обов’язкових полів
+    // Валідація обов'язкових полів
     if (!values.name.trim() || !values.placeType.trim() || !values.region.trim()) {
       alert("Будь ласка, заповніть Назву, Тип місця та Регіон.");
       return;
     }
 
+    // Виконуємо оновлення
+    // Axios interceptor автоматично обробить 401 і оновить токен
     const resultAction = await (dispatch as any)(
       updateLocation({
         id: location.id,
@@ -156,6 +90,7 @@ function EditLocationForm({ location }: LocationEditProps) {
     );
 
     if (updateLocation.fulfilled.match(resultAction)) {
+      // Успішно оновлено
       (dispatch as any)(
         saveOrUpdateLocation({
           ...location,
@@ -164,14 +99,12 @@ function EditLocationForm({ location }: LocationEditProps) {
       );
       navigate(`/locations/${location.id}`);
     } else {
+      // Помилка (якщо навіть після refresh не вдалося)
       const error = resultAction.payload as
         | { status: number; message: string }
         | undefined;
 
-      // accessToken невалідний → пробуємо refresh
-      if (error?.status === 401 || error?.message === "Unauthorized") {
-        await handleRefreshAndRetry(values);
-      } else if (error) {
+      if (error) {
         alert(`Помилка при оновленні місця: ${error.message}`);
       } else {
         alert("Сталася невідома помилка при оновленні місця.");
