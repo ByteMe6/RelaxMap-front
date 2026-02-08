@@ -1,17 +1,30 @@
 import styles from "./LocationInfoBlock.module.scss"
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Star from "../../LocationDeteilsPage/RatingLocation/Star/Star";
 interface LocationBlock {
+    id:number
     name:string,
     region:string | null,
     placeType: string | null
 }
+
 type LocationProps = {
-    location?: LocationBlock;
+    location?: LocationBlock | null;
 }
-function LocationInfoBlock({location}: LocationProps) {
+function LocationInfoBlock({location }: LocationProps) {
     const [hover, setHover] = useState<number | null>(null)
     const [rating, setRating] = useState(0)
+  const [currentLocation, setCurrentLocation] = useState(location);
+
+  useEffect(() => {
+    const data = localStorage.getItem("locations");
+    if (data && location?.id) {
+      const locations: LocationBlock[] = JSON.parse(data);
+      const updated = locations.find((l) => l.id === location.id);
+      setCurrentLocation(updated || location);
+    }
+  }, [location]);
+  console.log(currentLocation)
     return (
         <div className={styles.wrapperInfoBlock}>
             <div>
@@ -26,9 +39,9 @@ function LocationInfoBlock({location}: LocationProps) {
                     )
                 })}
             </div>
-            <p className={styles.titleLocationDetail}>{location?.name}</p>
-            <p className={styles.textLocation}><span className={styles.spanLocation}>Регіон:</span>{location?.region}</p>
-            <p className={styles.textLocation}><span className={styles.spanLocation}>Тип локації:</span>{location?.placeType}</p>
+            <p className={styles.titleLocationDetail}>{currentLocation?.name  || ""}</p>
+            <p className={styles.textLocation}><span className={styles.spanLocation}>Регіон:</span>{currentLocation?.region || null}</p>
+            <p className={styles.textLocation}><span className={styles.spanLocation}>Тип локації:</span>{currentLocation?.placeType || null}</p>
         </div>
     )
 }

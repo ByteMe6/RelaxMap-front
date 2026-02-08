@@ -46,6 +46,27 @@ const initialState: LocationState = {
     isSuccess: false
 }
 console.log(initialState.locations)
+export function getLocations(): LocationInfo[] {
+  const data = localStorage.getItem("locations");
+  return data ? JSON.parse(data) : [];
+}
+export function saveOrUpdateLocation(updated: LocationInfo) {
+  const locations = getLocations();
+
+  const exists = locations.find(loc => loc.id === updated.id);
+  let newLocations: LocationInfo[];
+
+  if (exists) {
+    newLocations = locations.map(loc =>
+      loc.id === updated.id ? { ...loc, ...updated } : loc
+    );
+  } else {
+    newLocations = [...locations, updated];
+  }
+
+  localStorage.setItem("locations", JSON.stringify(newLocations));
+  return updated;
+}
 const locationSlice = createSlice({
     name: "location",
     initialState,
@@ -123,7 +144,11 @@ const locationSlice = createSlice({
                         : loc
                 );
                 state.locations = [...state.locations];
-                state.currentLocationDetails = { ...state.currentLocationDetails, ...action.payload };
+                if (state.currentLocationDetails) {
+                    state.currentLocationDetails = { ...state.currentLocationDetails, ...action.payload };
+                } else {
+                    state.currentLocationDetails = action.payload;
+                }
                 console.log("fff", state.locations)
                 console.log("hhh", state.currentLocationDetails)
                 state.isSuccess = true

@@ -4,7 +4,7 @@ import { updateLocation } from "../../redux/thunk/thunkLocationUpdate";
 import { useAppDispatch } from "../../redux/hooks/hook";
 import { useRef } from "react";
 import { host } from "../../backendHost";
-import { resetLocation } from "../../redux/slice/locationSlice";
+import { resetLocation, saveOrUpdateLocation } from "../../redux/slice/locationSlice";
 import { useNavigate } from "react-router-dom";
 const handleCityInput = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -51,6 +51,7 @@ function EditLocationForm({ location }: LocationEditProps) {
         "Чернівецька область",
         "Чернігівська область",
     ];
+
     const navigate = useNavigate();
     return (
         <>
@@ -58,19 +59,27 @@ function EditLocationForm({ location }: LocationEditProps) {
                 enableReinitialize
                 initialValues={{
                     name: location.name || "",
-                    placeType: location.placeType || "",
-                    region: location.region || "",
+                    placeType: location.placeType || null,
+                    region: location.region || null,
                     description: location.description || "",
                     file: null,
                 }}
-                onSubmit={async (values) => {
-                    await dispatch(updateLocation({ id: location.id, ...values }));
-                    console.log("gh", values);
+                onSubmit={(values) => {
+                    const updated = {
+                        ...location,
+                        name: values.name,
+                        placeType: values.placeType,
+                        region: values.region,
+                        description: values.description,
+                        imageName: values.file ? URL.createObjectURL(values.file) : location.imageName,
+                    };
+                   dispatch(updateLocation(updated));
+                    saveOrUpdateLocation(updated);
                     navigate(`/locations/${location.id}`);
                 }}
             >
                 {({ setFieldValue, resetForm, values }) => (
-                    <Form className={styles.containerFormLocation}>
+                    <Form className={styles.containerFormLocation} style={{marginTop:"10%"}}>
                         <label htmlFor="file" className={styles.labelLocation}>
                             Обкладинка статті
                         </label>

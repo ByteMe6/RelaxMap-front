@@ -1,6 +1,6 @@
 import styles from "./LocationCard.module.scss"
 import Star from "../../LocationDeteilsPage/RatingLocation/Star/Star"
-import { useState } from "react"
+import { useState,u } from "react"
 import { host } from "../../../backendHost"
 import { useNavigate } from "react-router-dom"
 type CardData = {
@@ -18,6 +18,8 @@ function LocationCard({ info }: CardProps) {
     const [hover, setHover] = useState<number | null>(null)
     const [rating, setRating] = useState(0)
     const navigate = useNavigate()
+    const [localLocation, setLocalLocation] = useState<CardData[] | null>(null);
+
     return (
         <>
             {info.map((location) => (
