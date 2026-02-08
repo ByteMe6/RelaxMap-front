@@ -1,10 +1,10 @@
-// src/redux/slice/locationSlice.ts
 import { createSlice } from "@reduxjs/toolkit"
 import type { PayloadAction } from "@reduxjs/toolkit"
 import { searchLocation } from "../thunk/thunkLocationMap"
 import { postNewLocation } from "../thunk/thunkLocation"
 import { searchCities, searchRegions } from "../thunk/thunkTypeLocation"
 import { updateLocationRating } from "../thunk/thunkUpdateRating";
+import { updateLocation } from "../thunk/thunkLocationUpdate";
 import { fetchAllLocations } from "../thunk/thunkLocation"
 
 export interface LocationData {
@@ -29,34 +29,60 @@ interface LocationState {
   locations: LocationInfo[]
   location: LocationData | null
   listCity: any[]
+  currentLocationDetails: LocationInfo | null,
   listRegion: any[]
   isSuccess: boolean
 }
 
 const initialState: LocationState = {
-  loading: false,
-  info: {
-    id: 1,
-    name: "",
-    image: "",
-    placeType: null,
-    region: null,
-    description: "",
-    rating: 0
-  },
-  locations: [],
-  listCity: [],
-  listRegion: [],
-  location: null,
-  isSuccess: false,
+    loading: false,
+    info: {
+        id: 1,
+        name: "",
+        image: "",
+        placeType: null,
+        region: null,
+        description: "",
+         rating: 0
+    },
+    locations: [],
+    listCity: [],
+    currentLocationDetails: null,
+    listRegion: [],
+    location: null,
+    isSuccess: false
 }
+console.log(initialState.locations)
+export function getLocations(): LocationInfo[] {
+  const data = localStorage.getItem("locations");
+  return data ? JSON.parse(data) : [];
+}
+export function saveOrUpdateLocation(updated: LocationInfo) {
+  const locations = getLocations();
 
+  const exists = locations.find(loc => loc.id === updated.id);
+  let newLocations: LocationInfo[];
+
+  if (exists) {
+    newLocations = locations.map(loc =>
+      loc.id === updated.id ? { ...loc, ...updated } : loc
+    );
+  } else {
+    newLocations = [...locations, updated];
+  }
+
+  localStorage.setItem("locations", JSON.stringify(newLocations));
+  return updated;
+}
 const locationSlice = createSlice({
     name: "location",
     initialState,
     reducers: {
         setLocationData: (state, action: PayloadAction<LocationInfo>) => {
-            state.info = action.payload
+            state.currentLocationDetails = action.payload
+        },
+        setLocations: (state, action: PayloadAction<LocationInfo[]>) => {
+            state.locations = action.payload
         },
         resetLocation: (state) => {
             state.info = null;
@@ -129,7 +155,28 @@ const locationSlice = createSlice({
       .addCase(fetchAllLocations.rejected, (state) => {
         state.loading = false
       })
+         .addCase(updateLocation.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(updateLocation.fulfilled, (state, action) => {
+                state.loading = false
+                state.locations = state.locations.map(loc =>
+                    loc.id === action.payload.id
+                        ? { ...loc, ...action.payload }
+                        : loc
+                );
+                state.locations = [...state.locations];
+                if (state.currentLocationDetails) {
+                    state.currentLocationDetails = { ...state.currentLocationDetails, ...action.payload };
+                } else {
+                    state.currentLocationDetails = action.payload;
+                }
+                console.log("fff", state.locations)
+                console.log("hhh", state.currentLocationDetails)
+                state.isSuccess = true
+            })
     },
 })
+   
 export const {resetLocation, setLocationData} = locationSlice.actions
 export default locationSlice.reducer

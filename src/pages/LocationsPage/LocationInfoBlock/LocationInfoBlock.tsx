@@ -1,22 +1,31 @@
 import styles from "./LocationInfoBlock.module.scss"
 import { useState,useEffect } from "react";
 import Star from "../../LocationDeteilsPage/RatingLocation/Star/Star";
-interface LocationBlock {
+ export interface LocationBlock {
     id:number
     name:string,
     region:string | null,
     placeType: string | null
     rating?:number
 }
-type LocationProps = {
-    location?: LocationBlock;
-    onRatingChange?: (newRating: number) => void;
-}
-function LocationInfoBlock({location,onRatingChange}: LocationProps) {
-    const [hover, setHover] = useState<number | null>(null)
-      const [averageRating, setAverageRating] = useState<number>(2);
 
-     useEffect(() => {
+type LocationProps = {
+    location?: LocationBlock | null;
+    onRatingChange?: (newRating: number,) => void;
+}
+function LocationInfoBlock({location,onRatingChange }: LocationProps) {
+    const [hover, setHover] = useState<number | null>(null)
+  const [currentLocation, setCurrentLocation] = useState(location);
+const [averageRating, setAverageRating] = useState<number>(2);
+  useEffect(() => {
+    const data = localStorage.getItem("locations");
+    if (data && location?.id) {
+      const locations: LocationBlock[] = JSON.parse(data);
+      const updated = locations.find((l) => l.id === location.id);
+      setCurrentLocation(updated || location);
+    }
+  }, [location]);
+      useEffect(() => {
     if (!location) return;
 
     const storage = JSON.parse(localStorage.getItem("locationRatings") || "{}");
@@ -49,6 +58,7 @@ function LocationInfoBlock({location,onRatingChange}: LocationProps) {
     if (onRatingChange) onRatingChange(newAverage); 
   }
 
+  console.log(currentLocation)
     return (
         <div className={styles.wrapperInfoBlock}>
             <div>
@@ -63,9 +73,9 @@ function LocationInfoBlock({location,onRatingChange}: LocationProps) {
                     )
                 })}
             </div>
-            <p className={styles.titleLocationDetail}>{location?.name}</p>
-            <p className={styles.textLocation}><span className={styles.spanLocation}>Регіон:</span>{location?.region}</p>
-            <p className={styles.textLocation}><span className={styles.spanLocation}>Тип локації:</span>{location?.placeType}</p>
+            <p className={styles.titleLocationDetail}>{currentLocation?.name  || ""}</p>
+            <p className={styles.textLocation}><span className={styles.spanLocation}>Регіон:</span>{currentLocation?.region || null}</p>
+            <p className={styles.textLocation}><span className={styles.spanLocation}>Тип локації:</span>{currentLocation?.placeType || null}</p>
         </div>
     )
 }

@@ -1,16 +1,18 @@
 import { useEffect } from "react"
 import Container from "../../../components/Container/Container"
-import { useAppSelector, useAppDispatch } from "../../../redux/hooks/hook"
+import {  useAppDispatch } from "../../../redux/hooks/hook"
 import { fetchAllLocations } from "../../../redux/thunk/thunkLocation"
-import styles from "./LocationGrid.module.scss"
 import { useState } from "react"
 import type { LocationInfo } from "../../../redux/slice/locationSlice"
 import LocationCard from "../LocationCard/LocationCards"
+import styles from "./LocationGrid.module.scss"
 type Props = {
   locations: LocationInfo[];
 };
 function LocationsGrid({ locations }: Props) {
-  const dispatch = useAppDispatch()
+const newLocations = localStorage.getItem("locations")
+console.log(newLocations)
+ const dispatch = useAppDispatch()
   const [visibleCount, setVisibleCount] = useState(6);
  const visibleLocations = locations.slice(0, visibleCount);
  
@@ -21,9 +23,8 @@ function LocationsGrid({ locations }: Props) {
   useEffect(() => {
     dispatch(fetchAllLocations())
   }, [dispatch])
-
-  return (
-    <Container>
+    return (
+         <Container>
       <p></p>
       <ul className={styles.wrapperLocationCards}>
               {visibleLocations.map(location => (
@@ -34,7 +35,7 @@ function LocationsGrid({ locations }: Props) {
       <button className={styles.btnLoadLocation} onClick={handleLoadMore}>Показати ще</button>
        )}
     </Container>
-  )
+    )
 }
 
 export default LocationsGrid
