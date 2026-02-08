@@ -8,7 +8,6 @@ export default function EditLocation() {
     console.log(locations)
   return (
     <Container>
-      <p>Додавання нового місця</p>
       <EditLocationForm location={locations}/>
     </Container>
   );

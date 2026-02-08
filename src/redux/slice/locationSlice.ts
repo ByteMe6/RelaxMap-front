@@ -1,4 +1,3 @@
-// src/redux/slice/locationSlice.ts
 import { createSlice } from "@reduxjs/toolkit"
 import type { PayloadAction } from "@reduxjs/toolkit"
 import { searchLocation } from "../thunk/thunkLocationMap"

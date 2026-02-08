@@ -80,6 +80,7 @@ function EditLocationForm({ location }: LocationEditProps) {
             >
                 {({ setFieldValue, resetForm, values }) => (
                     <Form className={styles.containerFormLocation} style={{marginTop:"10%"}}>
+                           <p className={styles.titleNewLocation}>Редагування місця</p>
                         <label htmlFor="file" className={styles.labelLocation}>
                             Обкладинка статті
                         </label>

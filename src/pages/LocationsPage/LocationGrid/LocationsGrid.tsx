@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import Container from "../../../components/Container/Container"
-import { useAppSelector, useAppDispatch } from "../../../redux/hooks/hook"
+import {  useAppDispatch } from "../../../redux/hooks/hook"
 import { fetchAllLocations } from "../../../redux/thunk/thunkLocation"
 import { useState } from "react"
 import type { LocationInfo } from "../../../redux/slice/locationSlice"

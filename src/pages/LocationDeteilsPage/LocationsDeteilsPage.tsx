@@ -13,7 +13,6 @@ import type { LocationInfo } from "../../redux/slice/locationSlice.ts";
 import AddReviewModal from "../../components/Modals/AddReviewModal/AddReviewModal.tsx";
 import { useEffect, useState } from "react";
 function LocationDeteilsPage() {
-  
     const [locationNew, setLocation] = useState<LocationInfo | null>(null);
 const { id } = useParams<{ id?: string }>()
   const location = useAppSelector((state) => state.location.locations.find((loc) => loc.id === Number(id)));

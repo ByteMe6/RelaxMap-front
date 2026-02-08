@@ -1,7 +1,7 @@
 import styles from "./LocationInfoBlock.module.scss"
 import { useState,useEffect } from "react";
 import Star from "../../LocationDeteilsPage/RatingLocation/Star/Star";
-interface LocationBlock {
+ export interface LocationBlock {
     id:number
     name:string,
     region:string | null,
@@ -15,7 +15,6 @@ type LocationProps = {
 }
 function LocationInfoBlock({location,onRatingChange }: LocationProps) {
     const [hover, setHover] = useState<number | null>(null)
-    const [rating, setRating] = useState(0)
   const [currentLocation, setCurrentLocation] = useState(location);
 const [averageRating, setAverageRating] = useState<number>(2);
   useEffect(() => {
