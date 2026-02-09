@@ -8,10 +8,11 @@ import authReducer from "./slice/authSlice";
 const persistConfig = {
     key: "root",
     storage,
-    whitelist: ["location"]
+    whitelist: ["location", "auth"]
 }
 const rootReducer = combineReducers({
-    location: locationReducer
+    location: locationReducer,
+    auth: authReducer
 })
 export type RootState = ReturnType<typeof rootReducer>
 const persistedReducer = persistReducer(persistConfig, rootReducer)
