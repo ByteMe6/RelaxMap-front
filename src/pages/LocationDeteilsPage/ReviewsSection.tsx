@@ -51,7 +51,7 @@ function ReviewsSection() {
           </button>
         ) : (
           <p className={styles["reviews__auth-msg"]}>
-            <Link to="/login">Увійдіть</Link>, щоб оцінити локацію
+            <Link to="/auth/login">Увійдіть</Link>, щоб оцінити локацію
           </p>
         )}
       </div>

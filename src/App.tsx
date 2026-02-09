@@ -13,10 +13,20 @@ import RegisterPage from "./pages/Auth/RegisterPage/RegisterPage";
 import LoginPage from "./pages/Auth/Login/LoginPage";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import "./index.css"
+import { host } from "./backendHost";
 
 function App() {
   const [isAlive, setIsAlive] = useState<boolean | null>(null);
   const [isBackendModalOpen, setIsBackendModalOpen] = useState(true);
+
+  const handleCheckIsAlive = async (): Promise<boolean> => {
+    try {
+      const response = await axios.get(`${host}/places/all`, { timeout: 500 });
+      return response.status === 200;
+    } catch {
+      return false;
+    }
+  };
 
   useEffect(() => {
     void (async () => {
@@ -35,10 +45,10 @@ function App() {
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/locations" element={<LocationsPage />} />
-        <Route path="/locations/location" element={<LocationDeteilsPage />} /> {/* add id route*/}
-        <Route path="/profile" element={<ProfilePage />} /> {/* add id route*/}
         <Route path="/locations/add" element={<LocationFormPage />} />
-        <Route path="/locations/location/edit" element={<EditLocation />} /> {/* add id route*/}
+        <Route path="/locations/:id" element={<LocationDeteilsPage />} />
+        <Route path="/locations/:id/edit" element={<EditLocation />} />
+        <Route path="/profile/:mail" element={<ProfilePage />} />
         <Route path="/auth/register" element={<RegisterPage />} />
         <Route path="/auth/login" element={<LoginPage />} />
       </Route>

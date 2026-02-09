@@ -10,10 +10,10 @@ import ReviewsSection from "./ReviewsSection";
 import styles from "./LocationDetailsPage.module.scss";
 import { AddReviewModalProvider } from "../../components/Modals/AddReviewModal/AddReviewModalContext";
 import AddReviewModal from "../../components/Modals/AddReviewModal/AddReviewModal";
-import { useReviews } from "./ReviewsContext";
+import { ReviewProvider, useReviews } from "./ReviewsContext";
 import Star from "./RatingLocation/Star/Star";
 
-const LocationsDeteilsPage: React.FC = () => {
+const LocationsDeteilsPageContent: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { response } = useReviews();
@@ -196,6 +196,14 @@ const LocationsDeteilsPage: React.FC = () => {
 
       {id && <AddReviewModal placeId={Number(id)} />}
     </AddReviewModalProvider>
+  );
+};
+
+const LocationsDeteilsPage: React.FC = () => {
+  return (
+    <ReviewProvider>
+      <LocationsDeteilsPageContent />
+    </ReviewProvider>
   );
 };
 
