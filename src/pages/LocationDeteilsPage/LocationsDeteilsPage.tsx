@@ -20,7 +20,7 @@ const LocationsDeteilsPageContent: React.FC = () => {
 
   const [location, setLocation] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [hover, setHover] = useState<number | null>(null);
+  const [hover] = useState<number | null>(null);
   const [averageRating, setAverageRating] = useState<number>(2);
 
   const currentUserEmail = useAppSelector((state) => state.auth.email);
@@ -56,7 +56,6 @@ const LocationsDeteilsPageContent: React.FC = () => {
   }, [id]);
 
   // ratings are display-only in details; no client-side rating action
-  const handleRating = (_star: number) => {};
 
   if (loading) {
     return (

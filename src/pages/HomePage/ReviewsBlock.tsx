@@ -42,19 +42,8 @@ function ReviewsBlock() {
   const dispatch = useAppDispatch();
   const locations = useAppSelector((state) => state.location.locations);
   const [reviews, setReviews] = useState<any[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  // responsive behavior handled by Swiper breakpoints; no local `isMobile` needed
 
   useEffect(() => {
     dispatch(fetchAllLocations());
@@ -81,17 +70,7 @@ function ReviewsBlock() {
   const swiperRef = useRef<SwiperType | null>(null);
   const visibleReviews = reviews.slice(0, 3);
 
-  const nextReview = () => {
-    if (reviews.length > 0) {
-      setCurrentIndex((prev) => (prev + 1) % reviews.length);
-    }
-  };
-
-  const prevReview = () => {
-    if (reviews.length > 0) {
-      setCurrentIndex((prev) => (prev - 1 + reviews.length) % reviews.length);
-    }
-  };
+  // navigation handled by Swiper instance methods; local index not required
 
   return (
       <section className={ styles.reviews }>
