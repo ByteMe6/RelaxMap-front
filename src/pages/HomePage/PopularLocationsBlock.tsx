@@ -1,37 +1,21 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/hook";
+import { fetchAllLocations } from "../../redux/thunk/thunkLocation";
 import Container from "../../components/Container/Container";
 import LocationCard from "./LocationCard";
 import styles from "./PopularLocationsBlock.module.scss";
-
-import firstImg from "./img/first.png";
-import secondImg from "./img/second.png";
-import thirdImg from "./img/third.png";
+import { host } from "../../backendHost";
 
 function PopularLocationsBlock() {
-  const locations = [
-    {
-      title: "Сонячна Рів'єра",
-      category: "Море",
-      rating: 4.5,
-      image: firstImg
-    },
-    {
-      title: "Тилігульський Спокій",
-      category: "Море",
-      rating: 4.5,
-      image: secondImg
-    },
-    {
-      title: "Кінбурнська Вольниця",
-      category: "Море",
-      rating: 4.5,
-      image: thirdImg
-    }
-  ];
-
+  const dispatch = useAppDispatch();
+  const allLocations = useAppSelector((state) => state.location.locations);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    dispatch(fetchAllLocations());
+  }, [dispatch]);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -44,12 +28,25 @@ function PopularLocationsBlock() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Convert locations to card format
+  const locations = allLocations.map((loc) => ({
+    title: loc.name,
+    category: loc.placeType || "Локація",
+    rating: loc.rating || 0,
+    image: loc.imageName ? `${host}/images/${loc.imageName}` : "/assets/placeholder.jpg",
+    id: loc.id,
+  }));
+
   const nextLocation = () => {
-    setCurrentIndex((prev) => (prev + 1) % locations.length);
+    if (locations.length > 0) {
+      setCurrentIndex((prev) => (prev + 1) % locations.length);
+    }
   };
 
   const prevLocation = () => {
-    setCurrentIndex((prev) => (prev - 1 + locations.length) % locations.length);
+    if (locations.length > 0) {
+      setCurrentIndex((prev) => (prev - 1 + locations.length) % locations.length);
+    }
   };
 
   return (

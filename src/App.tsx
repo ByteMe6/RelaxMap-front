@@ -14,6 +14,7 @@ import LoginPage from "./pages/Auth/Login/LoginPage";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import "./index.css"
 import { host } from "./backendHost";
+import "./Scss/Modal.scss";
 
 function App() {
   const [isAlive, setIsAlive] = useState<boolean | null>(null);
@@ -41,6 +42,7 @@ function App() {
   };
 
   return (
+    <>
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
@@ -54,6 +56,29 @@ function App() {
       </Route>
       <Route path="*" element={<ErrorPage />} />
     </Routes>
+
+
+      {isAlive === false && isBackendModalOpen && (
+        <div className="customModalOverlay">
+          <div className="customModal">
+            <h3 className="customModal__title">Сервер впав</h3>
+            <p className="customModal__text">
+              Бекенд зараз недоступний. Спробуй перезавантажити сторінку трохи
+              пізніше.
+            </p>
+            <div className="modalActions">
+              <button
+                type="button"
+                className="modalActions__button"
+                onClick={closeBackendModal}
+              >
+                Закрити
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      </>
   );
 }
 

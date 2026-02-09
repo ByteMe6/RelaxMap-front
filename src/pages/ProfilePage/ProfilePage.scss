@@ -1,132 +1,10 @@
 @import url("../../Scss/_Modal.scss");
 
 .profile-page {
-  padding-top: 100px;
-  background-color: #fdf5f0;
-  min-height: 100vh;
-  font-family: 'Montserrat', sans-serif;
-
-  .profile-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 40px;
-
-    .user-info-block {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-
-      .avatar {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        object-fit: cover;
-      }
-
-      .text-info {
-        h1 {
-          font-size: 24px;
-          color: #1a3a3a;
-          margin-bottom: 4px;
-        }
-        p {
-          color: #666;
-          font-size: 14px;
-        }
-      }
-    }
-
-    .action-buttons {
-      display: flex;
-      gap: 12px;
-
-      .btn-edit-name {
-        background: #f5e6de;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 8px;
-        font-weight: 500;
-      }
-
-      .btn-delete-acc {
-        background: #e0e0e0;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 8px;
-        font-weight: 500;
-      }
-    }
-  }
-
-  .section-title {
-    font-size: 32px;
-    // margin-bottom: 30px;
-    font-weight: 700;
-  }
-
-  .locations-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    padding-bottom: 40px;
-
-    @media (max-width: 992px) { grid-template-columns: repeat(2, 1fr); }
-    @media (max-width: 600px) { grid-template-columns: 1fr; }
-  }
-
-  .location-card {
-    background: #fdf5f0;
-    border-radius: 12px;
-    overflow: hidden;
-    
-    .img-wrapper {
-      height: 250px;
-      img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
-    }
-
-    .card-content {
-      padding: 16px 0;
-      .category { font-size: 12px; color: #888; text-transform: capitalize; }
-      .stars { color: #000; margin: 4px 0; }
-      h3 { font-size: 18px; margin-bottom: 12px; }
-    }
-
-    .card-actions {
-      display: flex;
-      gap: 10px;
-      
-      button {
-        flex: 1;
-        padding: 10px;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-      }
-
-      .edit-btn { background: #e0e0e0; }
-      .delete-btn { background: #f5c6b1; color: #4c2613; }
-    }
-  }
-
-  .add-location-wrapper {
-    margin-bottom: 40px;
-    .btn-add {
-      background: #cc6534;
-      color: white;
-      padding: 12px 24px;
-      border-radius: 8px;
-      border: none;
-      font-weight: 600;
-    }
-  }
-}
-
-.profile-page {
   padding-top: 120px;
   background-color: #fdf5f0; 
   min-height: 100vh;
+  font-family: 'Montserrat', sans-serif;
 
   .profile-header {
     display: flex;
@@ -134,48 +12,76 @@
     align-items: flex-start;
     margin-bottom: 50px;
 
-    .user-text {
-      h1 { font-size: 36px; font-weight: 700; color: #1a1a1a; }
-      p { color: #666; margin-top: 8px; font-weight: 500; }
+    .user-info {
+      flex: 1;
+      
+      h1 { 
+        font-size: 36px; 
+        font-weight: 700; 
+        color: #1a1a1a; 
+        margin-bottom: 8px;
+      }
+      
+      .email {
+        color: #666; 
+        margin-top: 8px; 
+        font-weight: 500; 
+      }
+      
+      p {
+        color: #666;
+        font-weight: 500;
+      }
     }
 
-    .header-btns {
+    .profile-actions {
       display: flex;
       gap: 12px;
-      button {
-        padding: 10px 20px;
-        border-radius: 8px;
-        border: none;
-        font-weight: 600;
-        cursor: pointer;
-        transition: 0.3s;
-        &:hover { opacity: 0.8; transform: translateY(-2px); }
-      }
-      .edit-name { background: #f5e6de; color: #4c2613; }
-      .change-pass { background: #e0e0e0; color: #333; }
-      .delete-acc { background: #ffeded; color: #cc3434; }
+      flex-wrap: wrap;
+      justify-content: flex-end;
     }
+  }
+
+  .section-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 30px;
   }
 
   .locations-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 30px;
     margin-top: 30px;
+    padding-bottom: 40px;
+
+    @media (max-width: 992px) { 
+      grid-template-columns: repeat(2, 1fr); 
+    }
+    
+    @media (max-width: 600px) { 
+      grid-template-columns: 1fr; 
+      gap: 20px;
+    }
   }
 
   .location-card {
-    background: #fff;
+    background: #FFF2EC;
     border-radius: 16px;
     padding: 12px;
     transition: all 0.3s ease;
     border: 1px solid transparent;
+    cursor: pointer;
 
     &:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 12px 24px rgba(204, 101, 52, 0.1);
-      border-color: #cc6534;
-      background: #fffaf8;
+      background: #ffffff;
+      border-color: #CC6534;
+      box-shadow: 0 12px 24px rgba(204, 101, 52, 0.15);
+      transform: translateY(-5px);
+      
+      .info-box h3 {
+        color: #cc6534;
+      }
     }
 
     .img-box {
@@ -183,18 +89,35 @@
       height: 240px;
       border-radius: 12px;
       overflow: hidden;
-      img { width: 100%; height: 100%; object-fit: cover; }
+      
+      img { 
+        width: 100%; 
+        height: 100%; 
+        object-fit: cover; 
+      }
     }
 
     .info-box {
       padding: 15px 5px;
-      .type { font-size: 13px; color: #cc6534; font-weight: 600; }
-      h3 { font-size: 20px; margin: 8px 0; color: #1a1a1a; }
+      
+      .type { 
+        font-size: 13px; 
+        color: #cc6534; 
+        font-weight: 600; 
+        text-transform: capitalize;
+      }
+      
+      h3 { 
+        font-size: 20px; 
+        margin: 8px 0 12px 0; 
+        color: #1a1a1a; 
+      }
     }
 
     .card-btns {
       display: flex;
       gap: 10px;
+      
       button {
         flex: 1;
         padding: 10px;
@@ -202,15 +125,40 @@
         border: none;
         font-weight: 600;
         cursor: pointer;
+        transition: all 0.2s;
       }
-      .edit { background: #e0e0e0; }
-      .del { background: #f5c6b1; color: #4c2613; }
+      
+      .edit { 
+        background: #e0e0e0; 
+        
+        &:hover {
+          opacity: 0.9;
+        }
+      }
+      
+      .del { 
+        background: #f5c6b1; 
+        color: #4c2613; 
+        
+        &:hover {
+          opacity: 0.9;
+        }
+      }
     }
+  }
+
+  .profile-error {
+    padding: 12px;
+    background-color: #fff1f0;
+    border: 1px solid #ffa39e;
+    color: #cf1322;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 20px;
   }
 }
 
-// src/pages/ProfilePage/ProfilePage.scss
-
+// Modal styles
 .custom-modal-overlay {
   position: fixed;
   inset: 0;
@@ -231,7 +179,11 @@
   box-shadow: 0 20px 40px rgba(0,0,0,0.2);
   font-family: 'Montserrat', sans-serif;
 
-  h3 { margin-bottom: 20px; font-size: 20px; color: #1a1a1a; }
+  h3 { 
+    margin-bottom: 20px; 
+    font-size: 20px; 
+    color: #1a1a1a; 
+  }
 
   input {
     width: 100%;
@@ -241,12 +193,17 @@
     margin-bottom: 20px;
     font-size: 16px;
     box-sizing: border-box;
-    &:focus { outline: none; border-color: #cc6534; }
+    
+    &:focus { 
+      outline: none; 
+      border-color: #cc6534; 
+    }
   }
 
   .modal-actions {
     display: flex;
     gap: 12px;
+    
     button {
       flex: 1;
       padding: 12px;
@@ -254,164 +211,193 @@
       border-radius: 8px;
       font-weight: 600;
       cursor: pointer;
+      transition: all 0.2s;
     }
-    button:first-child { background: #eee; }
-    button:last-child { background: #cc6534; color: #fff; }
-  }
-}
-
-// Эффект ховера для карточек (как просил)
-.location-card {
-  cursor: pointer;
-  transition: all 0.3s ease;
-  &:hover {
-    background: #fffaf8 !important; // Светлый фон при ховере
-    transform: translateY(-5px);
-    .info-box h3 { color: #cc6534; }
-  }
-}
-
-.location-card {
-  background: #FFF2EC; // Цвет фона страницы или чуть темнее
-  border-radius: 20px;
-  padding: 15px;
-  border: 1px solid transparent;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
-  &:hover {
-    background: #ffffff;
-    border-color: #CC6534;
-    box-shadow: 0 15px 30px rgba(204, 101, 52, 0.15);
-    transform: scale(1.02);
-  }
-}
-
-@media (max-width: 340px) {
-  .profile-page {
-    padding-top: 60px;
-    padding-left: 8px;
-    padding-right: 8px;
-  }
-
-  .profile-header {
-    flex-direction: column;
-    gap: 20px;
-    margin-bottom: 30px;
-
-    .user-text {
-      h1 { font-size: 20px; }
-      p { font-size: 12px; }
-    }
-
-    .header-btns {
-      width: 100%;
-      flex-wrap: wrap;
-      
-      button {
-        flex: 1;
-        min-width: 70px;
-        padding: 8px 10px;
-        font-size: 11px;
-      }
-    }
-  }
-
-  .locations-grid {
-    grid-template-columns: 1fr;
-    gap: 15px;
-    margin-top: 20px;
-  }
-
-  .location-card {
-    max-width: 100%;
-    padding: 10px;
-
-    .img-box {
-      height: 180px;
-    }
-
-    .info-box {
-      padding: 10px 5px;
-      
-      .type { font-size: 11px; }
-      h3 { font-size: 16px; }
-    }
-
-    .card-btns {
-      button {
-        padding: 8px 6px;
-        font-size: 12px;
-      }
-    }
-  }
-
-  .add-location-wrapper {
-    margin-bottom: 20px;
     
-    .btn-add {
-      width: 100%;
-      padding: 10px 16px;
-      font-size: 14px;
+    button:first-child { 
+      background: #eee;
+      
+      &:hover {
+        background: #ddd;
+      }
     }
-  }
-
-  .section-title {
-    font-size: 20px;
-    margin-bottom: 20px;
-  }
-
-  .pBtn {
-    padding: 5px 10px;
-    font-size: 12px;
-  }
-
-  .custom-modal {
-    width: 90%;
-    max-width: 320px;
-    padding: 20px;
-    margin: 0 auto;
-
-    h3 { 
-      font-size: 16px; 
-      margin-bottom: 15px;
-    }
-
-    input {
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      margin-bottom: 12px;
-      font-size: 14px;
-    }
-
-    .modal-actions {
-      gap: 8px;
-      button {
-        padding: 10px;
-        font-size: 12px;
+    
+    button:last-child { 
+      background: #cc6534; 
+      color: #fff;
+      
+      &:hover {
+        background: #b85a2e;
       }
     }
   }
 }
 
-.pBtn{
-    margin-top: 24px;
+// Button styles
+.pBtn {
+  margin-top: 12px;
   align-self: center;
-  border: 0;
-  padding: 5px 14px;
-  border-radius: 10px;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
   background-color: #dfdfdf;
+  color: #333;
   cursor: pointer;
   font: inherit;
-  transition: transform 0.3s, background-color 0.3s;
+  font-weight: 600;
+  transition: background-color 0.3s;
 
   &:hover {
-    transform: scale(1.05);
+    background-color: #c9c9c9;
   }
 
-  margin: 3px;
+  &:active {
+    transform: translateY(1px);
+  }
 }
 
-.btn-danger{
+.btn-danger {
   background-color: #e7a8a8;
+  color: #4c2613;
+
+  &:hover {
+    background-color: #da9494;
+  }
+}
+
+// Media query for small screens (340px)
+@media (max-width: 340px) {
+  .profile-page {
+    padding-top: 70px;
+    padding-left: 8px;
+    padding-right: 8px;
+
+    .profile-header {
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 30px;
+      align-items: stretch;
+
+      .user-info {
+        h1 { 
+          font-size: 24px; 
+          margin-bottom: 10px;
+        }
+        
+        p {
+          font-size: 13px;
+          margin-bottom: 4px;
+        }
+      }
+
+      .profile-actions {
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+
+    .section-title {
+      font-size: 22px;
+      margin-bottom: 16px;
+      margin-top: 20px;
+    }
+
+    .locations-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 16px;
+      padding-bottom: 20px;
+    }
+
+    .location-card {
+      padding: 10px;
+      border-radius: 12px;
+
+      // Disable hover transform on small screens
+      &:hover {
+        transform: none;
+        box-shadow: 0 8px 16px rgba(204, 101, 52, 0.12);
+      }
+
+      .img-box {
+        height: 180px;
+        border-radius: 10px;
+      }
+
+      .info-box {
+        padding: 10px 5px;
+
+        .type { 
+          font-size: 11px; 
+        }
+
+        h3 { 
+          font-size: 16px; 
+          margin: 6px 0 8px 0;
+        }
+      }
+
+      .card-btns {
+        gap: 8px;
+
+        button {
+          padding: 8px 6px;
+          font-size: 12px;
+          border-radius: 6px;
+        }
+      }
+    }
+
+    .pBtn {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 13px;
+      margin-top: 8px;
+
+      // Disable scaling on small screens
+      &:hover {
+        transform: none;
+      }
+    }
+
+    .custom-modal {
+      width: 90%;
+      max-width: 280px;
+      padding: 20px;
+      margin: 0 auto;
+
+      h3 { 
+        font-size: 16px; 
+        margin-bottom: 15px;
+      }
+
+      input {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        margin-bottom: 12px;
+        font-size: 14px;
+      }
+
+      .modal-actions {
+        gap: 8px;
+
+        button {
+          padding: 10px;
+          font-size: 12px;
+
+          &:hover {
+            transform: none;
+          }
+        }
+      }
+    }
+
+    .profile-error {
+      font-size: 12px;
+      padding: 10px;
+      margin-bottom: 16px;
+    }
+  }
 }

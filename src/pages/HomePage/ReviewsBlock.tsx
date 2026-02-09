@@ -1,6 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/hook";
+import { fetchAllLocations } from "../../redux/thunk/thunkLocation";
 import Container from "../../components/Container/Container";
 import styles from "./ReviewsBlock.module.scss";
+import { api } from "../../api/axiosInstance";
+import { Swiper, SwiperSlide } from "swiper/react";
+import type { Swiper as SwiperType } from "swiper";
+import "swiper/css";
 
 export function Star({ type }: { type: "full" | "half" | "empty" }) {
   if (type === "full") {
@@ -32,27 +38,9 @@ export function Star({ type }: { type: "full" | "half" | "empty" }) {
 }
 
 function ReviewsBlock() {
-  const reviews = [
-    {
-      text: "Неймовірні краєвиди та спокійна атмосфера — це одне з моїх найулюбленіших місць в Україні.",
-      author: "Олена Коваль",
-      location: "Бакота",
-      rating: 4.5
-    },
-    {
-      text: "Чудове місце для відпочинку на природі: чисте повітря, мальовничі пагорби та спокійна річка.",
-      author: "Ігор Петров",
-      location: "Карпати",
-      rating: 5
-    },
-    {
-      text: "Тут відчуваєш гармонію та справжню силу української природи — варто приїхати хоча б раз у житті.",
-      author: "Ігор Шевченко",
-      location: "Місце",
-      rating: 4.5
-    }
-  ];
-
+  const dispatch = useAppDispatch();
+  const locations = useAppSelector((state) => state.location.locations);
+  const [reviews, setReviews] = useState<any[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -61,55 +49,93 @@ function ReviewsBlock() {
       setIsMobile(window.innerWidth <= 768);
     };
 
-    checkMobile(); // Check on mount
+    checkMobile();
     window.addEventListener('resize', checkMobile);
 
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  useEffect(() => {
+    dispatch(fetchAllLocations());
+  }, [dispatch]);
+
+  useEffect(() => {
+    // fetch reviews using pageable backend: /reviews/all
+    const pageSize = 3;
+    let active = true;
+    const fetchPage = async () => {
+      try {
+        const res = (await api.get(`/reviews/all`, { params: { page: 0, size: pageSize } })).data;
+        if (!active) return;
+        setReviews(res.content || []);
+      } catch (err) {
+        console.error("Failed to fetch reviews", err);
+        setReviews([]);
+      }
+    };
+
+    fetchPage();
+  }, [locations]);
+
+  const swiperRef = useRef<SwiperType | null>(null);
+  const visibleReviews = reviews;
+
   const nextReview = () => {
-    setCurrentIndex((prev) => (prev + 1) % reviews.length);
+    if (reviews.length > 0) {
+      setCurrentIndex((prev) => (prev + 1) % reviews.length);
+    }
   };
 
   const prevReview = () => {
-    setCurrentIndex((prev) => (prev - 1 + reviews.length) % reviews.length);
+    if (reviews.length > 0) {
+      setCurrentIndex((prev) => (prev - 1 + reviews.length) % reviews.length);
+    }
   };
-
-  const visibleReviews = isMobile ? [reviews[currentIndex]] : reviews;
 
   return (
       <section className={ styles.reviews }>
         <Container>
           <h2 className={ styles['reviews__title'] }>Останні відгуки</h2>
 
-        <div className={styles['reviews__grid']}>
+        <Swiper
+          onSwiper={(s) => (swiperRef.current = s)}
+          slidesPerView={1}
+          spaceBetween={20}
+          breakpoints={{
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+          }}
+          className={styles['reviews__grid']}
+        >
           {visibleReviews.map((review, index) => (
-            <div key={isMobile ? currentIndex : index} className={styles['review-card']}>
-              <div className={styles['review-card__rating']}>
-                {Array.from({ length: 5 }).map((_, i) => {
-                  let type: "full" | "half" | "empty" = "empty";
-                  if (review.rating >= i + 1) {
-                    type = "full";
-                  } else if (review.rating > i) {
-                    type = "half";
-                  }
-                  return <Star key={i} type={type} />;
-                })}
+            <SwiperSlide key={review.id || index}>
+              <div className={styles['review-card']}>
+                <div className={styles['review-card__rating']}>
+                  {Array.from({ length: 5 }).map((_, i) => {
+                    let type: "full" | "half" | "empty" = "empty";
+                    if (review.rating >= i + 1) {
+                      type = "full";
+                    } else if (review.rating > i) {
+                      type = "half";
+                    }
+                    return <Star key={i} type={type} />;
+                  })}
+                </div>
+                <p className={styles['review-card__text']}>{review.text}</p>
+                <div className={styles['review-card__author']}>
+                  <span className={styles['review-card__author-name']}>{review.userResponse?.name || review.author}</span>
+                  <span className={styles['review-card__author-location']}>{review.placeResponse?.name || review.location}</span>
+                </div>
               </div>
-              <p className={styles['review-card__text']}>{review.text}</p>
-              <div className={styles['review-card__author']}>
-                <span className={styles['review-card__author-name']}>{review.author}</span>
-                <span className={styles['review-card__author-location']}>{review.location}</span>
-              </div>
-            </div>
+            </SwiperSlide>
           ))}
-        </div>
+        </Swiper>
 
         <div className={styles['reviews__pagination']}>
           <button
             aria-label="Previous"
             className={styles['reviews__pagination-btn']}
-            onClick={prevReview}
+            onClick={() => swiperRef.current?.slidePrev()}
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
@@ -118,7 +144,7 @@ function ReviewsBlock() {
           <button
             aria-label="Next"
             className={styles['reviews__pagination-btn']}
-            onClick={nextReview}
+            onClick={() => swiperRef.current?.slideNext()}
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />

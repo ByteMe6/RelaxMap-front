@@ -3,46 +3,53 @@
 .wrapperLocationCards {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 50px;
-  max-width: 100%;
-  overflow-x: hidden;
+  align-items: stretch;
+  margin-top: 40px;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+
+.wrapperLocationCards > li {
+  width: 100%;
 }
 
 .btnLoadLocation {
-  margin: auto;
+  margin: 30px auto;
   width: 335px;
   height: 48px;
-  background: #CC6534;
-  border: 1px solid #CC6534;
+  background: #cc6534;
+  border: none;
   font-family: "Montserrat";
   font-weight: 500;
+  font-size: 16px;
   color: white;
-  justify-content: center;
-  display: flex;
-  align-items: center;
   border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &:hover {
+    background: #b85a2e;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
 }
 
-@media (min-width: 768px) {
+// Tablet: 2 columns (starting at 760px)
+@media (min-width: 760px) {
   .wrapperLocationCards {
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 30px;
+    gap: 24px;
+    justify-content: center;
   }
 
-  .btnLoadLocation {
-    width: 133px;
-  }
-}
-
-@media (min-width: 1440px) {
-  .wrapperLocationCards {
-    max-width: 1440px;
-    width: 100%;
-    justify-content: flex-start;
-    overflow-x: hidden;
+  .wrapperLocationCards > li {
+    width: calc(50% - 12px);
+    max-width: 340px;
   }
 
   .btnLoadLocation {
@@ -50,32 +57,84 @@
   }
 }
 
-
-.wrapperLocationCards {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 50px;
-  gap: 20px;
-}
-
-@media (min-width: 768px) {
-  .wrapperLocationCards {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 24px;
-  }
-}
-
+// Desktop: 3 columns
 @media (min-width: 1024px) {
   .wrapperLocationCards {
+    gap: 30px;
     justify-content: center;
   }
 
-  .wrapperCard {
-    flex: 0 1 calc(33.333% - 40px); 
-    max-width: 340px;
+  .wrapperLocationCards > li {
+    width: calc(33.333% - 20px);
+    max-width: 350px;
+    flex-shrink: 0;
+  }
+
+  .btnLoadLocation {
+    width: 180px;
+    margin: 40px auto;
+  }
+}
+
+// Large desktop
+@media (min-width: 1440px) {
+  .wrapperLocationCards > li {
+    width: calc(33.333% - 20px);
+    max-width: 360px;
+  }
+}
+
+// Small screens (340px)
+@media (max-width: 340px) {
+  .wrapperLocationCards {
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+    padding: 0 6px;
+  }
+
+  .wrapperLocationCards > li {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .btnLoadLocation {
+    width: 100%;
+    max-width: 100%;
+    height: 44px;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+}
+
+// Extra small screens (320px and below)
+@media (max-width: 320px) {
+  .wrapperLocationCards {
+    gap: 10px;
+    margin-top: 16px;
+    padding: 0 4px;
+  }
+
+  .btnLoadLocation {
+    height: 40px;
+    margin: 12px 0;
+    font-size: 12px;
+    border-radius: 6px;
+  }
+}
+
+// Tiny screens (280px and below)
+@media (max-width: 280px) {
+  .wrapperLocationCards {
+    gap: 8px;
+    margin-top: 12px;
+    padding: 0 2px;
+  }
+
+  .btnLoadLocation {
+    height: 38px;
+    margin: 8px 0;
+    font-size: 11px;
+    border-radius: 4px;
   }
 }
