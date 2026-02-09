@@ -7,6 +7,7 @@ import { api } from "../../api/axiosInstance";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
+import { Pagination } from "swiper/modules";
 
 export function Star({ type }: { type: "full" | "half" | "empty" }) {
   if (type === "full") {
@@ -78,7 +79,7 @@ function ReviewsBlock() {
   }, [locations]);
 
   const swiperRef = useRef<SwiperType | null>(null);
-  const visibleReviews = reviews;
+  const visibleReviews = reviews.slice(0, 3);
 
   const nextReview = () => {
     if (reviews.length > 0) {
@@ -99,6 +100,8 @@ function ReviewsBlock() {
 
         <Swiper
           onSwiper={(s) => (swiperRef.current = s)}
+          modules={[Pagination]}
+          pagination={{ clickable: true }}
           slidesPerView={1}
           spaceBetween={20}
           breakpoints={{

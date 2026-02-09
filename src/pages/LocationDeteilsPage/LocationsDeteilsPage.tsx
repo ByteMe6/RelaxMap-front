@@ -26,24 +26,18 @@ const LocationsDeteilsPageContent: React.FC = () => {
   const currentUserEmail = useAppSelector((state) => state.auth.email);
 
   useEffect(() => {
-    if (!id || !location) return;
-
-    const storage = JSON.parse(
-      localStorage.getItem("locationRatings") || "{}"
-    );
-    if (storage[id]) {
-      const { total, count } = storage[id];
-      setAverageRating(total / count);
+    // compute average rating from reviews data provided by ReviewsContext
+    if (!response || !response.content) return;
+    const ratings = response.content
+      .map((r: any) => Number(r.rating) || 0)
+      .filter((v: number) => v > 0);
+    if (ratings.length === 0) {
+      setAverageRating(location?.rating ?? 2);
     } else {
-      const defaultRating = location.rating ?? 2;
-      storage[id] = {
-        total: defaultRating,
-        count: 1,
-      };
-      localStorage.setItem("locationRatings", JSON.stringify(storage));
-      setAverageRating(defaultRating);
+      const sum = ratings.reduce((a: number, b: number) => a + b, 0);
+      setAverageRating(sum / ratings.length);
     }
-  }, [id, location]);
+  }, [response, location]);
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -61,32 +55,13 @@ const LocationsDeteilsPageContent: React.FC = () => {
     if (id) fetchLocation();
   }, [id]);
 
-  const handleRating = (star: number) => {
-    if (!id) return;
-
-    const storage = JSON.parse(
-      localStorage.getItem("locationRatings") || "{}"
-    );
-    const current = storage[id] || {
-      total: location?.rating ?? 2,
-      count: 1,
-    };
-    const newTotal = current.total + star;
-    const newCount = current.count + 1;
-
-    storage[id] = {
-      total: newTotal,
-      count: newCount,
-    };
-
-    localStorage.setItem("locationRatings", JSON.stringify(storage));
-    setAverageRating(newTotal / newCount);
-  };
+  // ratings are display-only in details; no client-side rating action
+  const handleRating = (_star: number) => {};
 
   if (loading) {
     return (
       <div className={styles.wrapperLocationDetail}>
-        👨🏻🦰
+
       </div>
     );
   }
@@ -157,9 +132,6 @@ const LocationsDeteilsPageContent: React.FC = () => {
                     <Star
                       key={star}
                       active={star <= (hover ?? Math.round(averageRating))}
-                      onMouseEnter={() => setHover(star)}
-                      onMouseLeave={() => setHover(null)}
-                      onClick={() => handleRating(star)}
                     />
                   ))}
                 </div>

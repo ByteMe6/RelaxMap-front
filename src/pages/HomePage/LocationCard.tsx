@@ -1,13 +1,20 @@
 import styles from "./LocationCard.module.scss";
+import { useNavigate } from "react-router-dom";
 
 interface LocationCardProps {
   image: string;
   category: string;
   title: string;
   rating: number;
+  id?: number | string;
 }
 
-function LocationCard({ image, category, title, rating }: LocationCardProps) {
+function LocationCard({ image, category, title, rating, id }: LocationCardProps) {
+  const navigate = useNavigate();
+  const navigateTo = () => {
+    if (!id) return;
+    navigate(`/locations/${id}`);
+  };
   const fullStars = Math.floor(rating);
   const hasHalfStar = rating % 1 >= 0.5;
   const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
@@ -51,7 +58,7 @@ function LocationCard({ image, category, title, rating }: LocationCardProps) {
 
         <h3 className={styles['location-card__title']}>{title}</h3>
 
-        <button className={styles['location-card__button']}>Переглянути локацію</button>
+        <button className={styles['location-card__button']} onClick={navigateTo}>Переглянути локацію</button>
       </div>
     </div>
   );

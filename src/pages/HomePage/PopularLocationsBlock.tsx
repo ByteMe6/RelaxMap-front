@@ -6,6 +6,7 @@ import Container from "../../components/Container/Container";
 import LocationCard from "./LocationCard";
 import styles from "./PopularLocationsBlock.module.scss";
 import { host } from "../../backendHost";
+import { api } from "../../api/axiosInstance";
 
 function PopularLocationsBlock() {
   const dispatch = useAppDispatch();
@@ -28,14 +29,61 @@ function PopularLocationsBlock() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Convert locations to card format
-  const locations = allLocations.map((loc) => ({
-    title: loc.name,
-    category: loc.placeType || "Локація",
-    rating: loc.rating || 0,
-    image: loc.imageName ? `${host}/images/${loc.imageName}` : "/assets/placeholder.jpg",
-    id: loc.id,
-  }));
+  // Convert locations to card format and limit to 3 for homepage
+  const [locations, setLocations] = useState<any[]>([]);
+
+  useEffect(() => {
+    const top = (allLocations || []).slice(0, 3);
+    if (top.length === 0) {
+      setLocations([]);
+      return;
+    }
+
+    const fetchRatings = async () => {
+      try {
+        const results = await Promise.all(
+          top.map(async (loc) => {
+            // fetch reviews for place and compute average
+            try {
+              const res = (await api.get(`/reviews/for-place/${loc.id}`)).data;
+              const content = res.content || [];
+              const ratings = content.map((r: any) => Number(r.rating) || 0).filter((v: number) => v > 0);
+              const avg = ratings.length ? ratings.reduce((a: number, b: number) => a + b, 0) / ratings.length : (loc.rating || 0);
+              return {
+                title: loc.name,
+                category: loc.placeType || "Локація",
+                rating: avg,
+                image: loc.imageName ? `${host}/images/${loc.imageName}` : "/assets/placeholder.jpg",
+                id: loc.id,
+              };
+            } catch (e) {
+              return {
+                title: loc.name,
+                category: loc.placeType || "Локація",
+                rating: loc.rating || 0,
+                image: loc.imageName ? `${host}/images/${loc.imageName}` : "/assets/placeholder.jpg",
+                id: loc.id,
+              };
+            }
+          })
+        );
+
+        setLocations(results);
+      } catch (e) {
+        setLocations(
+          top.map((loc) => ({
+            title: loc.name,
+            category: loc.placeType || "Локація",
+            rating: loc.rating || 0,
+            image: loc.imageName ? `${host}/images/${loc.imageName}` : "/assets/placeholder.jpg",
+            id: loc.id,
+          }))
+        );
+      }
+    };
+
+    fetchRatings();
+  }, [allLocations]);
 
   const nextLocation = () => {
     if (locations.length > 0) {
@@ -61,7 +109,7 @@ function PopularLocationsBlock() {
 
         <div className={styles['popular-locations__grid']}>
           {isMobile ? (
-            <LocationCard {...locations[currentIndex]} />
+            locations[currentIndex] ? <LocationCard {...locations[currentIndex]} /> : null
           ) : (
             locations.map((loc, index) => (
               <LocationCard key={index} {...loc} />

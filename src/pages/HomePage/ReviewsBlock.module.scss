@@ -3,7 +3,7 @@
 .reviews {
   padding: 60px 0;
   font-family: "Montserrat", sans-serif;
-  background-color: #fffaf7;
+  // background-color: #fffaf7;
 
   @media (max-width: 768px) {
     padding: 40px 0;
@@ -12,7 +12,7 @@
   &__title {
     font-size: 32px;
     font-weight: 700;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
     color: #3f2e27;
   }
 
@@ -129,4 +129,14 @@
     text-decoration: underline;
     color: #3f2e27;
   }
+}
+
+.reviews__button{
+  padding: 12px 24px;
+  border-radius: 10px;
+  border: none;
+  background-color: #cc6534;
+  font-weight: 600;
+  color: #fff;  
+  margin-bottom: 15px;
 }
