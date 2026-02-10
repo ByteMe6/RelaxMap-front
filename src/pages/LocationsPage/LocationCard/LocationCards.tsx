@@ -5,61 +5,41 @@ import { host } from "../../../backendHost";
 import { useNavigate } from "react-router-dom";
 import type { LocationInfo } from "../../../redux/slice/locationSlice";
 import type { LocationBlock } from "../LocationInfoBlock/LocationInfoBlock";
+import { api } from "../../../api/axiosInstance";
 
 type CardProps = {
   info: LocationInfo;
 };
 
 function LocationCard({ info }: CardProps) {
-  const [hover, setHover] = useState<number | null>(null);
   const [currentLocation, setCurrentLocation] = useState<LocationBlock | null>(
     null
   );
-  const [averageRating, setAverageRating] = useState<number>(2);
+  const [averageRating, setAverageRating] = useState<number>(0);
   const navigate = useNavigate();
 
-  // 1. Ініціалізація/зчитування рейтингу з localStorage
+  // Рейтинг береться тільки з reviews
   useEffect(() => {
-    const storage = JSON.parse(
-      localStorage.getItem("locationRatings") || "{}"
-    );
-
-    if (storage[info.id]) {
-      const { total, count } = storage[info.id];
-      setAverageRating(total / count);
-    } else {
-      const defaultRating = info.rating ?? 2;
-      storage[info.id] = {
-        total: defaultRating,
-        count: 1,
-      };
-      localStorage.setItem("locationRatings", JSON.stringify(storage));
-      setAverageRating(defaultRating);
-    }
-  }, [info.id, info.rating]);
-
-  // 2. Оновлення рейтингу при кліку на зірку
-  const handleRating = (star: number) => {
-    const storage = JSON.parse(
-      localStorage.getItem("locationRatings") || "{}"
-    );
-
-    const current = storage[info.id] || {
-      total: info.rating ?? 2,
-      count: 1,
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = (await api.get(`/reviews/for-place/${info.id}`)).data;
+        const content = res?.content || [];
+        const ratings = content
+          .map((r: any) => Number(r?.rating) || 0)
+          .filter((v: number) => v > 0);
+        const avg = ratings.length
+          ? ratings.reduce((a: number, b: number) => a + b, 0) / ratings.length
+          : 0;
+        if (!cancelled) setAverageRating(avg);
+      } catch {
+        if (!cancelled) setAverageRating(0);
+      }
+    })();
+    return () => {
+      cancelled = true;
     };
-
-    const newTotal = current.total + star;
-    const newCount = current.count + 1;
-
-    storage[info.id] = {
-      total: newTotal,
-      count: newCount,
-    };
-
-    localStorage.setItem("locationRatings", JSON.stringify(storage));
-    setAverageRating(newTotal / newCount);
-  };
+  }, [info.id]);
 
   // 3. Локальні дані по локації з localStorage (LocationBlock)
   useEffect(() => {
@@ -100,10 +80,7 @@ function LocationCard({ info }: CardProps) {
           {[1, 2, 3, 4, 5].map((star) => (
             <Star
               key={star}
-              active={star <= (hover ?? info.rating ?? 0)}
-              onMouseEnter={() => setHover(star)}
-              onMouseLeave={() => setHover(null)}
-              onClick={() => handleRating(star)}
+              active={star <= averageRating}
             />
           ))}
         </div>

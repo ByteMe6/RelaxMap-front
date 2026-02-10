@@ -49,9 +49,13 @@ export const updateLocation = createAsyncThunk<
       file: args.file ? args.file.name : null,
     });
 
+    // TOKEN: гарантируем Authorization даже для multipart
+    const token = localStorage.getItem("accessToken");
+
     const res = await api.patch(`/places/${args.id}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
     });
 

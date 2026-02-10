@@ -14,9 +14,13 @@ interface NewLocation {
 }
 
 const refreshAccessToken = async (refreshToken: string) => {
-  const { data } = await axios.post(`${host}/auth/refresh`, { refresh: refreshToken })
-  localStorage.setItem("accessToken", data.access)
-  return data.access as string
+  const { data } = await axios.post<{ access: string; refresh: string }>(
+    `${host}/auth/refresh`,
+    { refreshToken },
+  );
+  localStorage.setItem("accessToken", data.access);
+  localStorage.setItem("refreshToken", data.refresh);
+  return data.access as string;
 }
 
 export const postNewLocation = createAsyncThunk<

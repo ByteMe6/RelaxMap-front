@@ -69,16 +69,14 @@ function EditLocationForm({ location }: LocationEditProps) {
     "Чернігівська область",
   ];
 
-  const performUpdate = async (values: FormValues) => {
-    // Валідація обов'язкових полів
-    if (!values.name.trim() || !values.placeType.trim() || !values.region.trim()) {
-      alert("Будь ласка, заповніть Назву, Тип місця та Регіон.");
-      return;
-    }
+ const performUpdate = async (values: FormValues) => {
+  if (!values.name.trim() || !values.placeType.trim() || !values.region.trim()) {
+    alert("Будь ласка, заповніть Назву, Тип місця та Регіон.");
+    return;
+  }
 
-    // Виконуємо оновлення
-    // Axios interceptor автоматично обробить 401 і оновить токен
-    const resultAction = await (dispatch as any)(
+  try {
+    const resultAction = await dispatch(
       updateLocation({
         id: location.id,
         name: values.name,
@@ -90,27 +88,20 @@ function EditLocationForm({ location }: LocationEditProps) {
     );
 
     if (updateLocation.fulfilled.match(resultAction)) {
-      // Успішно оновлено
-      (dispatch as any)(
-        saveOrUpdateLocation({
-          ...location,
-          ...resultAction.payload,
-        })
-      );
-      navigate(`/locations/${location.id}`);
+      // сохраняем локально (localStorage) и переходим на страницу локации
+      const updated = { ...location, ...(resultAction.payload as Partial<Location>) };
+      saveOrUpdateLocation(updated as any);
+      navigate(`/locations/${updated.id ?? location.id}`);
     } else {
-      // Помилка (якщо навіть після refresh не вдалося)
-      const error = resultAction.payload as
-        | { status: number; message: string }
-        | undefined;
-
-      if (error) {
-        alert(`Помилка при оновленні місця: ${error.message}`);
-      } else {
-        alert("Сталася невідома помилка при оновленні місця.");
-      }
+      const error = resultAction.payload as { status?: number; message?: string } | undefined;
+      const message = error?.message || "Сталася помилка при оновленні місця.";
+      alert(message);
     }
-  };
+  } catch (err) {
+    alert("Сталася помилка при зверненні до сервера.");
+  }
+};
+
 
   return (
     <Formik<FormValues>

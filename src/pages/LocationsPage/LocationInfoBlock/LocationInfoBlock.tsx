@@ -1,6 +1,7 @@
 import styles from "./LocationInfoBlock.module.scss"
 import { useState,useEffect } from "react";
 import Star from "../../LocationDeteilsPage/RatingLocation/Star/Star";
+import { api } from "../../../api/axiosInstance";
  export interface LocationBlock {
     id:number
     name:string,
@@ -11,12 +12,10 @@ import Star from "../../LocationDeteilsPage/RatingLocation/Star/Star";
 
 type LocationProps = {
     location?: LocationBlock | null;
-    onRatingChange?: (newRating: number,) => void;
 }
-function LocationInfoBlock({location,onRatingChange }: LocationProps) {
-    const [hover, setHover] = useState<number | null>(null)
+function LocationInfoBlock({location }: LocationProps) {
   const [currentLocation, setCurrentLocation] = useState(location);
-const [averageRating, setAverageRating] = useState<number>(2);
+const [averageRating, setAverageRating] = useState<number>(0);
   useEffect(() => {
     const data = localStorage.getItem("locations");
     if (data && location?.id) {
@@ -25,38 +24,29 @@ const [averageRating, setAverageRating] = useState<number>(2);
       setCurrentLocation(updated || location);
     }
   }, [location]);
-      useEffect(() => {
-    if (!location) return;
-
-    const storage = JSON.parse(localStorage.getItem("locationRatings") || "{}");
-    if (storage[location.id]) {
-      const { total, count } = storage[location.id];
-      setAverageRating(total / count);
-    } else {
-      const defaultRating = location.rating ?? 2;
-      storage[location.id] = { total: defaultRating, count: 1 };
-      localStorage.setItem("locationRatings", JSON.stringify(storage));
-      setAverageRating(defaultRating);
-    }
-  }, [location]);
-
-  const handleRating = (star: number) => {
-    if (!location) return;
-
-    const storage = JSON.parse(localStorage.getItem("locationRatings") || "{}");
-    const current = storage[location.id] || { total: location.rating ?? 2, count: 1 };
-
-    const newTotal = current.total + star;
-    const newCount = current.count + 1;
-
-    storage[location.id] = { total: newTotal, count: newCount };
-    localStorage.setItem("locationRatings", JSON.stringify(storage));
-
-    const newAverage = newTotal / newCount;
-    setAverageRating(newAverage);
-
-    if (onRatingChange) onRatingChange(newAverage); 
-  }
+  // Рейтинг берётся только из reviews
+  useEffect(() => {
+    if (!location?.id) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = (await api.get(`/reviews/for-place/${location.id}`)).data;
+        const content = res?.content || [];
+        const ratings = content
+          .map((r: any) => Number(r?.rating) || 0)
+          .filter((v: number) => v > 0);
+        const avg = ratings.length
+          ? ratings.reduce((a: number, b: number) => a + b, 0) / ratings.length
+          : 0;
+        if (!cancelled) setAverageRating(avg);
+      } catch {
+        if (!cancelled) setAverageRating(0);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [location?.id]);
 
   console.log(currentLocation)
     return (
@@ -64,11 +54,8 @@ const [averageRating, setAverageRating] = useState<number>(2);
             <div>
                 {[1, 2, 3, 4, 5].map((star) => {
                     return (
-                        <Star  active={star <= (hover ?? averageRating)}
+                        <Star  active={star <= averageRating}
                             key={star}
-                            onMouseEnter={() => setHover(star)}
-                            onMouseLeave={() => setHover(null)}
-                             onClick={() => handleRating(star)}
                         />
                     )
                 })}

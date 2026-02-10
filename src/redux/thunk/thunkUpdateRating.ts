@@ -5,8 +5,12 @@ import type { RootState } from "../store";
 import type { LocationInfo } from "../slice/locationSlice";
 
 const refreshAccessToken = async (refreshToken: string) => {
-    const { data } = await axios.post(`${host}/auth/refresh`, { refresh: refreshToken });
+    const { data } = await axios.post<{ access: string; refresh: string }>(
+        `${host}/auth/refresh`,
+        { refreshToken }
+    );
     localStorage.setItem("accessToken", data.access);
+    localStorage.setItem("refreshToken", data.refresh);
     return data.access;
 };
 

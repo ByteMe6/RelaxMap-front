@@ -52,8 +52,8 @@ const AddReviewModal: React.FC<AddReviewModalProps> = ({ placeId }) => {
           const refreshRes = await axios.post(`${host}/auth/refresh`, { refreshToken });
           
           const newTokens = {
-            accessToken: refreshRes.data.accessToken,
-            refreshToken: refreshRes.data.refreshToken
+            accessToken: refreshRes.data.access,
+            refreshToken: refreshRes.data.refresh
           };
 
           dispatch(setCredentials(newTokens));
