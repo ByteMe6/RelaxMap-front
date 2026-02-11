@@ -1,42 +1,33 @@
-import { useEffect, useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Container from "../../../components/Container/Container";
 import type { LocationInfo } from "../../../redux/slice/locationSlice";
 import LocationCard from "../LocationCard/LocationCards";
 import styles from "./LocationGrid.module.scss";
-import { api } from "../../../api/axiosInstance";
 
 type Props = {
   locations?: LocationInfo[];
 };
 
-function LocationsGrid({ locations: initialLocations }: Props) {
-  const [locations, setLocations] = useState<LocationInfo[]>(initialLocations || []);
-  const [page, setPage] = useState<number>(0);
-  const [totalPages, setTotalPages] = useState<number>(0);
-  const pageSize = 6;
+const PAGE_SIZE = 6;
 
-  const fetchPage = async (p: number) => {
-    try {
-      const res = await api.get(`/places/all`, { params: { page: p, size: pageSize } });
-      const data = res.data;
-      setLocations(data.content || []);
-      setTotalPages(data.totalPages ?? 0);
-    } catch (e) {
-      console.error(e);
-      setLocations([]);
-      setTotalPages(0);
-    }
-  };
+function LocationsGrid({ locations: locationsProp = [] }: Props) {
+  const [page, setPage] = useState(0);
+
+  const totalPages = Math.max(1, Math.ceil(locationsProp.length / PAGE_SIZE));
 
   useEffect(() => {
-    fetchPage(page);
-  }, [page]);
+    if (page >= totalPages) setPage(0);
+  }, [locationsProp, page, totalPages]);
+  const paginatedLocations = useMemo(() => {
+    const start = page * PAGE_SIZE;
+    return locationsProp.slice(start, start + PAGE_SIZE);
+  }, [locationsProp, page]);
 
   return (
     <Container>
       <p></p>
       <ul className={styles.wrapperLocationCards}>
-        {locations.map((location) => (
+        {paginatedLocations.map((location) => (
           <LocationCard key={location.id} info={location} />
         ))}
       </ul>

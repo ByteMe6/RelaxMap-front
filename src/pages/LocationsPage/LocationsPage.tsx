@@ -1,10 +1,13 @@
 // import LocationInfoBlock from "./LocationInfoBlock/LocationInfoBlock";
 import FilterPanel from "./FilterPanel/FilterPanel";
 import LocationsGrid from "./LocationGrid/LocationsGrid";
-import { useReducer } from "react";
-import { useAppSelector } from "../../redux/hooks/hook";
-import type { LocationInfo } from "../../redux/slice/locationSlice";
+import { useReducer, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/hook";
 import { selectLocations } from "../../redux/slice/locationSlice";
+import { fetchAllLocations } from "../../redux/thunk/thunkLocation";
+import { type LocationInfo, selectLocations } from "../../redux/slice/locationSlice";
+
 export type FiltersState = {
   search: string;
   region: string;
@@ -41,8 +44,37 @@ function filtersReducer(
 }
 
 function LocationsPage() {
+  const dispatch = useAppDispatch();
+  const [searchParams, setSearchParams] = useSearchParams();
   const locations = useAppSelector(selectLocations);
-  const [filters, dispatch] = useReducer(filtersReducer, initialFiltersState);
+
+  useEffect(() => {
+    dispatch(fetchAllLocations());
+  }, [dispatch]);
+  const [filters, dispatch] = useReducer(filtersReducer, {
+    ...initialFiltersState,
+    search: searchParams.get("search") ?? "",
+  });
+
+  useEffect(() => {
+    const fromUrl = searchParams.get("search") ?? "";
+    if (fromUrl !== filters.search) {
+      dispatch({ type: "search", payload: fromUrl });
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    const current = searchParams.get("search") ?? "";
+    if (filters.search !== current) {
+      const next = new URLSearchParams(searchParams);
+      if (filters.search) {
+        next.set("search", filters.search);
+      } else {
+        next.delete("search");
+      }
+      setSearchParams(next, { replace: true });
+    }
+  }, [filters.search]);
 
   const filterBySearch = (location: LocationInfo, search: string) =>
     !search || location.name.toLowerCase().includes(search.toLowerCase());
