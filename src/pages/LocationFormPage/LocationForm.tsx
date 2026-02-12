@@ -140,9 +140,19 @@ export default function LocationForm() {
             }),
           );
         }}
+        validate={(values) => {
+          const errors: any = {};
+          if (!values.name) errors.name = "Обов'язкове поле";
+          if (!values.placeType) errors.placeType = "Обов'язкове поле";
+          if (!values.region) errors.region = "Обов'язкове поле";
+          if (!values.description) errors.description = "Обов'язкове поле";
+          if (!values.file) errors.file = "Додайте фото";
+          return errors;
+        }}
       >
-        {({ setFieldValue, values, resetForm }) => (
+        {({ setFieldValue, values, resetForm, isValid, dirty }) => (
           <Form className={styles.containerFormLocation}>
+            <h1 className={styles.titleNewLocation}>Додавання нового місця</h1>
             <label htmlFor="file" className={styles.labelLocation}>
               Обкладинка
             </label>
@@ -239,7 +249,7 @@ export default function LocationForm() {
               <Field
                 name="location"
                 placeholder="Введіть назву місця"
-                className={`${styles.inputLocation} ${styles.search}`}
+                className={` ${styles.inputSearch}`}
               />
               <button
                 type="button"
@@ -282,7 +292,9 @@ export default function LocationForm() {
               <button
                 className={`${styles.btnLocation} ${styles["btnLocation--post"]}`}
                 type="submit"
+                style={{color:"white"}}
                 onClick={onSumbit}
+                disabled={!(isValid && dirty)}
               >
                 Опублікувати
               </button>

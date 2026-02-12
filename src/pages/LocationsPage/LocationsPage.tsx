@@ -4,7 +4,6 @@ import LocationsGrid from "./LocationGrid/LocationsGrid";
 import { useReducer, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hook";
-import { selectLocations } from "../../redux/slice/locationSlice";
 import { fetchAllLocations } from "../../redux/thunk/thunkLocation";
 import { type LocationInfo, selectLocations } from "../../redux/slice/locationSlice";
 
@@ -44,13 +43,13 @@ function filtersReducer(
 }
 
 function LocationsPage() {
-  const dispatch = useAppDispatch();
+  const reduxDispatch = useAppDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const locations = useAppSelector(selectLocations);
 
   useEffect(() => {
-    dispatch(fetchAllLocations());
-  }, [dispatch]);
+    reduxDispatch(fetchAllLocations());
+  }, [reduxDispatch]);
   const [filters, dispatch] = useReducer(filtersReducer, {
     ...initialFiltersState,
     search: searchParams.get("search") ?? "",
