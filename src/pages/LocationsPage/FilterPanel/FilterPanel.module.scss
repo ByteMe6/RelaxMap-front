@@ -14,7 +14,6 @@
 }
 
 .inputTypeLocation {
-    width: 160px;
     height: 40px;
     background: #FFE5D9;
     appearance: none;
@@ -24,7 +23,9 @@
     background-repeat: no-repeat;
     background-position: right 12px center;
     padding-left: 12px;
-    font-size: 12px;
+    font-size: 14px;
+    min-width: 160px;
+    padding-right: 32px;
 }
 
 .formFilterLocation {

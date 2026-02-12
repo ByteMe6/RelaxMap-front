@@ -2,14 +2,9 @@
 /* These styles are scoped to the form container to avoid conflicts */
 
 .containerFormLocation {
-  width: 100%;
-  max-width: 720px;
   margin: 80px auto 40px;
-  padding: 24px 20px 32px;
   box-sizing: border-box;
-  background-color: #fdf5f0;
   border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -18,13 +13,13 @@
 .titleNewLocation {
   font-size: 24px;
   font-weight: 700;
-  text-align: center;
   margin-bottom: 8px;
-  color: #1a1a1a;
+  color: #1B391B;
 }
 
 .photoInput {
-  width: 100%;
+  width: 335px;
+  height: 223px;
   border-radius: 16px;
   background-color: #ffece5;
   min-height: 200px;
@@ -32,6 +27,8 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  background-repeat: no-repeat;
+  background-image: url("../../../public/assets/placeholderImage.png");
 }
 
 .imageLocation {
@@ -71,30 +68,50 @@
 }
 
 .inputLocation {
-  width: 100%;
-  padding: 10px 12px;
+  width: 335px;
+  height: 40px;
+  padding-left: 10px;
   border-radius: 10px;
   border: 1px solid #ddd;
-  background-color: #fff;
+  background-color: #FFE5D9;
+  font-family: "Montserrat";
   font-size: 14px;
   box-sizing: border-box;
-
+  appearance: none;
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-image: url("../../../public/assets/arrowDown.svg");
   &:focus {
     outline: 2px solid #cc6534;
     border-color: transparent;
   }
 }
+.btnLocation--post {
+  background-color: #ee986f;
+  cursor: not-allowed;
+  opacity: 0.6;
+  transition: 0.3s;
+}
 
+.btnLocation--post:not(:disabled) {
+  background-color: #cc6534;
+  cursor: pointer;
+  opacity: 1;
+}
+
+.btnLocation--post:not(:disabled):hover {
+  transform: translateY(-2px);
+}
 .inputLocationArea {
-  width: 100%;
-  min-height: 120px;
+  width: 335px;
+  min-height: 180px;
   padding: 10px 12px;
   border-radius: 10px;
   border: 1px solid #ddd;
-  background-color: #fff;
+  background-color: #FFE5D9;
   font-size: 14px;
   box-sizing: border-box;
-  resize: vertical;
+  resize: none;
 
   &:focus {
     outline: 2px solid #cc6534;
@@ -104,19 +121,19 @@
 
 .wrapperButton {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 12px;
   margin-top: 16px;
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 .btnLocation {
-  min-width: 140px;
+  width: 335px;
+  height: 48px;
   padding: 10px 18px;
   border-radius: 10px;
   border: none;
-  background-color: #1a3a3a;
-  color: #fff;
+  color: #4C2613;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -131,14 +148,11 @@
 /* Map and search specific styles */
 .wrapperLocation {
   display: flex;
-  flex-direction: row;
-  gap: 10px;
+  flex-direction: column;
+  gap: 20px;
   align-items: stretch;
 }
 
-.search {
-  flex: 1;
-}
 
 .btnSearch {
   padding: 10px 20px;
@@ -149,6 +163,7 @@
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+  height: 48px;
   transition: background-color 0.2s, transform 0.1s;
 
   &:hover {
@@ -189,7 +204,14 @@
     border-bottom: 1px solid #eee;
   }
 }
-
+.inputSearch {
+  width:335px;
+  height:48px;
+  background-color: #FFE5D9;
+  padding-left: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
 /* Container for the whole page */
 .containerNewLocation {
   width: 100%;
@@ -200,77 +222,104 @@
 
 /* ===== RESPONSIVE STYLES ===== */
 
-@media (max-width: 480px) {
+// @media (max-width: 480px) {
+//   .containerFormLocation {
+//     margin: 70px auto 24px;
+//     padding: 20px 12px 24px;
+//     border-radius: 16px;
+//   }
+
+//   .titleNewLocation {
+//     font-size: 20px;
+//   }
+
+//   .photoInput {
+//     min-height: 180px;
+//   }
+
+//   .imageLocation {
+//     max-height: 260px;
+//   }
+
+//   .wrapperButton {
+//     flex-direction: column;
+//     align-items: stretch;
+//   }
+
+//   .btnLocation {
+//     width: 100%;
+//   }
+
+//   .btnDownload {
+//     width: 100%;
+//     text-align: center;
+//   }
+
+//   .wrapperLocation {
+//     flex-direction: column;
+//   }
+
+//   .btnSearch {
+//     width: 100%;
+//   }
+// }
+
+@media (min-width: 768px)  {
   .containerFormLocation {
-    margin: 70px auto 24px;
-    padding: 20px 12px 24px;
-    border-radius: 16px;
-  }
-
-  .titleNewLocation {
-    font-size: 20px;
-  }
-
-  .photoInput {
-    min-height: 180px;
-  }
-
-  .imageLocation {
-    max-height: 260px;
-  }
-
-  .wrapperButton {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .btnLocation {
-    width: 100%;
-  }
-
-  .btnDownload {
-    width: 100%;
-    text-align: center;
-  }
-
-  .wrapperLocation {
-    flex-direction: column;
-  }
-
-  .btnSearch {
-    width: 100%;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 1024px) {
-  .containerFormLocation {
-    margin-top: 100px;
     padding: 28px 24px 32px;
   }
-
+  .btnLocation {
+    width:203px;
+  }
   .titleNewLocation {
-    font-size: 26px;
+    font-size: 48px;
   }
-
-  .imageLocation {
-    max-height: 360px;
+  .wrapperButton {
+    flex-direction: row;
+    justify-content: flex-start;
   }
-
   .mapLocation {
     height: 350px;
+  }
+  .wrapperLocation {
+    flex-direction: row;
+  }
+  .btnSearch {
+    width:199px;
+  }
+  .inputSearch {
+    width:421px;
+  }
+  .photoInput {
+    width: 704px;
+    height: 468px;
+    background-image: url("../../../public/assets/placeholderImageTablet.png");
+  }
+  .inputLocation {
+    width:704px;
+  }
+  .inputLocationArea {
+    width:704px;
   }
 }
 
 @media (min-width: 1024px) {
-  .containerFormLocation {
-    margin-top: 110px;
-  }
-
-  .titleNewLocation {
-    font-size: 28px;
-  }
-
   .mapLocation {
     height: 400px;
+  }
+}
+
+@media(min-width:1440px) and (min-width:1024px) {
+  .photoInput {
+    width: 1091px;
+    height: 726px;
+    background-image: url("../../../public/assets/placeholderImageDesktop.png");
+  }
+  .inputLocation {
+    width:1091px;
+    height:43px;
+  }
+  .inputLocationArea{
+    width:1091px;
   }
 }

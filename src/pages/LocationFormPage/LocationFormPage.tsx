@@ -5,7 +5,6 @@ function LocationFormPage() {
     return (
         <Container>
             <div className={styles.containerNewLocation}>
-                <h1 className={styles.titleNewLocation}>Додавання нового місця</h1>
                 <LocationForm />
             </div>
         </Container>
