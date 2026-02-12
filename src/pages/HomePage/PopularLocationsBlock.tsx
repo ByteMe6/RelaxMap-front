@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hook";
-import { fetchAllLocations } from "../../redux/thunk/thunkLocation";
+import { fetchLocationsPage } from "../../redux/thunk/thunkLocation";
 import Container from "../../components/Container/Container";
 import LocationCard from "./LocationCard";
 import styles from "./PopularLocationsBlock.module.scss";
@@ -18,15 +18,27 @@ type ReviewsResponse = { content?: any[] };
 function PopularLocationsBlock() {
   const dispatch = useAppDispatch();
   const allLocations = useAppSelector((state) => state.location.locations);
+  const currentPage = useAppSelector((state) => state.location.currentPage);
+  const totalPages = useAppSelector((state) => state.location.totalPages);
   const [reviewsByPlaceId, setReviewsByPlaceId] = useState<Record<string, any[]>>({});
   const [ratingByPlaceId, setRatingByPlaceId] = useState<Record<string, number>>({});
   const loadedRef = useRef<Set<string>>(new Set());
   const prevBtnRef = useRef<HTMLButtonElement | null>(null);
   const nextBtnRef = useRef<HTMLButtonElement | null>(null);
+  const prefetchTriggered = useRef<boolean>(false);
 
   useEffect(() => {
-    dispatch(fetchAllLocations());
+    dispatch(fetchLocationsPage({ page: 0, size: 50 }));
   }, [dispatch]);
+
+  useEffect(() => {
+    if (currentPage < totalPages - 1 && !prefetchTriggered.current) {
+      prefetchTriggered.current = true;
+      dispatch(fetchLocationsPage({ page: currentPage + 1, size: 50 })).finally(() => {
+        prefetchTriggered.current = false;
+      });
+    }
+  }, [currentPage, totalPages, dispatch]);
 
   const total = (allLocations || []).length;
 
@@ -75,8 +87,6 @@ function PopularLocationsBlock() {
             }}
             loop={total > 3}
             onBeforeInit={(swiper) => {
-              // Swiper читает nav-элементы один раз при инициализации
-              // поэтому прокидываем реальные DOM-узлы через onBeforeInit
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const nav = (swiper.params as any).navigation;
               if (nav) {
@@ -85,7 +95,6 @@ function PopularLocationsBlock() {
               }
             }}
             onInit={(swiper) => {
-              // preload reviews for first visible slides
               const start = swiper.realIndex || 0;
               const ids = [
                 allLocations[start]?.id,
@@ -102,6 +111,10 @@ function PopularLocationsBlock() {
                 allLocations[(start + 2) % total]?.id,
               ].filter((v): v is number => typeof v === "number");
               ids.forEach((id) => preloadReviews(id));
+              
+              if (start >= allLocations.length - 10 && currentPage < totalPages - 1) {
+                dispatch(fetchLocationsPage({ page: currentPage + 1, size: 50 }));
+              }
             }}
           >
             {allLocations.map((loc) => (

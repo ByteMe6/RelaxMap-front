@@ -75,8 +75,20 @@ function LocationsPage() {
     }
   }, [filters.search]);
 
-  const filterBySearch = (location: LocationInfo, search: string) =>
-    !search || location.name.toLowerCase().includes(search.toLowerCase());
+  const filterBySearch = (location: LocationInfo, search: string) => {
+    const query = search.trim().toLowerCase();
+    if (!query) return true;
+
+    const name = location.name.toLowerCase();
+    const type = (location.placeType || "").toLowerCase();
+    const region = (location.region || "").toLowerCase();
+
+    return (
+      name.includes(query) ||
+      type.includes(query) ||
+      region.includes(query)
+    );
+  };
 
   const filterByRegion = (location: LocationInfo, region: string) =>
     !region || location.region === region;

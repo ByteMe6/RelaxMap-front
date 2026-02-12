@@ -22,11 +22,11 @@ const LocationsDeteilsPageContent: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [hover] = useState<number | null>(null);
   const [averageRating, setAverageRating] = useState<number>(2);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const currentUserEmail = useAppSelector((state) => state.auth.email);
 
   useEffect(() => {
-    // compute average rating from reviews data provided by ReviewsContext
     if (!response || !response.content) return;
     const ratings = response.content
       .map((r: any) => Number(r.rating) || 0)
@@ -55,7 +55,23 @@ const LocationsDeteilsPageContent: React.FC = () => {
     if (id) fetchLocation();
   }, [id]);
 
-  // ratings are display-only in details; no client-side rating action
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isFullscreen) {
+        setIsFullscreen(false);
+      }
+    };
+
+    if (isFullscreen) {
+      document.addEventListener("keydown", handleEscape);
+      document.body.style.overflow = "hidden";
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
+    };
+  }, [isFullscreen]);
 
   if (loading) {
     return (
@@ -88,15 +104,26 @@ const LocationsDeteilsPageContent: React.FC = () => {
         <Container>
           <div className={styles.wrapperLocation}>
             <div className={styles.imageBox}>
-              <img
-                className={styles.imageLocation}
-                src={
-                  location.imageName
-                    ? `${host}/images/${location.imageName}`
-                    : "/assets/placeholder.jpg"
-                }
-                alt={location.name}
-              />
+              <div className={styles.imageWrapper} onClick={() => setIsFullscreen(true)}>
+                <img
+                  className={styles.imageLocation}
+                  src={
+                    location.imageName
+                      ? `${host}/images/${location.imageName}`
+                      : "/assets/placeholder.jpg"
+                  }
+                  alt={location.name}
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
+                />
+                <div className={styles.fullscreenHint}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                  </svg>
+                  <span>Натисніть для повноекранного перегляду</span>
+                </div>
+              </div>
             </div>
 
             <div className={styles.infoBox}>
@@ -166,6 +193,33 @@ const LocationsDeteilsPageContent: React.FC = () => {
       </div>
 
       {id && <AddReviewModal placeId={Number(id)} />}
+      
+      {isFullscreen && (
+        <div
+          className={styles.fullscreenOverlay}
+          onClick={() => setIsFullscreen(false)}
+        >
+          <button
+            className={styles.fullscreenClose}
+            onClick={() => setIsFullscreen(false)}
+            aria-label="Закрити"
+          >
+            ×
+          </button>
+          <img
+            className={styles.fullscreenImage}
+            src={
+              location.imageName
+                ? `${host}/images/${location.imageName}`
+                : "/assets/placeholder.jpg"
+            }
+            alt={location.name}
+            onClick={(e) => e.stopPropagation()}
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+      )}
     </AddReviewModalProvider>
   );
 };

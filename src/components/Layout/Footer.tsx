@@ -31,7 +31,7 @@ function Footer() {
             </div>
 
             <nav className="footer-nav">
-              <NavLink to="../../pages/homepage/heroblock.tsx">Головна</NavLink>
+              <NavLink to="/">Головна</NavLink>
               <NavLink to="/locations">Місця відпочинку</NavLink>
             </nav>
           </div>

@@ -98,14 +98,57 @@ export const fetchAllLocations = createAsyncThunk<
   { state: RootState; rejectValue: string }
 >("location/fetchAllLocations", async (_, thunkApi) => {
   try {
+    const allLocations: LocationInfo[] = [];
+    let currentPage = 0;
+    let hasMore = true;
+    const pageSize = 50;
+
+    while (hasMore) {
+      const { data } = await axios.get<PlacesPageResponse>(`${host}/places/all`, {
+        params: {
+          page: currentPage,
+          size: pageSize,
+        },
+      });
+
+      allLocations.push(...data.content);
+      
+      // Если текущая страница последняя или пустая, прекращаем загрузку
+      if (currentPage >= data.totalPages - 1 || data.content.length === 0) {
+        hasMore = false;
+      } else {
+        currentPage++;
+      }
+    }
+
+    return allLocations;
+  } catch (error: any) {
+    const message =
+      error.response?.data?.message ||
+      error.message ||
+      "Не вдалося завантажити список локацій."
+    return thunkApi.rejectWithValue(message)
+  }
+})
+
+export const fetchLocationsPage = createAsyncThunk<
+  { locations: LocationInfo[]; page: number; totalPages: number },
+  { page: number; size?: number },
+  { state: RootState; rejectValue: string }
+>("location/fetchLocationsPage", async ({ page, size = 50 }, thunkApi) => {
+  try {
     const { data } = await axios.get<PlacesPageResponse>(`${host}/places/all`, {
       params: {
-        page: 0,
-        size: 50,
+        page,
+        size,
       },
-    })
+    });
 
-    return data.content
+    return {
+      locations: data.content,
+      page: data.pageNumber,
+      totalPages: data.totalPages,
+    };
   } catch (error: any) {
     const message =
       error.response?.data?.message ||

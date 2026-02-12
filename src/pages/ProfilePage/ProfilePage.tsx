@@ -16,6 +16,7 @@ import {
   type UserInfo,
 } from "../../api/userClient";
 import { ProfileModal } from "./ProfileModal";
+import SuccessModal from "../../components/Modals/SuccessModal/SuccessModal";
 import "./ProfilePage.scss";
 import { host } from "../../backendHost";
 import axios from "axios";
@@ -37,6 +38,8 @@ const ProfilePage: React.FC = () => {
     title: string;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string>("");
 
   const isMyProfile = Boolean(
     currentUserEmail && mail && currentUserEmail === mail,
@@ -72,8 +75,10 @@ const ProfilePage: React.FC = () => {
       const info = await getUserInfo(mail);
       setUserInfo(info);
       setError(null);
+      setShowSuccessModal(false);
     } catch (e: any) {
       setError(e.message || "Не вдалося завантажити профіль");
+      setShowSuccessModal(false);
       return;
     }
 
@@ -98,16 +103,19 @@ const ProfilePage: React.FC = () => {
         await changeUserName(newValue);
         // Оновлюємо ім'я в Redux, щоб воно синхронізувалося всюди
         dispatch(updateUserName(newValue));
-        alert("Ім'я змінено");
+        setSuccessMessage("Ім'я успішно змінено");
+        setShowSuccessModal(true);
       } else if (modalConfig?.type === "pass" && oldValue && newValue) {
         await changePassword(oldValue, newValue);
-        alert("Пароль успішно змінено");
+        setSuccessMessage("Пароль успішно змінено");
+        setShowSuccessModal(true);
       }
       await loadData();
       setModalConfig(null);
       setError(null);
     } catch (error: any) {
       setError(error?.response?.data?.message || "Не вдалося змінити дані");
+      setShowSuccessModal(false);
     }
   };
 
@@ -125,10 +133,7 @@ const ProfilePage: React.FC = () => {
     <div className="profile-page">
       <Container>
         {error && (
-          <div
-            className="profile-error"
-            style={{ color: "red", marginBottom: 20 }}
-          >
+          <div className="profile-error">
             {error}
           </div>
         )}
@@ -212,6 +217,8 @@ const ProfilePage: React.FC = () => {
                         : "/assets/placeholder.jpg"
                     }
                     alt={place.name}
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
 
@@ -259,6 +266,12 @@ const ProfilePage: React.FC = () => {
         type={modalConfig?.type === "pass" ? "password" : "text"}
         onClose={() => setModalConfig(null)}
         onSave={handleSave}
+      />
+
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        title={successMessage}
       />
     </div>
   );

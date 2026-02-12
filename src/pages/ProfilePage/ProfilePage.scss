@@ -25,12 +25,15 @@
       .email {
         color: #666; 
         margin-top: 8px; 
+        margin-bottom: 4px;
         font-weight: 500; 
       }
       
       p {
         color: #666;
         font-weight: 500;
+        line-height: 1.4;
+        margin: 2px 0;
       }
     }
 
@@ -93,7 +96,10 @@
       img { 
         width: 100%; 
         height: 100%; 
-        object-fit: cover; 
+        object-fit: cover;
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+        image-rendering: high-quality;
       }
     }
 
@@ -154,7 +160,17 @@
     color: #cf1322;
     border-radius: 6px;
     font-size: 14px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
+  }
+
+  .profile-success {
+    padding: 12px;
+    background-color: #f6ffed;
+    border: 1px solid #b7eb8f;
+    color: #237804;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 16px;
   }
 }
 

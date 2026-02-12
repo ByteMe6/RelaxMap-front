@@ -71,6 +71,8 @@ function LocationCard({ info }: CardProps) {
         }
         alt="location-image"
         className={styles.cardImage}
+        loading="lazy"
+        decoding="async"
       />
 
       <div className={styles.wrapperInfoCard}>

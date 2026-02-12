@@ -5,7 +5,7 @@ import { postNewLocation } from "../thunk/thunkLocation"
 import { searchCities, searchRegions } from "../thunk/thunkTypeLocation"
 import { updateLocationRating } from "../thunk/thunkUpdateRating";
 import { updateLocation } from "../thunk/thunkLocationUpdate";
-import { fetchAllLocations } from "../thunk/thunkLocation"
+import { fetchAllLocations, fetchLocationsPage } from "../thunk/thunkLocation"
 import type { RootState } from "../store";
 
 
@@ -34,6 +34,8 @@ interface LocationState {
   currentLocationDetails: LocationInfo | null,
   listRegion: any[]
   isSuccess: boolean
+  currentPage: number
+  totalPages: number
 }
 
 const initialState: LocationState = {
@@ -52,7 +54,9 @@ const initialState: LocationState = {
     currentLocationDetails: null,
     listRegion: [],
     location: null,
-    isSuccess: false
+    isSuccess: false,
+    currentPage: 0,
+    totalPages: 0
 }
 console.log(initialState.locations)
 export function getLocations(): LocationInfo[] {
@@ -155,6 +159,22 @@ const locationSlice = createSlice({
         state.locations = action.payload
       })
       .addCase(fetchAllLocations.rejected, (state) => {
+        state.loading = false
+      })
+      .addCase(fetchLocationsPage.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(fetchLocationsPage.fulfilled, (state, action) => {
+        state.loading = false
+        const existingIds = new Set(state.locations.map(loc => loc.id));
+        const newLocations = action.payload.locations.filter(
+          loc => !existingIds.has(loc.id)
+        );
+        state.locations = [...state.locations, ...newLocations];
+        state.currentPage = action.payload.page;
+        state.totalPages = action.payload.totalPages;
+      })
+      .addCase(fetchLocationsPage.rejected, (state) => {
         state.loading = false
       })
          .addCase(updateLocation.pending, (state) => {

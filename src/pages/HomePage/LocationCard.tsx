@@ -39,7 +39,13 @@ function LocationCard({ image, category, title, reviews, rating: ratingProp, id 
   return (
     <div className={styles['location-card']}>
       <div className={styles['location-card__image-wrapper']}>
-        <img src={image} alt={title} />
+        <img 
+          src={image} 
+          alt={title}
+          loading="lazy"
+          decoding="async"
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+        />
       </div>
       <div className={styles['location-card__content']}>
         <span className={styles['location-card__category']}>{category}</span>

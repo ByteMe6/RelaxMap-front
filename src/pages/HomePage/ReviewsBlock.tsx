@@ -7,7 +7,8 @@ import { api } from "../../api/axiosInstance";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
-import { Pagination } from "swiper/modules";
+import "swiper/css/navigation";
+import { Pagination, Navigation } from "swiper/modules";
 
 export function Star({ type }: { type: "full" | "half" | "empty" }) {
   if (type === "full") {
@@ -43,15 +44,12 @@ function ReviewsBlock() {
   const locations = useAppSelector((state) => state.location.locations);
   const [reviews, setReviews] = useState<any[]>([]);
 
-  // responsive behavior handled by Swiper breakpoints; no local `isMobile` needed
-
   useEffect(() => {
     dispatch(fetchAllLocations());
   }, [dispatch]);
 
   useEffect(() => {
-    // fetch reviews using pageable backend: /reviews/all
-    const pageSize = 3;
+    const pageSize = 15;
     let active = true;
     const fetchPage = async () => {
       try {
@@ -65,12 +63,26 @@ function ReviewsBlock() {
     };
 
     fetchPage();
+    return () => {
+      active = false;
+    };
   }, [locations]);
 
   const swiperRef = useRef<SwiperType | null>(null);
-  const visibleReviews = reviews.slice(0, 3);
+  const prevBtnRef = useRef<HTMLButtonElement | null>(null);
+  const nextBtnRef = useRef<HTMLButtonElement | null>(null);
+  const visibleReviews = reviews;
 
-  // navigation handled by Swiper instance methods; local index not required
+  if (visibleReviews.length === 0) {
+    return (
+      <section className={styles.reviews}>
+        <Container>
+          <h2 className={styles['reviews__title']}>Останні відгуки</h2>
+          <p>Відгуків поки немає</p>
+        </Container>
+      </section>
+    );
+  }
 
   return (
       <section className={ styles.reviews }>
@@ -79,8 +91,20 @@ function ReviewsBlock() {
 
         <Swiper
           onSwiper={(s) => (swiperRef.current = s)}
-          modules={[Pagination]}
+          modules={[Pagination, Navigation]}
           pagination={{ clickable: true }}
+          navigation={{
+            prevEl: prevBtnRef.current,
+            nextEl: nextBtnRef.current,
+          }}
+          onBeforeInit={(swiper) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const nav = (swiper.params as any).navigation;
+            if (nav) {
+              nav.prevEl = prevBtnRef.current;
+              nav.nextEl = nextBtnRef.current;
+            }
+          }}
           slidesPerView={1}
           spaceBetween={20}
           breakpoints={{
@@ -113,26 +137,30 @@ function ReviewsBlock() {
           ))}
         </Swiper>
 
-        <div className={styles['reviews__pagination']}>
-          <button
-            aria-label="Previous"
-            className={styles['reviews__pagination-btn']}
-            onClick={() => swiperRef.current?.slidePrev()}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-            </svg>
-          </button>
-          <button
-            aria-label="Next"
-            className={styles['reviews__pagination-btn']}
-            onClick={() => swiperRef.current?.slideNext()}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-            </svg>
-          </button>
-        </div>
+        {visibleReviews.length > 1 && (
+          <div className={styles['reviews__pagination']}>
+            <button
+              ref={prevBtnRef}
+              aria-label="Previous"
+              className={styles['reviews__pagination-btn']}
+              onClick={() => swiperRef.current?.slidePrev()}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+              </svg>
+            </button>
+            <button
+              ref={nextBtnRef}
+              aria-label="Next"
+              className={styles['reviews__pagination-btn']}
+              onClick={() => swiperRef.current?.slideNext()}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </button>
+          </div>
+        )}
       </Container>
     </section>
   );

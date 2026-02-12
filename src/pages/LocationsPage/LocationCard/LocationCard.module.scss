@@ -17,6 +17,9 @@
   height: 280px;
   border-radius: 10px;
   object-fit: cover;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: high-quality;
 }
 
 .textPlace {

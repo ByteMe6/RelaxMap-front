@@ -13,7 +13,11 @@ import {
 } from "../../redux/thunk/thunkTypeLocation";
 import { resetLocation } from "../../redux/slice/locationSlice";
 import { useNavigate } from "react-router-dom";
-import ModalSuccessLocation from "./ModalSuccessLocation/ModalSuccessLocation";
+import SuccessModal from "../../components/Modals/SuccessModal/SuccessModal";
+import iconLocation from "../../../public/assets/iconLocation.png";
+import iconCamera from "../../../public/assets/iconCamera.png";
+import iconSearch from "../../../public/assets/iconSearch.png";
+import iconCompass from "../../../public/assets/iconCompass.png";
 export default function LocationForm() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -118,7 +122,27 @@ export default function LocationForm() {
   return (
     <>
       {showModal && (
-        <ModalSuccessLocation onClose={handleModalClose} />
+        <SuccessModal
+          isOpen={showModal}
+          onClose={handleModalClose}
+          title="Локація успішно створена!"
+          icon={
+            <>
+              <img src={iconCamera} alt="icon-camera" style={{ width: "100px" }} />
+              <img
+                src={iconLocation}
+                alt="icon-location"
+                style={{ width: "100px", position: "relative", right: "30px" }}
+              />
+              <img src={iconSearch} alt="icon-search" style={{ width: "100px" }} />
+              <img
+                src={iconCompass}
+                alt="icon-compass"
+                style={{ width: "100px", position: "relative", left: "30px" }}
+              />
+            </>
+          }
+        />
       )}
       <Formik
         initialValues={{
