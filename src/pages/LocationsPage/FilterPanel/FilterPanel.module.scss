@@ -32,7 +32,6 @@
     margin-top: 30px;
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 15px;
 }
 
@@ -55,7 +54,7 @@
 .titleAllLocation {
     font-family: "Montserrat";
     font-weight: 700;
-    margin: 10% auto 0 auto;
+    margin: 20% auto 0 auto;
     text-align: center;
     font-size: 36px;
     width: 335px;
@@ -66,7 +65,7 @@
         width: 704px;
     }
    .titleAllLocation {
-        margin: 5% auto 0 auto;
+        margin: 7% auto 0 auto;
         width:auto;
         font-size: 48px;
    }
@@ -77,6 +76,9 @@
     .wrapperSelect {
         flex-direction: row;
         justify-content: space-between;
+    }
+    .formFilterLocation {
+         align-items: center;
     }
 }
 
@@ -95,7 +97,7 @@
     }
 
     .wrapperSelect {
-        width: 890px;
+        width: 790px;
         justify-content: space-between;
     }
 }
