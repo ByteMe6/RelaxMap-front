@@ -13,13 +13,13 @@ import {
   getUserInfo,
   changeUserName,
   changePassword,
+  deleteAccount,
   type UserInfo,
 } from "../../api/userClient";
 import { ProfileModal } from "./ProfileModal";
 import SuccessModal from "../../components/Modals/SuccessModal/SuccessModal";
 import "./ProfilePage.scss";
 import { host } from "../../backendHost";
-import axios from "axios";
 import { logoutUser } from "../../redux/thunk/authThunk";
 
 const ProfilePage: React.FC = () => {
@@ -40,6 +40,8 @@ const ProfilePage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string>("");
+  const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
+  const [deleteInProgress, setDeleteInProgress] = useState(false);
 
   const isMyProfile = Boolean(
     currentUserEmail && mail && currentUserEmail === mail,
@@ -47,17 +49,21 @@ const ProfilePage: React.FC = () => {
 
   const handleDeleteAccount = async () => {
     if (!accessToken) return;
+    setDeleteInProgress(true);
+    setError(null);
     try {
-      await axios.delete(`${host}/users/delete-account`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      await deleteAccount();
       dispatch(logoutUser());
+      setShowDeleteConfirmModal(false);
       navigate("/");
-    } catch (e) {
+    } catch (e: unknown) {
       console.error(e);
-      setError("Не вдалося видалити акаунт");
+      const message =
+        (e as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+        "Не вдалося видалити акаунт";
+      setError(message);
+    } finally {
+      setDeleteInProgress(false);
     }
   };
 
@@ -140,9 +146,8 @@ const ProfilePage: React.FC = () => {
 
         <div className="profile-header">
           <div className="user-info">
-            <h1>{userInfo?.name || mail?.split("@")[0] || "Користувач"}</h1>
-            <p className="email">Email: {mail || "не вказано"}</p>
-            <p>Локацій: {places.length}</p>
+            <h1 className="profile-name">{userInfo?.name || mail?.split("@")[0] || "Користувач"}</h1>
+            <p className="profile-stats">Локацій: {places.length}</p>
           </div>
 
           {isMyProfile && (
@@ -178,7 +183,7 @@ const ProfilePage: React.FC = () => {
               <button
                 className="btn-danger pBtn"
                 type="button"
-                onClick={handleDeleteAccount}
+                onClick={() => setShowDeleteConfirmModal(true)}
               >
                 Видалити акаунт
               </button>
@@ -199,7 +204,16 @@ const ProfilePage: React.FC = () => {
         )}
 
         {places.length === 0 ? (
-          <p>Локацій поки немає</p>
+          <div className="profile-empty-locations">
+            <p className="profile-empty-text">Цей користувач ще не ділився локаціями</p>
+            <button
+              type="button"
+              className="profile-back-btn"
+              onClick={() => navigate("/locations")}
+            >
+              Назад до локацій
+            </button>
+          </div>
         ) : (
           <div className="locations-grid">
             {places.map((place) => (
@@ -225,6 +239,16 @@ const ProfilePage: React.FC = () => {
                 <div className="info-box">
                   <span className="type">{place.placeType || "—"}</span>
                   <h3>{place.name}</h3>
+                  <button
+                    type="button"
+                    className="location-view-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/locations/${place.id}`);
+                    }}
+                  >
+                    Переглянути локацію
+                  </button>
                 </div>
 
                 {isMyProfile && (
@@ -273,6 +297,37 @@ const ProfilePage: React.FC = () => {
         onClose={() => setShowSuccessModal(false)}
         title={successMessage}
       />
+
+      {showDeleteConfirmModal && (
+        <div
+          className="custom-modal-overlay"
+          onClick={() => !deleteInProgress && setShowDeleteConfirmModal(false)}
+        >
+          <div className="custom-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>Видалити акаунт?</h3>
+            <p className="profile-delete-confirm-text">
+              Цю дію не можна скасувати. Усі ваші дані будуть видалені назавжди.
+            </p>
+            <div className="modal-actions">
+              <button
+                type="button"
+                onClick={() => !deleteInProgress && setShowDeleteConfirmModal(false)}
+                disabled={deleteInProgress}
+              >
+                Скасувати
+              </button>
+              <button
+                type="button"
+                className="confirm-delete-btn"
+                onClick={() => void handleDeleteAccount()}
+                disabled={deleteInProgress}
+              >
+                {deleteInProgress ? "Видалення…" : "Видалити акаунт"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

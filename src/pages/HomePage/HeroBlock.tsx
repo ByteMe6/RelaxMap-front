@@ -5,15 +5,20 @@ import styles from "./HeroBlock.module.scss";
 
 function HeroBlock() {
   const [search, setSearch] = useState("");
+  const [searchError, setSearchError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const params = new URLSearchParams();
-    if (search.trim()) {
-      params.set("search", search.trim());
+    const trimmed = search.trim();
+    if (!trimmed) {
+      setSearchError("Введіть пошуковий запит");
+      return;
     }
-    navigate(`/locations${params.toString() ? `?${params.toString()}` : ""}`);
+    setSearchError("");
+    const params = new URLSearchParams();
+    params.set("search", trimmed);
+    navigate(`/locations?${params.toString()}`);
   };
 
   return (
@@ -34,10 +39,20 @@ function HeroBlock() {
               placeholder="Введіть назву, тип або регіон..."
               className={styles['hero__search-input']}
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                if (searchError) setSearchError("");
+              }}
+              aria-invalid={!!searchError}
+              aria-describedby={searchError ? "hero-search-error" : undefined}
             />
             <button type="submit" className={styles['hero__search-btn']}>Знайти місце</button>
           </form>
+          {searchError && (
+            <p id="hero-search-error" className={styles['hero__search-error']} role="alert">
+              {searchError}
+            </p>
+          )}
         </div>
       </Container>
     </section>
