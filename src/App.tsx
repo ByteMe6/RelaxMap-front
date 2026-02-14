@@ -12,6 +12,7 @@ import EditLocation from "./pages/EditLocation/EditLocation";
 import RegisterPage from "./pages/Auth/RegisterPage/RegisterPage";
 import LoginPage from "./pages/Auth/Login/LoginPage";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
+import Loader from "./components/Loader/Loader";
 import "./index.css"
 import { host } from "./backendHost";
 import "./Scss/Modal.scss";
@@ -31,7 +32,10 @@ function App() {
 
   useEffect(() => {
     void (async () => {
-      const alive = await handleCheckIsAlive();
+      const [alive] = await Promise.all([
+        handleCheckIsAlive(),
+        new Promise((resolve) => setTimeout(resolve,2000))
+      ])
       setIsAlive(alive);
       setIsBackendModalOpen(!alive);
     })();
@@ -43,6 +47,7 @@ function App() {
 
   return (
     <>
+   {isAlive === null && <Loader />}
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
