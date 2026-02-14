@@ -6,19 +6,34 @@ import locationReducer from "./slice/locationSlice";
 import authReducer from "./slice/authSlice";
 
 const persistConfig = {
-    key: "root",
-    storage,
-    whitelist: ["location", "auth"]
-}
+  key: "root",
+  storage,
+  whitelist: ["location", "auth"],
+};
+
 const rootReducer = combineReducers({
-    location: locationReducer,
-    auth: authReducer
-})
-export type RootState = ReturnType<typeof rootReducer>
-const persistedReducer = persistReducer(persistConfig, rootReducer)
+  location: locationReducer,
+  auth: authReducer,
+});
+
+export type RootState = ReturnType<typeof rootReducer>;
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
 const store = configureStore({
-    reducer: persistedReducer
-})
-export const persistor = persistStore(store)
-export default store
-export type AppDispatch = typeof store.dispatch
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        // ігноруємо некерований для нас внутрішній функціонал redux-persist
+        ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
+        ignoredActionPaths: ["register", "rehydrate"],
+        ignoredPaths: ["_persist"],
+      },
+    }),
+});
+
+export const persistor = persistStore(store);
+export default store;
+
+export type AppDispatch = typeof store.dispatch;

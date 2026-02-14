@@ -1,4 +1,7 @@
-import axios, { type AxiosError, type AxiosRequestConfig } from "axios";
+import axios, {
+  type AxiosError,
+  type AxiosRequestConfig,
+} from "axios";
 import { host } from "../backendHost";
 import store from "../redux/store";
 import { logout, authSuccess } from "../redux/slice/authSlice";
@@ -110,4 +113,13 @@ export async function authorizedRequest<T = unknown>(
       throw error;
     }
   }
+}
+
+
+export async function unauthorizedRequest<T = unknown>(
+  config: AxiosRequestConfig,
+): Promise<T> {
+  const res = await api.request<T>(config);
+  // axios завжди кладе тіло в res.data
+  return res.data as T;
 }

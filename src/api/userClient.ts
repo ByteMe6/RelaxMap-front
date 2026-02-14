@@ -1,4 +1,6 @@
 import { authorizedRequest } from "../api/authClient";
+import axios from "axios";
+import { host } from "../backendHost";
 
 export interface UserInfo {
   id: number;
@@ -6,12 +8,20 @@ export interface UserInfo {
   email: string;
 }
 
+// export async function getUserInfo(email: string): Promise<UserInfo> {
+//   return authorizedRequest<UserInfo>({
+//     url: "/users/info",
+//     method: "GET",
+//     params: { email },
+//   });
+// }
+
 export async function getUserInfo(email: string): Promise<UserInfo> {
-  return authorizedRequest<UserInfo>({
-    url: "/users/info",
-    method: "GET",
+  const res = await axios.get<UserInfo>(`${host}/users/info`, {
     params: { email },
   });
+
+  return res.data;
 }
 
 export async function changeUserName(newName: string): Promise<void> { 

@@ -1,6 +1,6 @@
 // Header.tsx
 import { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Container from "../Container/Container";
 import styles from "./Header.module.scss";
 import "normalize.css";
@@ -16,6 +16,7 @@ export default function Header() {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { accessToken, email } = useAppSelector((state) => state.auth);
   const isAuth = Boolean(accessToken);
 
@@ -50,6 +51,7 @@ export default function Header() {
   };
 
   const handleConfirmLogout = () => {
+    navigate("/auth/login");
     dispatch(logoutUser());
     setIsLogoutModalOpen(false);
     setIsBurgerOpen(false);

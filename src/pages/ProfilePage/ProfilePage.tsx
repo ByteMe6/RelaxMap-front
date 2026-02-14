@@ -47,20 +47,25 @@ const ProfilePage: React.FC = () => {
     currentUserEmail && mail && currentUserEmail === mail,
   );
 
+  const logoutUserFunc = () => {
+    navigate("/auth/login");
+    dispatch(logoutUser());
+  };
+
   const handleDeleteAccount = async () => {
     if (!accessToken) return;
     setDeleteInProgress(true);
     setError(null);
     try {
       await deleteAccount();
-      dispatch(logoutUser());
+      logoutUserFunc();
       setShowDeleteConfirmModal(false);
       navigate("/");
     } catch (e: unknown) {
       console.error(e);
       const message =
-        (e as { response?: { data?: { message?: string } } })?.response?.data?.message ||
-        "Не вдалося видалити акаунт";
+        (e as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Не вдалося видалити акаунт";
       setError(message);
     } finally {
       setDeleteInProgress(false);
@@ -83,7 +88,11 @@ const ProfilePage: React.FC = () => {
       setError(null);
       setShowSuccessModal(false);
     } catch (e: any) {
-      setError(e.message || "Не вдалося завантажити профіль");
+      if (e.message === "No access token") {
+        setError("Ви не увійшли до аккаунту. Будь ласка, увійдіть в аккаунт.");
+      } else {
+        setError(e.message || "Не вдалося завантажити профіль");
+      }
       setShowSuccessModal(false);
       return;
     }
@@ -138,15 +147,13 @@ const ProfilePage: React.FC = () => {
   return (
     <div className="profile-page">
       <Container>
-        {error && (
-          <div className="profile-error">
-            {error}
-          </div>
-        )}
+        {error && <div className="profile-error">{error}</div>}
 
         <div className="profile-header">
           <div className="user-info">
-            <h1 className="profile-name">{userInfo?.name || mail?.split("@")[0] || "Користувач"}</h1>
+            <h1 className="profile-name">
+              {userInfo?.name || mail?.split("@")[0] || "Користувач"}
+            </h1>
             <p className="profile-stats">Локацій: {places.length}</p>
           </div>
 
@@ -205,7 +212,9 @@ const ProfilePage: React.FC = () => {
 
         {places.length === 0 ? (
           <div className="profile-empty-locations">
-            <p className="profile-empty-text">Цей користувач ще не ділився локаціями</p>
+            <p className="profile-empty-text">
+              Цей користувач ще не ділився локаціями
+            </p>
             <button
               type="button"
               className="profile-back-btn"
@@ -311,7 +320,9 @@ const ProfilePage: React.FC = () => {
             <div className="modal-actions">
               <button
                 type="button"
-                onClick={() => !deleteInProgress && setShowDeleteConfirmModal(false)}
+                onClick={() =>
+                  !deleteInProgress && setShowDeleteConfirmModal(false)
+                }
                 disabled={deleteInProgress}
               >
                 Скасувати

@@ -1,7 +1,9 @@
-import type { AxiosRequestConfig } from "axios";
+// src/api/profileClient.ts
+import axios, { type AxiosRequestConfig } from "axios";
 import { authorizedRequest } from "./authClient";
 import store from "../redux/store";
 import { logout } from "../redux/slice/authSlice";
+import { host } from "../backendHost";
 
 export interface UserPlace {
   id: number;
@@ -20,22 +22,32 @@ export interface UserPlacesResponse {
   pageSize: number;
 }
 
+/**
+ * ПУБЛІЧНИЙ ендпоінт:
+ * отримати місця користувача за email без JWT.
+ * Використовується в ProfilePage, коли дивимось чужий профіль.
+ */
 export async function getPlacesForUser(
   email: string,
   page = 0,
   size = 50,
 ): Promise<UserPlacesResponse> {
-  return authorizedRequest<UserPlacesResponse>({
-    url: "/places/for-user",
-    method: "GET",
+  const res = await axios.get<UserPlacesResponse>(`${host}/places/for-user`, {
     params: {
       email,
       "pageable.page": page,
       "pageable.size": size,
     },
   });
+
+  return res.data;
 }
 
+/**
+ * ЗАХИЩЕНИЙ ендпоінт:
+ * мої місця для залогіненого користувача (email з Redux).
+ * Тут лишаємо authorizedRequest – потрібен токен.
+ */
 export async function getUserPlaces(
   page = 0,
   size = 50,
@@ -51,8 +63,8 @@ export async function getUserPlaces(
     url: "/places/for-user",
     method: "GET",
     params: {
-      email,              
-      "pageable.page": page, 
+      email,
+      "pageable.page": page,
       "pageable.size": size,
     },
   };
