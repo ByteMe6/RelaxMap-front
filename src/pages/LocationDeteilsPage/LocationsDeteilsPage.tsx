@@ -21,7 +21,7 @@ const LocationsDeteilsPageContent: React.FC = () => {
   const [location, setLocation] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [hover] = useState<number | null>(null);
-  const [averageRating, setAverageRating] = useState<number>(2);
+  const [averageRating, setAverageRating] = useState<number>(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const currentUserEmail = useAppSelector((state) => state.auth.email);
