@@ -193,7 +193,7 @@ const LocationsDeteilsPageContent: React.FC = () => {
       </div>
 
       {id && <AddReviewModal placeId={Number(id)} />}
-      
+
       {isFullscreen && (
         <div
           className={styles.fullscreenOverlay}
