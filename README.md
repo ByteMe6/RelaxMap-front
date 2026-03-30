@@ -1,5 +1,6 @@
 # RelaxMap
 Relax map – project to share your travel destinations
+
 **Backend is down**
 
 [Md on russian](./README.ru.md) <br/>
