@@ -16,7 +16,6 @@
     "@reduxjs/toolkit": "^2.11.2",
     "aos": "^2.3.4",
     "axios": "^1.13.3",
-    "express": "^5.2.1",
     "formik": "^2.4.9",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.563.0",
