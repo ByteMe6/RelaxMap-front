@@ -23,7 +23,7 @@ function App() {
 
   const handleCheckIsAlive = async (): Promise<boolean> => {
     try {
-      const response = await axios.get(`${host}/places/all`, { timeout: 3000 });
+      const response = await axios.get(`${host}/places/all`, { timeout: 12000 });
       return response.status === 200;
     } catch {
       return false;

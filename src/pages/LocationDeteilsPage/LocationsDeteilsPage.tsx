@@ -12,6 +12,7 @@ import { AddReviewModalProvider } from "../../components/Modals/AddReviewModal/A
 import AddReviewModal from "../../components/Modals/AddReviewModal/AddReviewModal";
 import { ReviewProvider, useReviews } from "./ReviewsContext";
 import Star from "./RatingLocation/Star/Star";
+import Loader from "../../components/Loader/Loader";
 
 const LocationsDeteilsPageContent: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -74,17 +75,18 @@ const LocationsDeteilsPageContent: React.FC = () => {
   }, [isFullscreen]);
 
   if (loading) {
-    return (
-      <div className={styles.wrapperLocationDetail}>
-
-      </div>
-    );
+    return <Loader />;
   }
 
   if (!location) {
     return (
       <div className={styles.wrapperLocationDetail}>
-        Error
+        <div className={styles.stateBox}>
+          <p>Не вдалося завантажити локацію.</p>
+          <button className={styles.btnEdit} onClick={() => navigate("/locations")}>
+            До списку локацій
+          </button>
+        </div>
       </div>
     );
   }
