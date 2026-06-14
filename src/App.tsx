@@ -18,6 +18,7 @@ import { host } from "./backendHost";
 import "./Scss/Modal.scss";
 
 function App() {
+  const [isPageLoading, setIsPageLoading] = useState(true);
   const [isAlive, setIsAlive] = useState<boolean | null>(null);
   const [isBackendModalOpen, setIsBackendModalOpen] = useState(true);
 
@@ -31,11 +32,18 @@ function App() {
   };
 
   useEffect(() => {
+    if (document.readyState === "complete") {
+      setIsPageLoading(false);
+      return;
+    }
+    const handleLoad = () => setIsPageLoading(false);
+    window.addEventListener("load", handleLoad);
+    return () => window.removeEventListener("load", handleLoad);
+  }, []);
+
+  useEffect(() => {
     void (async () => {
-      const [alive] = await Promise.all([
-        handleCheckIsAlive(),
-        new Promise((resolve) => setTimeout(resolve,2000))
-      ])
+      const alive = await handleCheckIsAlive();
       setIsAlive(alive);
       setIsBackendModalOpen(!alive);
     })();
@@ -47,7 +55,7 @@ function App() {
 
   return (
     <>
-   {isAlive === null && <Loader />}
+   {isPageLoading && <Loader />}
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
