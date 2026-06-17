@@ -2,9 +2,7 @@
 
 Share and discover relaxing travel destinations on an interactive map.
 
-**[Live Demo](https://byteme6.github.io/RelaxMap-front/)** · [Українська](./README.ua.md) · [Русский](./README.ru.md)
-
-> Backend may be unavailable — the app runs at [relaxmap.hellper.dev](https://relaxmap.hellper.dev)
+**[Live Demo](https://byteme6.github.io/RelaxMap-front/)** · [Русский](./README.ru.md)
 
 ## Features
 
