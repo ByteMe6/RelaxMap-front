@@ -1,31 +1,55 @@
 # RelaxMap
-Relax map – project to share your travel destinations
 
-**Backend is down**
+Share and discover relaxing travel destinations on an interactive map.
 
-[Md on russian](./README.ru.md) <br/>
-[Md on english](./README.md)
+**[Live Demo](https://byteme6.github.io/RelaxMap-front/)** · [Українська](./README.ua.md) · [Русский](./README.ru.md)
 
-### [Deployment](https://byteme6.github.io/RelaxMap-front/)
+> Backend may be unavailable — the app runs at [relaxmap.hellper.dev](https://relaxmap.hellper.dev)
 
-## Tools
-**lang:** *typesript* <br/>
-**framework:** *React* <br/>
-**deployment** *github pages* <br/>
-**backend:** *java + spring*
+## Features
+
+- Interactive map with location pins (Leaflet)
+- Browse, add, and edit locations with photos
+- Leave reviews on locations
+- User accounts and profiles
+- Smooth animations (AOS) and image carousel (Swiper)
+- Persistent auth state via Redux
+
+## Tech Stack
+
+| | |
+|---|---|
+| Language | TypeScript |
+| Framework | React 19, React Router 7 |
+| State | Redux Toolkit, redux-persist |
+| Map | Leaflet, react-leaflet |
+| Forms | Formik |
+| Styling | SCSS, normalize.css |
+| HTTP | Axios |
+| Tooling | Vite 7, GitHub Pages |
+
+## Setup
+
+```bash
+git clone https://github.com/ByteMe6/RelaxMap-front
+cd RelaxMap-front
+npm install
+npm run dev
+```
+
+To point at a local backend, edit `src/backendHost.ts`:
+
+```ts
+export const host: string = "http://localhost:8080";
+```
 
 ## Repos
-[Frontend](https://github.com/ByteMe6/RelaxMap-front/) <br/>
-[Backend](https://github.com/ByteMe6/RelaxMap-back/)
+
+- [Frontend](https://github.com/ByteMe6/RelaxMap-front)
+- [Backend](https://github.com/ByteMe6/RelaxMap-back)
 
 ## Developers
 
-### Frontend
 <a href="https://github.com/ByteMe6/RelaxMap-front/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=ByteMe6/RelaxMap-front" />
-</a>
-
-### Backend
-<a href="https://github.com/ByteMe6/RelaxMap-back/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=ByteMe6/RelaxMap-back" />
 </a>
